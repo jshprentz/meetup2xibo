@@ -73,3 +73,6 @@ venv/
 
 # Older logs
 *.log.*
+
+# Sensitive files
+config.py
