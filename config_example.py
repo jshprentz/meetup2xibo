@@ -1,4 +1,4 @@
-"""Example configuration should be copied to config.py and edited."""
+"""Example configuration should be copied to meetup2xibo/config.py and edited."""
 
 # Meetup API configuration
 MEETUP_API_CONFIG = {
