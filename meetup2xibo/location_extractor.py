@@ -53,14 +53,16 @@ class LocationExtractor:
                 locations.add(location)
         return locations
 
-    def format_locations(self, location_set):
+    @staticmethod
+    def format_locations(location_set):
         """Format a set of locations as an English phrase."""
         if location_set:
-            return self.format_location_list(list(location_set))
+            return LocationExtractor.format_location_list(list(location_set))
         else:
             return "TBD"
 
-    def format_location_list(self, locations):
+    @staticmethod
+    def format_location_list(locations):
         """Format a list of locations as an English phrase."""
         if len(locations) == 1:
             return locations[0]
