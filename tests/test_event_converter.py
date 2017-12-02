@@ -2,6 +2,7 @@
 
 from .context import meetup2xibo
 from meetup2xibo.event_converter import EventConverter, Event
+from meetup2xibo.location_extractor import LocationExtractor
 from hypothesis import given, assume, example
 from hypothesis.strategies import integers, text
 import string
@@ -30,8 +31,25 @@ EVENT_WITH_VENUE = Event(
     name = "Computational Mathematics: P=NP for students and engineers at Nova Labs",
     start_time = "2017-11-20 19:15:00",
     end_time = "2017-11-20 21:30:00",
-    location = "TODO")
-#    location = "Conference Room 2")
+    location = "Conference Room 2")
+
+JSON_EVENT_WITH_UNKNOWN_VENUE = {
+    "duration": 8100000,
+    "how_to_find_us": "Somewhere",
+    "id": "bztfpmywpbbc",
+    "name": "Computational Mathematics: P=NP for students and engineers at Nova Labs",
+    "time": 1511223300000,
+    "venue": {
+        "name": "Somewhere else"
+    }
+}
+
+EVENT_WITH_UNKNOWN_VENUE = Event(
+    meetup_id = "bztfpmywpbbc",
+    name = "Computational Mathematics: P=NP for students and engineers at Nova Labs",
+    start_time = "2017-11-20 19:15:00",
+    end_time = "2017-11-20 21:30:00",
+    location = "Nova Labs")
 
 
 JSON_EVENT_WITHOUT_VENUE = {
@@ -47,8 +65,7 @@ EVENT_WITHOUt_VENUE = Event(
     name = "Blacksmithing for supervised practice and fun",
     start_time = "2017-11-25 16:00:00",
     end_time = "2017-11-25 18:30:00",
-    location = "TODO")
-#    location = "Blacksmithing Alley")
+    location = "Blacksmithing Alley")
 
 
 COMPLETE_JSON_EVENT = {
@@ -109,20 +126,27 @@ COMPLETE_EVENT = Event(
     name = "Enco Vertical Mill 101",
     start_time = "2017-11-21 18:30:00",
     end_time = "2017-11-21 21:30:00",
-    location = "TODO")
-#    location = "Metal Shoppe")
+    location = "Metal Shop")
 
 SAMPLE_EVENTS = [
     (JSON_EVENT_WITH_VENUE, EVENT_WITH_VENUE),
+    (JSON_EVENT_WITH_UNKNOWN_VENUE, EVENT_WITH_UNKNOWN_VENUE),
     (JSON_EVENT_WITHOUT_VENUE, EVENT_WITHOUt_VENUE),
     (COMPLETE_JSON_EVENT, COMPLETE_EVENT),
+]
+
+LOCATION_PHRASES = [
+    ("Classroom A and B", "Classroom A/B"),
+    ("Conference Rm 2", "Conference Room 2"),
+    ("Metal shop", "Metal Shop"),
+    ("Out Back", "Blacksmithing Alley"),
 ]
 
 @given(sec_since_epoch = integers(0, END_OF_EPOCH_SEC))
 def test_iso_time_converts_back(sec_since_epoch):
     """Test that the ISO time for some seconds since the Unix
     epoch converts back to that seconds value."""
-    converter = EventConverter()
+    converter = EventConverter(None)
     iso_time = converter.iso_time(sec_since_epoch * 1000)
     parsed_time = time.strptime(iso_time, "%Y-%m-%d %H:%M:%S")
     recovered_secs_since_epoch = time.mktime(parsed_time)
@@ -135,7 +159,7 @@ def test_edit_name_without_prefix(event_name):
     """Test that an unprefixed name edits to the event name."""
     trimmed_event_name = event_name.strip()
     assume(trimmed_event_name)
-    converter = EventConverter()
+    converter = EventConverter(None)
     edited_name = converter.edit_name(event_name)
     assert edited_name == trimmed_event_name
 
@@ -144,7 +168,7 @@ def test_edit_name_with_prefix(prefix, event_name):
     """Test that a prefixed name edits to the event name."""
     trimmed_event_name = event_name.strip()
     assume(trimmed_event_name)
-    converter = EventConverter()
+    converter = EventConverter(None)
     raw_name = "{}: {}".format(prefix, event_name)
     edited_name = converter.edit_name(raw_name)
     assert edited_name == trimmed_event_name
@@ -152,7 +176,8 @@ def test_edit_name_with_prefix(prefix, event_name):
 @pytest.mark.parametrize("json_event,expected_event", SAMPLE_EVENTS)
 def test_convert(json_event, expected_event):
     """Test converting an event from Meetup JSON into an event tuple."""
-    converter = EventConverter()
+    extractor = LocationExtractor.from_location_phrases(LOCATION_PHRASES, "Nova Labs")
+    converter = EventConverter(extractor)
     event = converter.convert(json_event)
     assert expected_event == event
 
