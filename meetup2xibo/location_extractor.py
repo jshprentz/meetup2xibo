@@ -3,38 +3,15 @@
 import re
 
 
-NOVA_LABS_LOCATION_PHRASES = [
-    ("Classroom A and B", "Classroom A/B"),
-    ("Classroom A/B", "Classroom A/B"),
-    ("Classroom A", "Classroom A"),
-    ("Classroom B", "Classroom B"),
-    ("Computer Lab", "Computer Lab"),
-    ("Conference room 1", "Conference Room 1"),
-    ("Conference room 2", "Conference Room 2"),
-    ("Conference room 3", "Conference Room 3"),
-    ("Conference rm 1", "Conference Room 1"),
-    ("Conference rm 2", "Conference Room 2"),
-    ("Conference rm 3", "Conference Room 3"),
-    ("Orange Bay", "Orange Bay"),
-    ("Orange room", "Orange Bay"),
-    ("Blacksmithing", "Blacksmithing Alley outside behind Nova Labs"),
-    ("out back", "Blacksmithing Alley outside behind Nova Labs"),
-    ("outback", "Blacksmithing Alley outside behind Nova Labs"),
-    ("Metalshop", "Metal Shop"),
-    ("Metal shop", "Metal Shop"),
-    ("Woodshop", "Woodshop"),
-    ("Wood shop", "Woodshop"),
-]
-
-
 class LocationExtractor:
 
     """Extracts locations from Meetup event fields."""
 
-    def __init__(self, location_patterns):
+    def __init__(self, location_patterns, default_location):
         """Initialize with a list of tuples containing
         conmpiled location patterns and corresponding locations."""
         self.location_patterns = location_patterns
+        self.default_location = default_location
 
     def extract(self, venue_name, find_us):
         """Extract locations from the Meetup venue name and "how to
@@ -53,13 +30,12 @@ class LocationExtractor:
                 locations.add(location)
         return locations
 
-    @staticmethod
-    def format_locations(location_set):
+    def format_locations(self, location_set):
         """Format a set of locations as an English phrase."""
         if location_set:
-            return LocationExtractor.format_location_list(list(location_set))
+            return self.format_location_list(list(location_set))
         else:
-            return "TBD"
+            return self.default_location
 
     @staticmethod
     def format_location_list(locations):
@@ -73,21 +49,16 @@ class LocationExtractor:
         return "{}, and {}".format(most_locations, locations[-1])
 
     @classmethod
-    def from_location_phrases(cls, location_phrases):
+    def from_location_phrases(cls, location_phrases, default_location):
         """Create an instance from a list of tuples containing
-        location phrases and corresponding locations."""
+        location phrases and corresponding locations and from a
+        default location."""
         location_patterns = []
         for phrase, location in location_phrases:
             words = phrase.split()
             regex = r"(.*)\b{}\b(.*)".format(r"\s+".join(words))
             matcher = re.compile(regex, re.IGNORECASE | re.DOTALL)
             location_patterns.append((matcher, location))
-        return cls(location_patterns)
-
-    @classmethod
-    def from_nova_labs(cls):
-        """Create an instance from the predefined list of tuples
-        containing Nova Labs location phrases and corresponding locations."""
-        return cls.from_location_phrases(NOVA_LABS_LOCATION_PHRASES)
+        return cls(location_patterns, default_location)
 
 # vim: tabstop=8 expandtab shiftwidth=4 softtabstop=4 autoindent
