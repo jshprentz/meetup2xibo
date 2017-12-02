@@ -1,13 +1,15 @@
 """Example configuration should be copied to meetup2xibo/config.py and edited."""
 
-# Meetup API configuration
 MEETUP_API_CONFIG = {
 
     # URL name for Meetup group
     "group_url_name": "NOVA-Makers",
 
-    # API key
-    "api_key": "zvbxrpl",
+    # Meetup API key
+    "api_key": "zvbxrpl"
+}
+
+LOCATION_CONFIG = {
 
     # Default location
     "default_location": "TBD",
@@ -25,7 +27,7 @@ MEETUP_API_CONFIG = {
         ("Metal shop", "Metal Shop"),
         ("Woodshop", "Woodshop"),
         ("Wood shop", "Woodshop"),
-    ],
+    ]
 
 }
 
