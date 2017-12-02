@@ -3,7 +3,6 @@
 import re
 import time
 from collections import namedtuple
-from .location_extractor import LocationExtractor
 
 
 THREE_HOURS_MSEC = 3 * 60 * 60 * 1000
