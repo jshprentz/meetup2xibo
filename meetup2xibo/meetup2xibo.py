@@ -14,14 +14,14 @@ if __name__ == "__main__":
 
     location_extractor = LocationExtractor.from_location_phrases(**LOCATION_CONFIG)
     event_converter = EventConverter(location_extractor)
+    meetup_events = {event_converter.convert(event_json) for event_json in json_events}
 
     import csv
     with open("events.csv", 'w', newline='') as csv_file:
         csv_writer = csv.writer(csv_file)
         csv_writer.writerow(("meetup_id", "name", "start_time", "end_time", "location"))
 
-        for event_json in json_events:
-            event = event_converter.convert(event_json)
+        for event in meetup_events:
             csv_writer.writerow(event)
             
 	
