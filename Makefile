@@ -3,6 +3,14 @@ test:
 	. venv/bin/activate; \
 	pytest --ignore=venv/
 
+test-locals:
+	. venv/bin/activate; \
+	pytest --ignore=venv/ --showlocals
+
+run:
+	. venv/bin/activate; \
+	python -m meetup2xibo.meetup2xibo > run.log
+
 gitlog:
 	git log --oneline --graph --decorate --all
 

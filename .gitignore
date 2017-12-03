@@ -73,3 +73,9 @@ venv/
 
 # Older logs
 *.log.*
+
+# Sample data
+*.csv
+
+# Sensitive files
+config.py
