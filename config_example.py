@@ -1,5 +1,17 @@
 """Example configuration should be copied to meetup2xibo/config.py and edited."""
 
+from logging import INFO, DEBUG
+
+
+LOG_CONFIG = {
+
+    # Log file name
+    "filename": "meetup2xibo.log",
+
+    # Log level
+    "log_level": INFO
+}
+
 MEETUP_API_CONFIG = {
 
     # URL name for Meetup group
