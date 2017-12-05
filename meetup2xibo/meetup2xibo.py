@@ -5,7 +5,7 @@ from config import MEETUP_API_CONFIG, LOCATION_CONFIG
 from .meetup_api import MeetupEventsRetriever
 from .location_extractor import LocationExtractor
 from .event_converter import EventConverter
-from .logging_context import LoggingContext, daily_file_handler, stderr_stream_handler
+from .logging_context import LoggingContext
 import json
 import logging
 
@@ -37,10 +37,12 @@ class Meetup2Xibo:
 
     def logging_context(self):
         """Return a logging context."""
-        file_handler = daily_file_handler(args.logfile)
-        stderr_handler = stderr_stream_handler()
         log_level = logging.DEBUG if self.args.debug else logging.INFO
-        return  LoggingContext(file_handler, stderr_handler, log_level = log_level, name = "meetup2xibo")
+        logging_context =  LoggingContext(log_level = log_level, name = "meetup2xibo")
+        logging_context.log_to_file(self.args.logfile)
+        if self.args.verbose:
+            logging_context.log_to_stderr()
+        return logging_context
 
     def retreive_meetup_json_events(self):
         """Retrieve a list of Meetup events."""

@@ -12,18 +12,30 @@ class LoggingContext:
 
     """Logging context configures logging and reports exit exceptions."""
 
-    def __init__(self, *handlers, log_level = logging.INFO, name=None):
-        """Initialize with some handlers, a log level, and a name."""
-        self.handlers = handlers
+    def __init__(self, name=None, log_level = logging.INFO):
+        """Initialize with a name and a log level."""
         self.log_level = log_level
         self.name = name
+        self.root_logger = logging.getLogger()
 
     def setup_root_logger(self):
         """Setup the root logger with the configured handlers and log level."""
-        root_logger = logging.getLogger()
-        root_logger.setLevel(self.log_level)
-        for handler in self.handlers:
-            root_logger.addHandler(handler)
+        self.root_logger.setLevel(self.log_level)
+
+    def log_to_file(self, filename):
+        """Add a file handler that rotates daily at midnight."""
+        handler = logging.handlers.TimedRotatingFileHandler(
+                filename = filename,
+                when = 'midnight',
+                backupCount = 5)
+        handler.setFormatter(FORMATTER)
+        self.root_logger.addHandler(handler)
+
+    def log_to_stderr(self,):
+        """Add a stream handler that logs to standard error."""
+        handler = logging.StreamHandler()
+        handler.setFormatter(FORMATTER)
+        self.root_logger.addHandler(handler)
 
     def __enter__(self):
         """Enter a 'with' context and return a named logger."""
@@ -38,20 +50,5 @@ class LoggingContext:
         logging.shutdown()
         return True
 
-
-def daily_file_handler(filename):
-    """Return a file handler that rotates daily at midnight."""
-    handler = logging.handlers.TimedRotatingFileHandler(
-            filename = filename,
-            when = 'midnight',
-            backupCount = 5)
-    handler.setFormatter(FORMATTER)
-    return handler
-
-def stderr_stream_handler():
-    """Return a stream handler that logs to standard error."""
-    handler = logging.StreamHandler()
-    handler.setFormatter(FORMATTER)
-    return handler
 
 # vim: tabstop=8 expandtab shiftwidth=4 softtabstop=4 autoindent
