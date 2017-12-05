@@ -1,5 +1,6 @@
 """Example configuration should be copied to meetup2xibo/config.py and edited."""
 
+
 MEETUP_API_CONFIG = {
 
     # URL name for Meetup group
