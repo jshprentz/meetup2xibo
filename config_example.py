@@ -32,5 +32,17 @@ LOCATION_CONFIG = {
 
 }
 
+XIBO_DB_CONFIG = {
+
+    # Connection parameters
+    # (see https://mysqlclient.readthedocs.io/user_guide.html#functions-and-attributes)
+    "user": "xibo",
+    "passwd": "zvbxrpl",
+    "db": "xibo",
+
+    # Required to save results
+    "autocommit": True
+}
+
 
 # vim: tabstop=8 expandtab shiftwidth=4 softtabstop=4 autoindent

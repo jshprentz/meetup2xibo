@@ -7,7 +7,7 @@ from collections import namedtuple
 
 THREE_HOURS_MSEC = 3 * 60 * 60 * 1000
 
-Event = namedtuple("Event", "meetup_id name start_time end_time location")
+Event = namedtuple("Event", "meetup_id name location start_time end_time")
 
 
 class EventConverter:
@@ -24,7 +24,7 @@ class EventConverter:
         duration = event_json.get("duration", THREE_HOURS_MSEC)
         end_time = self.iso_time(event_json["time"] + duration)
         location = self.extract_location(event_json)
-        return Event(meetup_id, name, start_time, end_time, location)
+        return Event(meetup_id, name, location, start_time, end_time)
 
     def extract_location(self, event_json):
         """Extract the location(s) from the Meetup event JSON."""
