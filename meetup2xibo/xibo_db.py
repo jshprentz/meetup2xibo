@@ -12,6 +12,46 @@ SELECT_COLUMN_NAMES = "`id`, " + INSERT_COLUMN_NAMES
 
 UPDATE_ASSIGNMENTS = ", ".join("`{}` = %s".format(name) for name in MEETUP_EVENT_COLUMN_NAMES)
 
+
+class Xibo_DB_Query_Maker:
+
+    """Makes queries for accessing events in the Xibo database."""
+
+    def __init__(self, dataset_number, column_names):
+        """Initialize with a dataset number and a dictionary of
+        Meetup event column names."""
+        self.dataset_number = dataset_number
+        self.column_names = column_names
+
+    def insert_query(self):
+        """Return a query to insert new events."""
+        insert_fields = [field for field in XiboEvent._fields if field != "xibo_id"]
+        insert_columns = [self.column_names[field] for field in insert_fields]
+        columns = ", ".join("`{}`".format(name) for name in insert_columns)
+        values = ", ".join("%({})s".format(field) for field in insert_fields)
+        return "INSERT INTO dataset_{} ({}) VALUES ({})".format(self.dataset_number, columns, values)
+
+    def update_query(self):
+        """Return a query to update an event."""
+        update_fields = [field for field in XiboEvent._fields if field != "xibo_id"]
+        update_columns = [self.column_names[field] for field in update_fields]
+        assignments = ["`{}` = %({})s".format(column, field) for column, field in zip(update_columns, update_fields)]
+        return "UPDATE dataset_{} SET {} WHERE id = %(xibo_id)s".format(self.dataset_number, ", ".join(assignments))
+
+    def delete_query(self):
+        """Return a query to delete an event."""
+        return "DELETE FROM dataset_{} where id = %s".format(self.dataset_number)
+
+    def select_query(self):
+        """Return a query to select events."""
+        xibo_column_names = self.column_names.copy()
+        xibo_column_names['xibo_id'] = "id"
+        select_fields = [field for field in XiboEvent._fields]
+        select_columns = [xibo_column_names[field] for field in select_fields]
+        columns = ", ".join("`{}`".format(name) for name in select_columns)
+        return "SELECT {} FROM dataset_{}".format(columns, self.dataset_number)
+
+
 class Xibo_DB_Connection:
 
     """Hides details of accessing a Xibo database."""
@@ -28,7 +68,7 @@ class Xibo_DB_Connection:
         cursor.execute("SELECT {} FROM dataset_2".format(SELECT_COLUMN_NAMES))
         event_tuples = cursor.fetchall()
         cursor.close()
-        return {XiboEvent(*event_tuple) for event_tuple in event_tuples}
+        return (XiboEvent(*event_tuple) for event_tuple in event_tuples)
 
     def insert_meetup_event(self, meetup_event):
         """Insert a Meetup event into the database."""
