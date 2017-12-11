@@ -44,5 +44,18 @@ XIBO_DB_CONFIG = {
     "autocommit": True
 }
 
+XIBO_DB_COLUMN_NAMES = {
+
+    # Event column names defined via the Xibo web interface
+    "meetup_id": "Meetup ID",
+    "name": "Name",
+    "location": "Location",
+    "start_time": "ISO Start Time",
+    "end_time": "ISO End Time",
+
+    # Internal ID number used by Xibo
+    "xibo_id": "id"
+}
+
 
 # vim: tabstop=8 expandtab shiftwidth=4 softtabstop=4 autoindent

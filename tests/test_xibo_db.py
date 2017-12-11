@@ -8,6 +8,7 @@ COLUMN_NAMES = {
     "location": "foo_location",
     "start_time": "foo_start_time",
     "end_time": "foo_end_time",
+    "xibo_id": "id"
 }
 
 EXPECTED_INSERT_QUERY = "INSERT INTO dataset_1 " \
