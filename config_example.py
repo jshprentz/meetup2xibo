@@ -57,5 +57,8 @@ XIBO_DB_COLUMN_NAMES = {
     "xibo_id": "id"
 }
 
+# API code for Meetup event schedule dataset
+XIBO_DATASET_CODE = "novalabsschedule"
+
 
 # vim: tabstop=8 expandtab shiftwidth=4 softtabstop=4 autoindent

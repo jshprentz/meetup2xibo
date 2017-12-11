@@ -1,7 +1,7 @@
 """Retrieve events from Meetup, extract data to display on signs, and
 update the Xibo database."""
 
-from config import MEETUP_API_CONFIG, LOCATION_CONFIG, XIBO_DB_CONFIG, XIBO_DB_COLUMN_NAMES
+from config import MEETUP_API_CONFIG, LOCATION_CONFIG, XIBO_DB_CONFIG, XIBO_DB_COLUMN_NAMES, XIBO_DATASET_CODE
 from .meetup_api import MeetupEventsRetriever
 from .location_extractor import LocationExtractor
 from .event_converter import EventConverter, Event
@@ -56,7 +56,7 @@ class Meetup2Xibo:
 
     def update_xibo_events(self, meetup_events):
         """Update events in the Xibo database with events downloaded from Meetup."""
-        db_connection = connect_to_xibo_db(XIBO_DB_CONFIG, XIBO_DB_COLUMN_NAMES)
+        db_connection = connect_to_xibo_db(XIBO_DB_CONFIG, XIBO_DB_COLUMN_NAMES, XIBO_DATASET_CODE)
         new_event = Event("12345", "Joel's Birthday", "Kitchen", "2017-11-20 17:00:00", "2017-11-20 19:00:00")
         db_connection.insert_meetup_event(new_event)
         xibo_events = list(db_connection.get_xibo_events())

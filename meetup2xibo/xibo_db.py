@@ -10,37 +10,35 @@ class Xibo_DB_Query_Maker:
 
     """Makes queries for accessing events in the Xibo database."""
 
-    def __init__(self, dataset_number, column_names):
-        """Initialize with a dataset number and a dictionary of
-        Meetup event column names."""
-        self.dataset_number = dataset_number
+    def __init__(self, column_names):
+        """Initialize with a a dictionary of Meetup event column names."""
         self.column_names = column_names
 
-    def insert_query(self):
+    def insert_query(self, dataset_number):
         """Return a query to insert new events."""
         insert_fields = [field for field in XiboEvent._fields if field != "xibo_id"]
         insert_columns = [self.column_names[field] for field in insert_fields]
         columns = ", ".join("`{}`".format(name) for name in insert_columns)
         values = ", ".join("%({})s".format(field) for field in insert_fields)
-        return "INSERT INTO dataset_{} ({}) VALUES ({})".format(self.dataset_number, columns, values)
+        return "INSERT INTO dataset_{} ({}) VALUES ({})".format(dataset_number, columns, values)
 
-    def update_query(self):
+    def update_query(self, dataset_number):
         """Return a query to update an event."""
         update_fields = [field for field in XiboEvent._fields if field != "xibo_id"]
         update_columns = [self.column_names[field] for field in update_fields]
         assignments = ["`{}` = %({})s".format(column, field) for column, field in zip(update_columns, update_fields)]
-        return "UPDATE dataset_{} SET {} WHERE id = %(xibo_id)s".format(self.dataset_number, ", ".join(assignments))
+        return "UPDATE dataset_{} SET {} WHERE id = %(xibo_id)s".format(dataset_number, ", ".join(assignments))
 
-    def delete_query(self):
+    def delete_query(self, dataset_number):
         """Return a query to delete an event."""
-        return "DELETE FROM dataset_{} where id = %s".format(self.dataset_number)
+        return "DELETE FROM dataset_{} where id = %s".format(dataset_number)
 
-    def select_query(self):
+    def select_query(self, dataset_number):
         """Return a query to select events."""
         select_fields = [field for field in XiboEvent._fields]
         select_columns = [self.column_names[field] for field in select_fields]
         columns = ", ".join("`{}`".format(name) for name in select_columns)
-        return "SELECT {} FROM dataset_{}".format(columns, self.dataset_number)
+        return "SELECT {} FROM dataset_{}".format(columns, dataset_number)
 
 
 class Xibo_DB_Connection:
@@ -54,22 +52,38 @@ class Xibo_DB_Connection:
         self.db_connection = db_connection
         self.query_maker = query_maker
 
+    def make_queries(self, dataset_code):
+        """Make various SQL queries to access the dataset identified by an API code."""
+        dataset_number = self.get_dataset_number(dataset_code)
+        self.logger.debug("dataset_number=%s", dataset_number)
+        self.insert_query = self.query_maker.insert_query(dataset_number)
+        self.update_query = self.query_maker.update_query(dataset_number)
+        self.delete_query = self.query_maker.delete_query(dataset_number)
+        self.select_query = self.query_maker.select_query(dataset_number)
+
+    def get_dataset_number(self, dataset_code):
+        """Get the id number for the dataset holding Meetup events."""
+        query = "SELECT DataSetID FROM dataset WHERE code = %s"
+        cursor = self.db_connection.cursor()
+        cursor.execute(query, (dataset_code, ))
+        result = cursor.fetchone()
+        if result == None:
+            raise KeyError('cannot find dataset "{}"'.format(dataset_code))
+        cursor.close()
+        return result[0]
+
     def get_xibo_events(self):
         """Get a list of Xibo events from the database."""
-        query = self.query_maker.select_query()
-        self.logger.debug(query)
         cursor = self.db_connection.cursor()
-        cursor.execute(query)
+        cursor.execute(self.select_query)
         event_tuples = cursor.fetchall()
         cursor.close()
         return (XiboEvent(*event_tuple) for event_tuple in event_tuples)
 
     def insert_meetup_event(self, meetup_event):
         """Insert a Meetup event into the database."""
-        query = self.query_maker.insert_query()
-        self.logger.debug(query)
         cursor = self.db_connection.cursor()
-        cursor.execute(query, meetup_event._asdict())
+        cursor.execute(self.insert_query, meetup_event._asdict())
         self.logger.info("Inserted %s", meetup_event)
         cursor.close()
 
@@ -77,29 +91,28 @@ class Xibo_DB_Connection:
         """Update a Xibo event in the database with a Meetup event."""
         updates = meetup_event._asdict()
         updates["xibo_id"] = xibo_event.xibo_id
-        query = self.query_maker.update_query()
-        self.logger.debug(query)
         cursor = self.db_connection.cursor()
-        cursor.execute(query, updates)
+        cursor.execute(self.update_query, updates)
         self.logger.info("Updated from %s", xibo_event)
         self.logger.info("Updated to %s", meetup_event)
         cursor.close()
 
     def delete_xibo_event(self, xibo_event):
         """Delete a Xibo event from the database."""
-        query = self.query_maker.delete_query()
-        self.logger.debug(query)
         cursor = self.db_connection.cursor()
-        cursor.execute(query, (xibo_event.xibo_id, ))
+        cursor.execute(self.delete_query, (xibo_event.xibo_id, ))
         self.logger.info("Deleted %s", xibo_event)
         cursor.close()
 
 
-def connect_to_xibo_db(db_connect_args, column_names):
+def connect_to_xibo_db(db_connect_args, column_names, dataset_code):
     """Make a connection to the Xibo database with a dictionary
-    of database connection arguments."""
-    query_maker = Xibo_DB_Query_Maker(2, column_names)
+    of database connection arguments, a dictionary mapping internal
+    names to database column names, and a dataset API code."""
+    query_maker = Xibo_DB_Query_Maker(column_names)
     db_connection = MySQLdb.connect(**db_connect_args)
-    return Xibo_DB_Connection(db_connection, query_maker)
+    xibo_connection = Xibo_DB_Connection(db_connection, query_maker)
+    xibo_connection.make_queries(dataset_code)
+    return xibo_connection
 
 # vim: tabstop=8 expandtab shiftwidth=4 softtabstop=4 autoindent

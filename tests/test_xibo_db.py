@@ -32,23 +32,23 @@ EXPECTED_SELECT_QUERY = "SELECT " \
 
 def test_insert_query():
     """Test that the expected insert query is generated."""
-    query_maker = Xibo_DB_Query_Maker(1, COLUMN_NAMES)
-    assert EXPECTED_INSERT_QUERY == query_maker.insert_query()
+    query_maker = Xibo_DB_Query_Maker(COLUMN_NAMES)
+    assert EXPECTED_INSERT_QUERY == query_maker.insert_query(1)
 
 def test_update_query():
     """Test that the expected update query is generated."""
-    query_maker = Xibo_DB_Query_Maker(2, COLUMN_NAMES)
-    assert EXPECTED_UPDATE_QUERY == query_maker.update_query()
+    query_maker = Xibo_DB_Query_Maker(COLUMN_NAMES)
+    assert EXPECTED_UPDATE_QUERY == query_maker.update_query(2)
 
 def test_delete_query():
     """Test that the expected delete query is generated."""
-    query_maker = Xibo_DB_Query_Maker(3, COLUMN_NAMES)
-    assert EXPECTED_DELETE_QUERY == query_maker.delete_query()
+    query_maker = Xibo_DB_Query_Maker(COLUMN_NAMES)
+    assert EXPECTED_DELETE_QUERY == query_maker.delete_query(3)
 
 def test_select_query():
     """Test that the expected select query is generated."""
-    query_maker = Xibo_DB_Query_Maker(4, COLUMN_NAMES)
-    assert EXPECTED_SELECT_QUERY == query_maker.select_query()
+    query_maker = Xibo_DB_Query_Maker(COLUMN_NAMES)
+    assert EXPECTED_SELECT_QUERY == query_maker.select_query(4)
 
 
 # vim: tabstop=8 expandtab shiftwidth=4 softtabstop=4 autoindent
