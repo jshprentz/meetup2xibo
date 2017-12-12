@@ -11,6 +11,7 @@ from  .xibo_db import connect_to_xibo_db
 import json
 import logging
 
+VERSION = "1.0"
 
 class Meetup2Xibo:
 
@@ -24,7 +25,7 @@ class Meetup2Xibo:
 
         with self.logging_context() as logger:
             self.logger = logger
-            logger.info("Start meetup2xibo")
+            logger.info("Start meetup2xibo %s", VERSION)
             json_events = self.retreive_meetup_json_events()
             meetup_events = self.extract_events_from_json(json_events)
             self.update_xibo_events(meetup_events)
