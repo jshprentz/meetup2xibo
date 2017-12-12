@@ -32,7 +32,7 @@ LOCATION_CONFIG = {
 
 }
 
-XIBO_DB_CONFIG = {
+XIBO_DB_CONNECTION = {
 
     # Connection parameters
     # (see https://mysqlclient.readthedocs.io/user_guide.html#functions-and-attributes)
