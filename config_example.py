@@ -47,7 +47,7 @@ XIBO_DB_CONNECTION = {
 XIBO_DB_CONFIG = {
 
     # API code for Meetup event schedule dataset
-    "xibo_dataset_code": "novalabsschedule"
+    "xibo_dataset_code": "novalabsschedule",
 
     # Delete events this number of minutes after ending
     "delete_minutes_after_event": 120
