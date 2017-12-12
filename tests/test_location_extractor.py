@@ -47,21 +47,6 @@ def test_format_location_list(location_list, expected_phrase):
     phrase = extractor.format_location_list(location_list)
     assert expected_phrase == phrase
 
-@pytest.mark.parametrize("location_list,expected_phrase", test_location_lists)
-def test_format_locations(location_list, expected_phrase):
-    """Test formatting location sets as a phrase."""
-    location_set = set(location_list)
-    extractor = LocationExtractor(None, None)
-    phrase = extractor.format_locations(location_set)
-    assert expected_phrase == phrase
-
-def test_format_locations_empty():
-    """Test formatting empty location sets as a phrase."""
-    location_set = set()
-    extractor = LocationExtractor(None, "Bar")
-    phrase = extractor.format_locations(location_set)
-    assert "Bar" == phrase
-
 
 test_location_phrases = [
     ("Nova Labs (Classroom A and B)", ["Classroom A/B"]),

@@ -19,14 +19,20 @@ class LocationExtractor:
     def extract(self, venue_name, find_us):
         """Extract locations from the Meetup venue name and "how to
         find us" information."""
+        location_list = self.extract_location_list(venue_name, find_us)
+        if location_list:
+            return self.format_location_list(location_list)
+        self.logger.warning(
+            'Cannot extract location. venue_name="{}" find_us="{}"'
+            .format(venue_name, find_us))
+        return self.default_location
+
+    def extract_location_list(self, venue_name, find_us):
+        """Extract a list of locations from the Meetup venue name
+        and "how to find us" information."""
         venue_name_locations = self.extract_from_text(venue_name)
         find_us_locations = self.extract_from_text(find_us)
-        combined_locations = venue_name_locations.union(find_us_locations)
-        if not combined_locations:
-            self.logger.warning(
-                'Cannot extract location. venue_name="{}" find_us="{}"'
-                .format(venue_name, find_us))
-        return self.format_locations(combined_locations)
+        return list(venue_name_locations.union(find_us_locations))
 
     def extract_from_text(self, text):
         """Return a set of locations extracted from text."""
@@ -37,13 +43,6 @@ class LocationExtractor:
                 text = "|".join(match.groups())
                 locations.add(location)
         return locations
-
-    def format_locations(self, location_set):
-        """Format a set of locations as an English phrase."""
-        if location_set:
-            return self.format_location_list(list(location_set))
-        else:
-            return self.default_location
 
     @staticmethod
     def format_location_list(locations):
