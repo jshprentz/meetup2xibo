@@ -1,11 +1,14 @@
 """Extracts locations from Meetup event fields."""
 
 import re
+import logging
 
 
 class LocationExtractor:
 
     """Extracts locations from Meetup event fields."""
+
+    logger = logging.getLogger("LocationExtractor")
 
     def __init__(self, location_patterns, default_location):
         """Initialize with a list of tuples containing
@@ -18,7 +21,12 @@ class LocationExtractor:
         find us" information."""
         venue_name_locations = self.extract_from_text(venue_name)
         find_us_locations = self.extract_from_text(find_us)
-        return self.format_locations(venue_name_locations.union(find_us_locations))
+        combined_locations = venue_name_locations.union(find_us_locations)
+        if not combined_locations:
+            self.logger.warning(
+                'Cannot extract location. venue_name="{}" find_us="{}"'
+                .format(venue_name, find_us))
+        return self.format_locations(combined_locations)
 
     def extract_from_text(self, text):
         """Return a set of locations extracted from text."""

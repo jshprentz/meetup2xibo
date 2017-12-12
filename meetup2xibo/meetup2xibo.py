@@ -24,9 +24,11 @@ class Meetup2Xibo:
 
         with self.logging_context() as logger:
             self.logger = logger
+            logger.info("Start meetup2xibo")
             json_events = self.retreive_meetup_json_events()
             meetup_events = self.extract_events_from_json(json_events)
             self.update_xibo_events(meetup_events)
+            logger.info("End meetup2xibo")
 
     def logging_context(self):
         """Return a logging context."""
@@ -41,7 +43,7 @@ class Meetup2Xibo:
         """Retrieve a list of Meetup events."""
         retriever = MeetupEventsRetriever(**MEETUP_API_CONFIG)
         json_events = retriever.retrieve_events_json()
-        self.logger.info("JSON retrieved")
+        self.logger.debug("JSON retrieved")
         return json_events
 
     def extract_events_from_json(self, json_events):
@@ -49,7 +51,7 @@ class Meetup2Xibo:
         location_extractor = LocationExtractor.from_location_phrases(**LOCATION_CONFIG)
         event_converter = EventConverter(location_extractor)
         meetup_events = (event_converter.convert(event_json) for event_json in json_events)
-        self.logger.info("Events converted")
+        self.logger.debug("Events converted")
         return meetup_events
 
     def update_xibo_events(self, meetup_events):
