@@ -44,6 +44,15 @@ XIBO_DB_CONNECTION = {
     "autocommit": True
 }
 
+XIBO_DB_CONFIG = {
+
+    # API code for Meetup event schedule dataset
+    "xibo_dataset_code": "novalabsschedule"
+
+    # Delete events this number of minutes after ending
+    "delete_minutes_after_event": 120
+}
+
 XIBO_DB_COLUMN_NAMES = {
 
     # Event column names defined via the Xibo web interface
@@ -56,9 +65,6 @@ XIBO_DB_COLUMN_NAMES = {
     # Internal ID number used by Xibo
     "xibo_id": "id"
 }
-
-# API code for Meetup event schedule dataset
-XIBO_DATASET_CODE = "novalabsschedule"
 
 
 # vim: tabstop=8 expandtab shiftwidth=4 softtabstop=4 autoindent
