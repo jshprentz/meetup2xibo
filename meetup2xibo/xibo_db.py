@@ -1,5 +1,6 @@
 from collections import namedtuple
 import logging
+import time
 import MySQLdb
 
 
@@ -10,9 +11,11 @@ class Xibo_DB_Query_Maker:
 
     """Makes queries for accessing events in the Xibo database."""
 
-    def __init__(self, column_names):
-        """Initialize with a a dictionary of Meetup event column names."""
+    def __init__(self, column_names, delete_minutes_after_event):
+        """Initialize with a a dictionary of Meetup event column names
+        and a number of minutes after an event."""
         self.column_names = column_names
+        self.delete_minutes_after_event = delete_minutes_after_event
 
     def insert_query(self, dataset_number):
         """Return a query to insert new events."""
@@ -31,7 +34,19 @@ class Xibo_DB_Query_Maker:
 
     def delete_query(self, dataset_number):
         """Return a query to delete an event."""
-        return "DELETE FROM dataset_{} where id = %s".format(dataset_number)
+        return self.delete_query_now(dataset_number, time.time())
+
+    def delete_query_now(self, dataset_number, now):
+        """Return a query to delete a future ending event or an event
+        that ended some time past. Now is measured in epoch seconds."""
+        future = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(now + 60))
+        past = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(now - self.delete_minutes_after_event * 60))
+        return "DELETE FROM dataset_{dataset_number} WHERE id = %s AND " \
+            "(`{end_time_column}` > '{future}' OR `{end_time_column}` < '{past}')".format(
+            dataset_number = dataset_number,
+            end_time_column = self.column_names['end_time'],
+            future = future,
+            past = past)
 
     def select_query(self, dataset_number):
         """Return a query to select events."""
@@ -105,14 +120,14 @@ class Xibo_DB_Connection:
         cursor.close()
 
 
-def connect_to_xibo_db(db_connect_args, column_names, dataset_code):
+def connect_to_xibo_db(db_connect_args, column_names, db_config):
     """Make a connection to the Xibo database with a dictionary
     of database connection arguments, a dictionary mapping internal
-    names to database column names, and a dataset API code."""
-    query_maker = Xibo_DB_Query_Maker(column_names)
+    names to database column names, and other database configurations."""
+    query_maker = Xibo_DB_Query_Maker(column_names, db_config["delete_minutes_after_event"])
     db_connection = MySQLdb.connect(**db_connect_args)
     xibo_connection = Xibo_DB_Connection(db_connection, query_maker)
-    xibo_connection.make_queries(dataset_code)
+    xibo_connection.make_queries(db_config["xibo_dataset_code"])
     return xibo_connection
 
 # vim: tabstop=8 expandtab shiftwidth=4 softtabstop=4 autoindent

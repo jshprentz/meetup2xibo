@@ -23,31 +23,35 @@ EXPECTED_UPDATE_QUERY = "UPDATE dataset_2 SET " \
     "`foo_end_time` = %(end_time)s " \
     "WHERE id = %(xibo_id)s"
 
-EXPECTED_DELETE_QUERY = "DELETE FROM dataset_3 where id = %s"
+EXPECTED_DELETE_QUERY = "DELETE FROM dataset_3 WHERE id = %s " \
+    "AND (`foo_end_time` > '2017-12-12 12:17:04' " \
+    "OR `foo_end_time` < '2017-12-12 11:13:04')"
 
 EXPECTED_SELECT_QUERY = "SELECT " \
     "`id`, `foo_meetup_id`, `foo_name`, `foo_location`, `foo_start_time`, `foo_end_time` " \
     "FROM dataset_4"
 
+# 2017-12-12 12:16:04 EST
+NOW = 1513098964
 
 def test_insert_query():
     """Test that the expected insert query is generated."""
-    query_maker = Xibo_DB_Query_Maker(COLUMN_NAMES)
+    query_maker = Xibo_DB_Query_Maker(COLUMN_NAMES, 63)
     assert EXPECTED_INSERT_QUERY == query_maker.insert_query(1)
 
 def test_update_query():
     """Test that the expected update query is generated."""
-    query_maker = Xibo_DB_Query_Maker(COLUMN_NAMES)
+    query_maker = Xibo_DB_Query_Maker(COLUMN_NAMES, 63)
     assert EXPECTED_UPDATE_QUERY == query_maker.update_query(2)
 
-def test_delete_query():
+def test_delete_query_now():
     """Test that the expected delete query is generated."""
-    query_maker = Xibo_DB_Query_Maker(COLUMN_NAMES)
-    assert EXPECTED_DELETE_QUERY == query_maker.delete_query(3)
+    query_maker = Xibo_DB_Query_Maker(COLUMN_NAMES, 63)
+    assert EXPECTED_DELETE_QUERY == query_maker.delete_query_now(3, NOW)
 
 def test_select_query():
     """Test that the expected select query is generated."""
-    query_maker = Xibo_DB_Query_Maker(COLUMN_NAMES)
+    query_maker = Xibo_DB_Query_Maker(COLUMN_NAMES, 63)
     assert EXPECTED_SELECT_QUERY == query_maker.select_query(4)
 
 
