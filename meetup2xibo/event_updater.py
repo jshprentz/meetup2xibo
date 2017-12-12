@@ -1,10 +1,13 @@
 """Updates the events in the Xibo database to conform to events from Meetup.com."""
 
+import logging
 
 class EventUpdater:
 
     """Updates events in a Xibo database by inserting, updating, or deleting 
     events to make the Xibo events conform to Meetup.com events."""
+
+    logger = logging.getLogger("EventUpdater")
 
     def __init__(self, meetup_events, xibo_events, db_connection):
         """Initialize with lists (or iterables) of Meetup and Xibo events
@@ -35,6 +38,7 @@ class EventUpdater:
                 and xibo_event.location == meetup_event.location \
                 and xibo_event.start_time == meetup_event.start_time \
                 and xibo_event.end_time == meetup_event.end_time:
+            self.logger.debug("Unchanged %s", xibo_event)
             return
         self.db_connection.update_xibo_event(xibo_event, meetup_event)
 
