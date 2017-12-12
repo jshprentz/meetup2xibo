@@ -16,8 +16,8 @@ class EventUpdater:
     def update_xibo(self):
         """Update the Xibo database by inserting, updating, or deleting
         events to make the Xibo events conform to Meetup.com events."""
-        ids_from_meetup = Set(self.meetup_events.keys())
-        ids_from_xibo = Set(self.xibo_events.keys())
+        ids_from_meetup = set(self.meetup_events.keys())
+        ids_from_xibo = set(self.xibo_events.keys())
         self.update_known_events(ids_from_meetup & ids_from_xibo)
         self.insert_new_events(ids_from_meetup - ids_from_xibo)
         self.delete_unknown_events(ids_from_xibo - ids_from_meetup)
@@ -46,6 +46,9 @@ class EventUpdater:
 
     def delete_unknown_events(self, event_ids):
         """Delete unknown (to Meetup) events given a set of event IDs."""
+        for event_id in event_ids:
+            xibo_event = self.xibo_events[event_id]
+            self.db_connection.delete_xibo_event(xibo_event)
 
     @staticmethod
     def event_list_to_dict(events):
