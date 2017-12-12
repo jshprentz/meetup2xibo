@@ -11,7 +11,7 @@ from  .xibo_db import connect_to_xibo_db
 import json
 import logging
 
-VERSION = "1.0"
+VERSION = "1.0.1"
 
 class Meetup2Xibo:
 
