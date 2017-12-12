@@ -37,14 +37,15 @@ class Xibo_DB_Query_Maker:
         return self.delete_query_now(dataset_number, time.time())
 
     def delete_query_now(self, dataset_number, now):
-        """Return a query to delete a future ending event or an event
+        """Return a query to delete a future starting event or an event
         that ended some time past. Now is measured in epoch seconds."""
         future = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(now + 60))
         past = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(now - self.delete_minutes_after_event * 60))
         return "DELETE FROM dataset_{dataset_number} WHERE id = %s AND " \
-            "(`{end_time_column}` > '{future}' OR `{end_time_column}` < '{past}')".format(
+            "(`{start_time_column}` > '{future}' OR `{end_time_column}` < '{past}')".format(
             dataset_number = dataset_number,
             end_time_column = self.column_names['end_time'],
+            start_time_column = self.column_names['start_time'],
             future = future,
             past = past)
 

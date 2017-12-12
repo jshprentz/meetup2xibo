@@ -24,7 +24,7 @@ EXPECTED_UPDATE_QUERY = "UPDATE dataset_2 SET " \
     "WHERE id = %(xibo_id)s"
 
 EXPECTED_DELETE_QUERY = "DELETE FROM dataset_3 WHERE id = %s " \
-    "AND (`foo_end_time` > '2017-12-12 12:17:04' " \
+    "AND (`foo_start_time` > '2017-12-12 12:17:04' " \
     "OR `foo_end_time` < '2017-12-12 11:13:04')"
 
 EXPECTED_SELECT_QUERY = "SELECT " \
