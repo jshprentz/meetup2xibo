@@ -9,12 +9,15 @@ class LocationExtractor:
     """Extracts locations from Meetup event fields."""
 
     logger = logging.getLogger("LocationExtractor")
+    find_us_pattern = re.compile(r'^\s*\[(.*)\]\s*$')
 
-    def __init__(self, location_patterns, default_location):
+    def __init__(self, location_patterns, default_location, default_location_matcher):
         """Initialize with a list of tuples containing
-        conmpiled location patterns and corresponding locations."""
+        conmpiled location patterns and corresponding locations
+        and a default location with its pattern matcher."""
         self.location_patterns = location_patterns
         self.default_location = default_location
+        self.default_location_matcher = default_location_matcher
 
     def extract(self, venue_name, find_us):
         """Extract locations from the Meetup venue name and "how to
@@ -28,10 +31,33 @@ class LocationExtractor:
     def extract_default_location(self, venue_name, find_us):
         """Extract the default location from the  Meetup venue name
         and "how to find us" information."""
+        matcher = self.default_location_matcher
+        match = matcher.match(venue_name) or matcher.match(find_us)
+        if match:
+            self.logger.info(
+                'Using default location. venue_name="{}" find_us="{}"'
+                .format(venue_name, find_us))
+            return self.default_location
+        else:
+            return self.extract_unknown_location(venue_name, find_us)
+
+    def extract_unknown_location(self, venue_name, find_us):
+        """Extract an unknown location  from the  Meetup venue name
+        and "how to find us" information."""
         self.logger.warning(
             'Cannot extract location. venue_name="{}" find_us="{}"'
             .format(venue_name, find_us))
-        return self.default_location
+        match = self.find_us_pattern.search(find_us)
+        if match:
+            find_us_content = match.group(1)
+        else:
+            find_us_content = find_us
+        nonempty_phrases = list(filter(None, (phrase.strip() for phrase in [venue_name, find_us_content])))
+        if nonempty_phrases:
+            return " - ".join(nonempty_phrases)
+        else:
+            return self.default_location
+
 
     def extract_location_list(self, venue_name, find_us):
         """Extract a list of locations from the Meetup venue name
@@ -78,7 +104,8 @@ class LocationExtractor:
         for phrase, location in location_phrases:
             matcher = cls.matcher_from_phrase(phrase)
             location_patterns.append((matcher, location))
-        return cls(location_patterns, default_location)
+        default_location_matcher = cls.matcher_from_phrase(default_location)
+        return cls(location_patterns, default_location, default_location_matcher)
 
 
 # vim: tabstop=8 expandtab shiftwidth=4 softtabstop=4 autoindent
