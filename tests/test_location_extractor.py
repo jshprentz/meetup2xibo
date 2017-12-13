@@ -20,11 +20,11 @@ test_event_locations = [
     ("*Nova Labs (Classroom A and B)","[Metal shop]","Classroom A/B and Metal Shop"),
     ("Nova Labs","[Metal shop]","Metal Shop"),
     ("Nova Labs","[Metalshop]","Metal Shop"),
-    ("Nova Labs","See http://nova-labs.org/contact/#parking for map and parking details.","Nova Labs"),
+    ("Nova  Labs","See http://nova-labs.org/contact/#parking for map and parking details.","Nova Labs"),
+    ("NVCC Seefeldt Building", "Seefeldt Building room #228", "NVCC Seefeldt Building - Seefeldt Building room #228"),
 ]
 
 
-#@pytest.mark.xfail(reason="Not implemented yet")
 @pytest.mark.parametrize("venue_name,find_us,expected_location", test_event_locations)
 def test_extract_location(venue_name, find_us, expected_location):
     """Test extracting a location from an event's venue name and "how to
@@ -43,24 +43,9 @@ test_location_lists = [
 @pytest.mark.parametrize("location_list,expected_phrase", test_location_lists)
 def test_format_location_list(location_list, expected_phrase):
     """Test formatting location lists as a phrase."""
-    extractor = LocationExtractor(None, None)
+    extractor = LocationExtractor(None, None, None)
     phrase = extractor.format_location_list(location_list)
     assert expected_phrase == phrase
-
-@pytest.mark.parametrize("location_list,expected_phrase", test_location_lists)
-def test_format_locations(location_list, expected_phrase):
-    """Test formatting location sets as a phrase."""
-    location_set = set(location_list)
-    extractor = LocationExtractor(None, None)
-    phrase = extractor.format_locations(location_set)
-    assert expected_phrase == phrase
-
-def test_format_locations_empty():
-    """Test formatting empty location sets as a phrase."""
-    location_set = set()
-    extractor = LocationExtractor(None, "Bar")
-    phrase = extractor.format_locations(location_set)
-    assert "Bar" == phrase
 
 
 test_location_phrases = [

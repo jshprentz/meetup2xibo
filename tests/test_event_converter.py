@@ -49,7 +49,7 @@ EVENT_WITH_UNKNOWN_VENUE = Event(
     name = "Computational Mathematics: P=NP for students and engineers at Nova Labs",
     start_time = "2017-11-20 19:15:00",
     end_time = "2017-11-20 21:30:00",
-    location = "Nova Labs")
+    location = "Somewhere else - Somewhere")
 
 
 JSON_EVENT_WITHOUT_VENUE = {
