@@ -21,4 +21,6 @@ gitlog:
 install:
 	virtualenv -p python3.5 venv
 	. venv/bin/activate; \
-	pip3.5 install -r requirements.txt
+	pip3.5 install --upgrade pip setuptools wheel; \
+	pip3.5 install -r requirements.txt; \
+	pip3.5 install -r requirements-test.txt
