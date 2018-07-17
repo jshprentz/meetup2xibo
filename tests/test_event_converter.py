@@ -12,6 +12,8 @@ import pytest
 
 END_OF_EPOCH_SEC = (1 << 31) - 1
 
+EXPECTED_TIMEZONES = ["EST", "EDT"]
+
 event_prefixes = text(alphabet = string.ascii_uppercase, min_size = 2, max_size = 2)
 event_names = text(min_size = 1)
 
@@ -181,5 +183,9 @@ def test_convert(json_event, expected_event):
     event = converter.convert(json_event)
     assert expected_event == event
 
+def test_timezone():
+    """Test that the timezone is set to an expected value."""
+    local_time = time.localtime()
+    assert local_time.tm_zone in EXPECTED_TIMEZONES
 
 # vim: tabstop=8 expandtab shiftwidth=4 softtabstop=4 autoindent
