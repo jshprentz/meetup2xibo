@@ -147,12 +147,12 @@ LOCATION_PHRASES = [
 @given(sec_since_epoch = integers(0, END_OF_EPOCH_SEC))
 def test_iso_time_converts_back(sec_since_epoch):
     """Test that the ISO time for some seconds since the Unix
-    epoch converts back to that seconds value."""
+    epoch converts as expected."""
+    expected_iso_time = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(sec_since_epoch))
     converter = EventConverter(None)
-    iso_time = converter.iso_time(sec_since_epoch * 1000)
-    parsed_time = time.strptime(iso_time, "%Y-%m-%d %H:%M:%S")
-    recovered_secs_since_epoch = time.mktime(parsed_time)
-    assert sec_since_epoch == recovered_secs_since_epoch
+    msec_since_epoch = sec_since_epoch * 1000
+    iso_time = converter.iso_time(msec_since_epoch)
+    assert expected_iso_time == iso_time
 
 
 @given(event_name = text())

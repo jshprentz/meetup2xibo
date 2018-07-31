@@ -1,8 +1,8 @@
 """Converts Meetup events from JSON dictionaries into event objects."""
 
 import re
-import time
 from collections import namedtuple
+from datetime import datetime
 
 
 THREE_HOURS_MSEC = 3 * 60 * 60 * 1000
@@ -37,7 +37,7 @@ class EventConverter:
     def iso_time(epoch_ms):
         """Format a time represented as milliseconds since the Unix epoch
         in ISO YYYY-MM-DD hh:mm:ss format."""
-        return time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(epoch_ms/1000))
+        return datetime.fromtimestamp(epoch_ms/1000).strftime('%Y-%m-%d %H:%M:%S')
 
     @staticmethod
     def edit_name(raw_name):
