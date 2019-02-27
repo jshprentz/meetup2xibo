@@ -72,7 +72,8 @@ def inject_site_cert_assurer(application_scope):
     return SiteCertAssurer(
         sys_ca_path = certifi.where(),
         site_ca_path = application_scope.site_ca_path,
-        site_url = inject_cert_validation_url(application_scope))
+        site_url = inject_cert_validation_url(application_scope),
+        user_agent = inject_user_agent(application_scope))
 
 def inject_cert_validation_url(application_scope):
     """Return the URL for certificate validation

@@ -10,13 +10,14 @@ class SiteCertAssurer(object):
 
     logger = logging.getLogger("SiteCertAssurer")
     
-    def __init__ (self, sys_ca_path, site_ca_path, site_url):
+    def __init__ (self, sys_ca_path, site_ca_path, site_url, user_agent):
         """Initialize with paths to the Python Requests certificate
         authority file and the site-specific certificate authority file
-        (in PEM format) and a site URL."""
+        (in PEM format), a site URL, and a user agent for HTTPS requests."""
         self.sys_ca_path = sys_ca_path
         self.site_ca_path = site_ca_path
         self.site_url = site_url
+        self.user_agent = user_agent
 
     def assure_site_cert(self):
         """Assure that the site at URL has a valid SSL certificate we recognize."""
@@ -27,7 +28,8 @@ class SiteCertAssurer(object):
     def have_valid_cert(self):
         """Check that we have a valid SSL certificate for the site URL."""
         try:
-            requests.get(self.site_url)
+            headers = {'User-Agent': self.user_agent}
+            requests.get(self.site_url, headers = headers)
             return True
         except requests.exceptions.SSLError as err:
             return False
@@ -55,7 +57,7 @@ def assure_site_cert(site_ca_path, site_url):
     for accessing the URL."""
     if site_ca_path and site_url:
         sys_ca_path = certifi.where()
-        assurer = SiteCertAssurer(sys_ca_path, site_ca_path, site_url)
+        assurer = SiteCertAssurer(sys_ca_path, site_ca_path, site_url, "test/456")
         assurer.assure_site_cert()
 
 
