@@ -75,9 +75,9 @@ def test_assure_site_cert_known(mocker):
 def test_assure_site_cert_unknown(mocker):
     """Test assuring a site certificate when it is unknown."""
     assurer = SiteCertAssurer(
-            sys_ca_path = None,
-            site_ca_path = None,
-            site_url = None)
+            sys_ca_path = "/foo",
+            site_ca_path = "/bar",
+            site_url = "https://example.com")
     mocker.patch.object(assurer, "have_valid_cert", return_value = False)
     mocker.patch.object(assurer, "append_site_cert")
     assurer.assure_site_cert()

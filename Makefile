@@ -1,6 +1,7 @@
 
 test:
 	. venv/bin/activate; \
+	. ./test.config; \
 	pytest --ignore=venv/
 
 test-locals:
@@ -9,11 +10,13 @@ test-locals:
 
 run:
 	. venv/bin/activate; \
-	python -m meetup2xibo.meetup2xibo > run.log
+	. ./run.config; \
+	python -m meetup2xibo > run.log
 
 debug:
 	. venv/bin/activate; \
-	python -m meetup2xibo.meetup2xibo -v -d > run.log
+	. ./run.config; \
+	python -m meetup2xibo -v -d > run.log
 
 gitlog:
 	git log --oneline --graph --decorate --all

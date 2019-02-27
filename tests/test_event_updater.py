@@ -2,7 +2,7 @@
 
 from .context import meetup2xibo
 from meetup2xibo.event_converter import Event
-from meetup2xibo.xibo_db import XiboEvent
+from meetup2xibo.xibo_event import XiboEvent
 from meetup2xibo.event_updater import EventUpdater
 from unittest.mock import MagicMock, call
 
@@ -59,26 +59,26 @@ def test_init():
 
 def test_insert_new_events():
     """Test inserting new events."""
-    mock_db_connection = MagicMock()
-    event_updater = EventUpdater(MEETUP_EVENTS, XIBO_EVENTS, mock_db_connection)
+    mock_xibo_event_crud = MagicMock()
+    event_updater = EventUpdater(MEETUP_EVENTS, XIBO_EVENTS, mock_xibo_event_crud)
     insert_ids = {"A01", "C01"}
     event_updater.insert_new_events(insert_ids)
     calls = [call(NEW_MEETUP_EVENT), call(UNCHANGED_MEETUP_EVENT)]
-    mock_db_connection.insert_meetup_event.assert_has_calls(calls, any_order = True)
+    mock_xibo_event_crud.insert_meetup_event.assert_has_calls(calls, any_order = True)
 
 def test_update_known_events():
     """Test updating known events."""
-    mock_db_connection = MagicMock()
-    event_updater = EventUpdater(MEETUP_EVENTS, XIBO_EVENTS, mock_db_connection)
+    mock_xibo_event_crud = MagicMock()
+    event_updater = EventUpdater(MEETUP_EVENTS, XIBO_EVENTS, mock_xibo_event_crud)
     update_ids = {"B01", "C01"}
     event_updater.update_known_events(update_ids)
     calls = [call(UPDATED_XIBO_EVENT, UPDATED_MEETUP_EVENT)]
-    mock_db_connection.update_xibo_event.assert_has_calls(calls, any_order = True)
+    mock_xibo_event_crud.update_xibo_event.assert_has_calls(calls, any_order = True)
 
 def test_delete_unknown_events():
     """Test deleting unknown events."""
-    mock_db_connection = MagicMock()
-    event_updater = EventUpdater(MEETUP_EVENTS, XIBO_EVENTS, mock_db_connection)
+    mock_xibo_event_crud = MagicMock()
+    event_updater = EventUpdater(MEETUP_EVENTS, XIBO_EVENTS, mock_xibo_event_crud)
     update_ids = {"D01", "D02", "D03"}
     event_updater.delete_unknown_events(update_ids)
     calls = [
@@ -86,6 +86,6 @@ def test_delete_unknown_events():
         call(DELETED_CURRENT_XIBO_EVENT),
         call(DELETED_FUTURE_XIBO_EVENT),
     ]
-    mock_db_connection.delete_xibo_event.assert_has_calls(calls, any_order = True)
+    mock_xibo_event_crud.delete_xibo_event.assert_has_calls(calls, any_order = True)
 
 # vim: tabstop=8 expandtab shiftwidth=4 softtabstop=4 autoindent

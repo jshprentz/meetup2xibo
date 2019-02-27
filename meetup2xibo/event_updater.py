@@ -4,17 +4,17 @@ import logging
 
 class EventUpdater:
 
-    """Updates events in a Xibo database by inserting, updating, or deleting 
+    """Updates events in a Xibo dataset by inserting, updating, or deleting 
     events to make the Xibo events conform to Meetup.com events."""
 
     logger = logging.getLogger("EventUpdater")
 
-    def __init__(self, meetup_events, xibo_events, db_connection):
+    def __init__(self, meetup_events, xibo_events, xibo_event_crud):
         """Initialize with lists (or iterables) of Meetup and Xibo events
-        and a Xibo database connection."""
+        and a Xibo event CRUD manager."""
         self.meetup_events = self.event_list_to_dict(meetup_events)
         self.xibo_events = self.event_list_to_dict(xibo_events)
-        self.db_connection = db_connection
+        self.xibo_event_crud = xibo_event_crud
 
     def update_xibo(self):
         """Update the Xibo database by inserting, updating, or deleting
@@ -40,19 +40,19 @@ class EventUpdater:
                 and xibo_event.end_time == meetup_event.end_time:
             self.logger.debug("Unchanged %s", xibo_event)
             return
-        self.db_connection.update_xibo_event(xibo_event, meetup_event)
+        self.xibo_event_crud.update_xibo_event(xibo_event, meetup_event)
 
     def insert_new_events(self, event_ids):
         """Insert new events given a set of event IDs."""
         for event_id in event_ids:
             meetup_event = self.meetup_events[event_id]
-            self.db_connection.insert_meetup_event(meetup_event)
+            self.xibo_event_crud.insert_meetup_event(meetup_event)
 
     def delete_unknown_events(self, event_ids):
         """Delete unknown (to Meetup) events given a set of event IDs."""
         for event_id in event_ids:
             xibo_event = self.xibo_events[event_id]
-            self.db_connection.delete_xibo_event(xibo_event)
+            self.xibo_event_crud.delete_xibo_event(xibo_event)
 
     @staticmethod
     def event_list_to_dict(events):

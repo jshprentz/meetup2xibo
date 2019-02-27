@@ -20,8 +20,9 @@ class SiteCertAssurer(object):
 
     def assure_site_cert(self):
         """Assure that the site at URL has a valid SSL certificate we recognize."""
-        if not self.have_valid_cert():
-            self.append_site_cert()
+        if self.site_ca_path and self.site_url and self.sys_ca_path:
+            if not self.have_valid_cert():
+                self.append_site_cert()
 
     def have_valid_cert(self):
         """Check that we have a valid SSL certificate for the site URL."""
@@ -52,9 +53,10 @@ class SiteCertAssurer(object):
 def assure_site_cert(site_ca_path, site_url):
     """Assure that the site's certificate authority is available
     for accessing the URL."""
-    sys_ca_path = certifi.where()
-    assurer = SiteCertAssurer(sys_ca_path, site_ca_path, site_url)
-    assurer.assure_site_cert()
+    if site_ca_path and site_url:
+        sys_ca_path = certifi.where()
+        assurer = SiteCertAssurer(sys_ca_path, site_ca_path, site_url)
+        assurer.assure_site_cert()
 
 
 # vim: tabstop=8 expandtab shiftwidth=4 softtabstop=4 autoindent
