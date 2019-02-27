@@ -45,6 +45,7 @@ coverage.xml
 *,cover
 .hypothesis/
 .pytest_cache/
+tests/xibo_responses/
 
 # Translations
 *.mo
@@ -80,3 +81,6 @@ venv/
 
 # Sensitive files
 config.py
+run.config
+test.config
+TODO
