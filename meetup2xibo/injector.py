@@ -3,9 +3,10 @@
 from .logging_context import LoggingContext
 from .meetup2xibo import Meetup2Xibo, XiboSessionProcessor, XiboEventCrudProcessor
 from .meetup_api import MeetupEventsRetriever
-from .location_extractor import LocationExtractor
+from .location_builder import LocationBuilder
 from .event_converter import EventConverter
 from .event_updater import EventUpdater
+from .phrase_mapper import PhraseMapper
 from .xibo_api_url_builder import XiboApiUrlBuilder
 from .site_cert_assurer import SiteCertAssurer
 from .oauth2_session_starter import Oauth2SessionStarter
@@ -13,6 +14,7 @@ from .xibo_api import XiboApi
 from .xibo_dataset_id_finder import XiboDatasetIdFinder
 from .xibo_event import XiboEvent, XiboEventColumnNameManager, XiboEventColumnIdManager
 from .xibo_event_crud import XiboEventCrud
+from ahocorasick import Automaton
 from pathlib import Path
 import os
 import certifi
@@ -46,18 +48,49 @@ def inject_meetup_events_retriever(application_scope):
         group_url_name = application_scope.meetup_group_url_name,
         api_key = application_scope.meetup_api_key)
 
-def inject_location_extractor(application_scope):
-    """Return a loaction exctractor
+def inject_location_builder(application_scope):
+    """Return a loaction builder
     configured by an application scope."""
-    return LocationExtractor.from_location_phrases(
-        application_scope.location_phrase_tuples,
+    return LocationBuilder(
+        inject_phrase_mappers(application_scope),
         application_scope.default_location)
+
+def inject_phrase_mappers(application_scope):
+    """Return a list of phrase mappers
+    configured by an application scope."""
+    return [
+        inject_locations_phrase_mapper(application_scope),
+        inject_more_locations_phrase_mapper(application_scope),
+        ]
+
+def inject_locations_phrase_mapper(application_scope):
+    """Return a phrase mapper for location phrases
+    configured by an application scope."""
+    return inject_phrase_mapper(
+        application_scope,
+        application_scope.location_phrase_tuples)
+
+def inject_more_locations_phrase_mapper(application_scope):
+    """Return a phrase mapper for more location phrases
+    configured by an application scope."""
+    return inject_phrase_mapper(
+        application_scope,
+        application_scope.more_location_phrase_tuples)
+
+def inject_phrase_mapper(application_scope, phrase_tuples):
+    """Return a phrase mapper configured by an application scope and a list of
+    tuples containing a phrase and its preferred phrase."""
+    return PhraseMapper(inject_automaton(), phrase_tuples).setup()
+
+def inject_automaton():
+    """Return an Aho-Corasick automaton."""
+    return Automaton()
 
 def inject_event_converter(application_scope):
     """Return an event converter
     configured by an application scope."""
     return EventConverter(
-        inject_location_extractor(application_scope))
+        inject_location_builder(application_scope))
 
 def inject_xibo_api_url_builder(application_scope):
     """Return a Xibo API URL builder

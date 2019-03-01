@@ -81,6 +81,17 @@ class ApplicationScope:
         return self._env_vars["MEETUP_ID_COLUMN_NAME"]
 
     @property
+    def more_location_phrases(self):
+        return self._env_vars["MORE_LOCATION_PHRASES"]
+
+    @property
+    def more_location_phrase_tuples(self):
+        return (
+            PhraseLocation(**dict) for dict in
+            json.loads(self.more_location_phrases)
+        )
+
+    @property
     def name_column_name(self):
         return self._env_vars["NAME_COLUMN_NAME"]
 

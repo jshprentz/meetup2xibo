@@ -1,8 +1,7 @@
 """Test the event converter from Meetup JSON to event object."""
 
 from .context import meetup2xibo
-from meetup2xibo.event_converter import EventConverter, Event
-from meetup2xibo.location_extractor import LocationExtractor
+from meetup2xibo.event_converter import EventConverter, Event, PartialEvent
 from hypothesis import given, assume, example
 from hypothesis.strategies import integers, text
 import string
@@ -51,7 +50,7 @@ EVENT_WITH_UNKNOWN_VENUE = Event(
     name = "Computational Mathematics: P=NP for students and engineers at Nova Labs",
     start_time = "2017-11-20 19:15:00",
     end_time = "2017-11-20 21:30:00",
-    location = "Somewhere else - Somewhere")
+    location = "Orange Bay")
 
 
 JSON_EVENT_WITHOUT_VENUE = {
@@ -137,12 +136,10 @@ SAMPLE_EVENTS = [
     (COMPLETE_JSON_EVENT, COMPLETE_EVENT),
 ]
 
-LOCATION_PHRASES = [
-    ("Classroom A and B", "Classroom A/B"),
-    ("Conference Rm 2", "Conference Room 2"),
-    ("Metal shop", "Metal Shop"),
-    ("Out Back", "Blacksmithing Alley"),
-]
+@pytest.fixture
+def event_converter(location_builder):
+    """Return an event converter with the usual location builder."""
+    return EventConverter(location_builder)
 
 @given(sec_since_epoch = integers(0, END_OF_EPOCH_SEC))
 def test_iso_time_converts_back(sec_since_epoch):
@@ -176,11 +173,9 @@ def test_edit_name_with_prefix(prefix, event_name):
     assert edited_name == trimmed_event_name
 
 @pytest.mark.parametrize("json_event,expected_event", SAMPLE_EVENTS)
-def test_convert(json_event, expected_event):
+def test_convert(json_event, expected_event, event_converter):
     """Test converting an event from Meetup JSON into an event tuple."""
-    extractor = LocationExtractor.from_location_phrases(LOCATION_PHRASES, "Nova Labs")
-    converter = EventConverter(extractor)
-    event = converter.convert(json_event)
+    event = event_converter.convert(json_event)
     assert expected_event == event
 
 def test_timezone():

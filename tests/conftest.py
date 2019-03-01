@@ -4,9 +4,47 @@ from .context import meetup2xibo
 from meetup2xibo.xibo_api_url_builder import XiboApiUrlBuilder
 from meetup2xibo.site_cert_assurer import assure_site_cert
 from meetup2xibo.oauth2_session_starter import Oauth2SessionStarter
+from meetup2xibo.location_builder import LocationBuilder
+from meetup2xibo.phrase_mapper import PhraseMapper
+from ahocorasick import Automaton
 from pathlib import Path
 import os
 import pytest
+
+LOCATION_PHRASES = [
+    ("Classroom A and B", "Classroom A/B"),
+    ("Classroom A/B", "Classroom A/B"),
+    ("Classroom A", "Classroom A"),
+    ("Conference Rm 2", "Conference Room 2"),
+    ("Metal shop", "Metal Shop"),
+    ("Metalshop", "Metal Shop"),
+    ("Out Back", "Blacksmithing Alley"),
+]
+
+DEFAULT_PHRASES = [
+    ("Nova Labs", "Nova Labs"),
+    ("TBD", "TBD")
+]
+
+@pytest.fixture(scope="module")
+def location_phrase_mapper():
+    """Return a phrase mapper initialized with the location phrases."""
+    return PhraseMapper(Automaton(), LOCATION_PHRASES).setup()
+
+@pytest.fixture(scope="module")
+def default_phrase_mapper():
+    """Return a phrase mapper initialized with the default phrases."""
+    return PhraseMapper(Automaton(), DEFAULT_PHRASES).setup()
+
+@pytest.fixture(scope="module")
+def phrase_mappers(location_phrase_mapper, default_phrase_mapper):
+    """Return a list of phrase mappers."""
+    return [location_phrase_mapper, default_phrase_mapper]
+
+@pytest.fixture
+def location_builder(phrase_mappers):
+    """Return a location builder with the test phrase mappers."""
+    return LocationBuilder(phrase_mappers, "Orange Bay")
 
 @pytest.fixture(scope="module")
 def xibo_api_url_builder():
