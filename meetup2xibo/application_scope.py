@@ -11,6 +11,8 @@ VERSION = "2.0.1"
 APP_NAME = "meetup2xibo"
 XIBO_PAGE_LENGTH = 50
 
+SECONDS_PER_HOUR = 60 * 60
+SECONDS_PER_DAY = 24 * SECONDS_PER_HOUR
 
 PhraseLocation = namedtuple("PhraseLocation", "phrase location")
 
@@ -28,6 +30,18 @@ class ApplicationScope:
     @property
     def app_name(self):
         return APP_NAME
+
+    @property
+    def delete_after_end_seconds(self):
+        return int(self._env_vars["DELETE_AFTER_END_HOURS"]) * SECONDS_PER_HOUR
+
+    @property
+    def delete_before_start_seconds(self):
+        return int(self._env_vars["DELETE_BEFORE_START_HOURS"]) * SECONDS_PER_HOUR
+
+    @property
+    def delete_until_future_seconds(self):
+        return int(self._env_vars["DELETE_UNTIL_FUTURE_DAYS"]) * SECONDS_PER_DAY
 
     @property
     def debug(self):

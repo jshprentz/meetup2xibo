@@ -14,22 +14,13 @@ from .xibo_api import XiboApi
 from .xibo_dataset_id_finder import XiboDatasetIdFinder
 from .xibo_event import XiboEvent, XiboEventColumnNameManager, XiboEventColumnIdManager
 from .xibo_event_crud import XiboEventCrud
+from .anti_flapper import AntiFlapper, iso_offset_time
 from ahocorasick import Automaton
 from pathlib import Path
+from datetime import datetime
 import os
 import certifi
 
-def inject_meetup_2_xibo(application_scope):
-    """Return a Meetup to Xibo converter
-    configured by an application scope."""
-    return Meetup2Xibo(
-        inject_logging_context(application_scope),
-        inject_meetup_events_retriever(application_scope),
-        inject_event_converter(application_scope),
-        inject_site_cert_assurer(application_scope),
-        inject_oauth2_session_starter(application_scope),
-        inject_enter_xibo_session_scope(application_scope),
-        )
 
 def inject_logging_context(application_scope):
     """Return a logging context
@@ -203,7 +194,7 @@ def inject_xibo_event_crud_processor(application_scope,
     return XiboEventCrudProcessor(
         xibo_session_scope.meetup_events,
         inject_xibo_event_crud(application_scope, xibo_session_scope, xibo_event_crud_scope),
-        inject_event_updater_provider(xibo_session_scope)
+        inject_event_updater_provider(application_scope, xibo_session_scope)
         )
 
 def inject_xibo_event_crud(application_scope, xibo_session_scope, xibo_event_crud_scope):
@@ -221,15 +212,53 @@ def inject_xibo_event_column_id_manager(xibo_event_crud_scope):
     configured by a Xibo event CRUD scope."""
     return XiboEventColumnIdManager(xibo_event_crud_scope.event_column_ids)
 
-def inject_event_updater_provider(xibo_session_scope):
+def inject_event_updater_provider(application_scope, xibo_session_scope):
     """Return a function that provides an event updater
     configured by a Xibo session scope."""
     def get(xibo_event_crud, xibo_events):
         return EventUpdater(
             xibo_session_scope.meetup_events,
             xibo_events,
-            xibo_event_crud
+            xibo_event_crud,
+            inject_anti_flapper(application_scope)
             )
     return get
+
+def inject_anti_flapper(application_scope):
+    """Return an anti-flapper configured by an application scope."""
+    return AntiFlapper(
+        inject_recent_limit(application_scope),
+        inject_current_limit(application_scope),
+        inject_future_limit(application_scope)
+        )
+
+def inject_recent_limit(application_scope):
+    """Return the recent flapping limit configured by an application scope."""
+    return iso_offset_time(inject_now(), -application_scope.delete_after_end_seconds)
+
+def inject_current_limit(application_scope):
+    """Return the current flapping limit configured by an application scope."""
+    return iso_offset_time(inject_now(), application_scope.delete_before_start_seconds)
+
+def inject_future_limit(application_scope):
+    """Return the future flapping limit configured by an application scope."""
+    return iso_offset_time(inject_now(), application_scope.delete_until_future_seconds)
+
+def inject_now():
+    """Return the current local date and time."""
+    return datetime.today()
+
+
+def inject_meetup_2_xibo(application_scope):
+    """Return a Meetup to Xibo converter
+    configured by an application scope."""
+    return Meetup2Xibo(
+        inject_logging_context(application_scope),
+        inject_meetup_events_retriever(application_scope),
+        inject_event_converter(application_scope),
+        inject_site_cert_assurer(application_scope),
+        inject_oauth2_session_starter(application_scope),
+        inject_enter_xibo_session_scope(application_scope),
+        )
 
 # vim: tabstop=8 expandtab shiftwidth=4 softtabstop=4 autoindent
