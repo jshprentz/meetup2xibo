@@ -1,7 +1,7 @@
 import argparse
 
 parser = argparse.ArgumentParser(
-        description='Download Meetup events into a XIBO database')
+        description='Download Meetup events into a XIBO CMS')
 
 parser.add_argument('-l', '--logfile',
         default='meetup2xibo.log',
@@ -14,6 +14,10 @@ parser.add_argument('-d', '--debug',
 parser.add_argument('-v', '--verbose',
         action='store_true',
         help='Log to standard output')
+
+parser.add_argument('-m', '--mappings',
+        action='store_true',
+        help='Log location mappings (default: only with debug messages)')
 
 def parse_args(args = None):
     return parser.parse_args(args)

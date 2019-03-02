@@ -1,6 +1,7 @@
 """Converts Meetup events from JSON dictionaries into event objects."""
 
 import re
+import logging
 from collections import namedtuple
 from datetime import datetime
 
@@ -13,6 +14,8 @@ PartialEvent = namedtuple("PartialEvent", "meetup_id name start_time end_time ve
 
 class EventConverter:
 
+    logger = logging.getLogger("EventConverter")
+
     def __init__(self, location_builder):
         """Initialize with a location builder."""
         self.location_builder = location_builder
@@ -21,6 +24,7 @@ class EventConverter:
         """Convert Meetup event JSON to an event tuple."""
         partial_event = self.partial_event(event_json)
         location = self.location_builder.build_location(partial_event)
+        self.logger.debug("Location='%s' MeetupEvent=%s", location, partial_event)
         return self.event(partial_event, location)
 
     def partial_event(self, event_json):

@@ -55,5 +55,20 @@ def test_logfile_long():
     args = parse_command_line("--logfile foo.log")
     assert "foo.log" == args.logfile
 
+def test_mappings_flag_off():
+    """Test the default mappings flag value."""
+    args = parse_without_args()
+    assert not args.mappings
+
+def test_mappings_flag_short():
+    """Test setting the mappings flag with the short argument."""
+    args = parse_command_line("-m")
+    assert args.mappings
+
+def test_mappings_flag_long():
+    """Test setting the mappings flag with the long argument."""
+    args = parse_command_line("--mappings")
+    assert args.mappings
+
 
 # vim: tabstop=8 expandtab shiftwidth=4 softtabstop=4 autoindent

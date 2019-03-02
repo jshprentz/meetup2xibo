@@ -83,6 +83,10 @@ class ApplicationScope:
         return logging.DEBUG if self.debug else logging.INFO
 
     @property
+    def mappings(self):
+        return self._args.mappings
+
+    @property
     def meetup_api_key(self):
         return self._env_vars["MEETUP_API_KEY"]
 

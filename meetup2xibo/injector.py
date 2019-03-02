@@ -30,7 +30,8 @@ def inject_logging_context(application_scope):
         version = application_scope.version,
         log_level = application_scope.log_level,
         filename = application_scope.logfile,
-        verbose = application_scope.verbose)
+        verbose = application_scope.verbose,
+        mappings = application_scope.mappings)
 
 def inject_meetup_events_retriever(application_scope):
     """Return a Meetup events retriever

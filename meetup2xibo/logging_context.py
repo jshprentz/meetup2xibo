@@ -13,14 +13,16 @@ class LoggingContext:
     """Logging context configures logging and reports exit exceptions."""
 
     def __init__(self, app_name, version, log_level = logging.INFO,
-            filename = None, verbose = False):
+            filename = None, verbose = False, mappings = False):
         """Initialize with an application name and version, a log level,
-        an optional log file name, and a verbose flag (sending logs to stderr)."""
+        an optional log file name, a verbose flag (sending logs to stderr),
+        and a mappings flag to force location mapping logs."""
         self.app_name = app_name
         self.version = version
         self.log_level = log_level
         self.filename = filename
         self.verbose = verbose
+        self.mappings = mappings
 
     def setup_root_logger(self):
         """Setup the root logger with the configured handlers and log level."""
@@ -28,6 +30,12 @@ class LoggingContext:
         root_logger.setLevel(self.log_level)
         self.log_to_stderr(root_logger)
         self.log_to_file(root_logger)
+
+    def setup_mappings_logger(self):
+        """Setup the mappings logger if requested."""
+        if self.mappings:
+            logger = logging.getLogger("EventConverter")
+            logger.setLevel(logging.DEBUG)
 
     def log_to_file(self, root_logger):
         """Add a file handler that rotates daily at midnight."""
@@ -53,6 +61,7 @@ class LoggingContext:
     def __enter__(self):
         """Enter a 'with' context and return a named logger."""
         self.setup_root_logger()
+        self.setup_mappings_logger()
         self._named_logger = logging.getLogger(self.app_name)
         self.log_start_end("Start")
         return self._named_logger
