@@ -4,10 +4,14 @@ from .context import meetup2xibo
 from meetup2xibo.phrase_mapper import PhraseMapper
 import meetup2xibo.phrase_mapper as phrase_mapper
 import ahocorasick
+from hypothesis import given, assume, example
+import hypothesis.strategies as st
 import pytest
 
 
 PHRASES = [
+    ("Conf Room A", "Room A"),
+    ("Conf Room B", "Room B"),
     ("Rm A", "Room A"),
     ("Rm B", "Room B"),
     ("Rm A and B", "Room A and B"),
@@ -41,6 +45,8 @@ EXPECTED_VALID_MATCH_ENDS = [1, 4, 12]
 
 EXPECTED_INVALID_MATCH_ENDS = [0, 2, 3, 5, 7, 8, 9]
 
+phrase_tuples = st.sampled_from(PHRASES)
+phrase_tuple_lists = st.lists(phrase_tuples, min_size = 1, max_size = len(PHRASES), unique = True)
 
 @pytest.fixture()
 def sample_phrase_mapper():
@@ -58,6 +64,14 @@ def test_map_phrases(text, expected_phrases, setup_phrase_mapper):
     phrases = setup_phrase_mapper.map_phrases(text)
     assert phrases == expected_phrases
 
+@given(phrase_tuples = phrase_tuple_lists)
+def test_map_phrases_ordered(phrase_tuples, setup_phrase_mapper):
+    """Test that phrases are mapped in order."""
+    patterns, expected_phrases = zip(*phrase_tuples)
+    text = ", ".join(patterns)
+    phrases = setup_phrase_mapper.map_phrases(text)
+    assert phrases == list(expected_phrases)
+    
 def test_setup_returns_phrase_mapper(sample_phrase_mapper):
     """Test that setup returns the phrase mapper."""
     assert sample_phrase_mapper.setup() == sample_phrase_mapper
