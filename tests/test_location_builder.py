@@ -23,10 +23,12 @@ DEFAULT_PHRASES = [
 
 TEST_VENUE_MAPPINGS_1= [
     ("","[]",[]),
+    ("TBD","[]",[]),
     ("*Nova Labs (Classroom A)","[ ]",["Classroom A"]),
-    ("*Nova Labs (Classroom A and B)","[]",["Classroom A/B"]),
+    ("*Nova Labs (Classroom A  and B)","[]",["Classroom A/B"]),
     ("*Nova Labs (Classroom A and B)","[Metal shop]",["Classroom A/B", "Metal Shop"]),
     ("Nova Labs","[Metal shop]",["Metal Shop"]),
+    ("Nova Labs","",[]),
     ("Nova  Labs","See http://nova-labs.org/contact/#parking for map and parking details.",[]),
 ]
 
@@ -34,20 +36,21 @@ TEST_VENUE_MAPPINGS_2 = [
     ("","[]",[]),
     ("TBD","[]",["TBD"]),
     ("*Nova Labs (Classroom A)","[ ]",["Classroom A"]),
-    ("*Nova Labs (Classroom A and B)","[]",["Classroom A/B"]),
+    ("*Nova Labs (Classroom A  and B)","[]",["Classroom A/B"]),
     ("*Nova Labs (Classroom A and B)","[Metal shop]",["Classroom A/B", "Metal Shop"]),
     ("Nova Labs","[Metal shop]",["Metal Shop"]),
+    ("Nova  Labs","",["Nova Labs"]),
     ("Nova  Labs","See http://nova-labs.org/contact/#parking for map and parking details.",["Nova Labs"]),
 ]
 
 TEST_EVENT_LOCATIONS = [
     ("","[]","Auditorium"),
     ("*Nova Labs (Classroom A)","[ ]","Classroom A"),
-    ("*Nova Labs (Classroom A and B)","[]","Classroom A/B"),
+    ("*Nova Labs (Classroom A  and B)","[]","Classroom A/B"),
     ("*Nova Labs (Classroom A and B)","[Metal shop]","Classroom A/B and Metal Shop"),
     ("Nova Labs","[Metal shop]","Metal Shop"),
     ("Nova Labs","[Metalshop]","Metal Shop"),
-    ("Nova  Labs","See http://nova-labs.org/contact/#parking for map and parking details.","Nova Labs"),
+    ("Nova Labs","See http://nova-labs.org/contact/#parking for map and parking details.","Nova Labs"),
     ("NVCC Seefeldt Building", "Seefeldt Building room #228", "Auditorium"),
 ]
 

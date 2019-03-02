@@ -25,7 +25,8 @@ class PhraseMapper:
         normalized_text = normalize_text(text)
         matches = self.automaton.iter(normalized_text)
         sortable_matches = [match_to_sortable_match(match)
-            for match in matches]
+            for match in matches
+            if is_valid_match(match, normalized_text)]
         sortable_matches.sort()
         longest_matches = longest_non_overlapping_matches(sortable_matches)
         return [match.preferred_phrase for match in longest_matches]
@@ -42,7 +43,22 @@ class PhraseMapper:
 def normalize_text(text):
     """Normalize a text by converting it to lower case and removing
     excess white space."""
-    return " ".join(text.lower().split())
+    return " ".join(text.casefold().split())
+
+def is_valid_match(match, text):
+    """True unless the match starts or ends in the middle of a word."""
+    end, phrase_mapping = match
+    start = end - phrase_mapping.phrase_length + 1
+    return (
+            end + 1 == len(text)
+            or (not text[end + 1].isalnum())
+            or (not text[end].isalnum())
+        ) and (
+            start == 0
+            or (not text[start].isalnum())
+            or (not text[start - 1].isalnum())
+        )
+
 
 def match_to_sortable_match(match):
     """Return a sortable match given a match tuple.  Matches will be sorted by
@@ -63,10 +79,6 @@ def longest_non_overlapping_matches(sorted_matches):
             continue
         yield match
         start = match.end
-
-
-
-
 
 
 # vim: tabstop=8 expandtab shiftwidth=4 softtabstop=4 autoindent
