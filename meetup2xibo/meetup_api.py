@@ -11,13 +11,20 @@ class MeetupEventsRetriever:
         self.group_url_name = group_url_name
         self.api_key = api_key
 
-    def retrieve_events_json(self):
-        """Retrieve the JSON event list."""
+    def retrieve_events_json(self, **kwargs):
+        """Retrieve the JSON event list, adding keyword arguments to the usual
+        request parameters."""
         url = self.build_url()
         params = self.request_params()
+        params.update(kwargs)
         response = requests.get(url, params = params)
         response.raise_for_status()
         return response.json()
+
+    def retrieve_cancelled_events_json(self, **kwargs):
+        """Retrieve the JSON cancelled event list, adding keyword arguments to
+        the usual request parameters."""
+        return self.retrieve_events_json(status = "cancelled", **kwargs)
 
     def build_url(self):
         """Build a Meetup API URL to download events."""
