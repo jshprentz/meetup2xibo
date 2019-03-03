@@ -50,7 +50,6 @@ class LocationBuilder:
         """Format a list of locations as an English phrase."""
         if len(locations) == 1:
             return locations[0]
-        locations.sort()
         if len(locations) == 2:
             return "{} and {}".format(locations[0], locations[1])
         most_locations = ", ".join(locations[0:-1])

@@ -110,14 +110,14 @@ def test_build_location(venue_name, find_us, expected_location, location_builder
 
 test_location_lists = [
     (["abc"], "abc"),
-    (["def", "abc"], "abc and def"),
-    (["def", "abc", "ghi"], "abc, def, and ghi"),
-    (["def", "jkl", "abc", "ghi"], "abc, def, ghi, and jkl"),
+    (["def", "abc"], "def and abc"),
+    (["def", "abc", "ghi"], "def, abc, and ghi"),
+    (["def", "jkl", "abc", "ghi"], "def, jkl, abc, and ghi"),
 ]
 
 @pytest.mark.parametrize("location_list,expected_phrase", test_location_lists)
 def test_format_location_list(location_list, expected_phrase):
-    """Test formatting location lists as a phrase."""
+    """Test formatting location lists as a phrase retaining order."""
     phrase = LocationBuilder.format_location_list(location_list)
     assert expected_phrase == phrase
 
