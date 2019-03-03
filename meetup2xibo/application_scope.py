@@ -15,6 +15,7 @@ SECONDS_PER_HOUR = 60 * 60
 SECONDS_PER_DAY = 24 * SECONDS_PER_HOUR
 
 PhraseLocation = namedtuple("PhraseLocation", "phrase location")
+SpecialLocation = namedtuple("SpecialLocation", "meetup_id location override comment")
 
 
 class ApplicationScope:
@@ -120,6 +121,16 @@ class ApplicationScope:
     @property
     def site_url(self):
         return self._env_vars["SITE_URL"]
+
+    @property
+    def special_locations(self):
+        return self._env_vars["SPECIAL_LOCATIONS"]
+
+    @property
+    def special_locations_dict(self):
+        return {d["meetup_id"]: SpecialLocation(**d)
+            for d in json.loads(self.special_locations)
+        }
 
     @property
     def start_time_column_name(self):

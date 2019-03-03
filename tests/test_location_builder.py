@@ -44,17 +44,15 @@ TEST_VENUE_MAPPINGS_2 = [
 ]
 
 TEST_EVENT_LOCATIONS = [
-    ("","[]","Auditorium"),
+    ("","[]",""),
     ("*Nova Labs (Classroom A)","[ ]","Classroom A"),
     ("*Nova Labs (Classroom A  and B)","[]","Classroom A/B"),
     ("*Nova Labs (Classroom A and B)","[Metal shop]","Classroom A/B and Metal Shop"),
     ("Nova Labs","[Metal shop]","Metal Shop"),
     ("Nova Labs","[Metalshop]","Metal Shop"),
     ("Nova Labs","See http://nova-labs.org/contact/#parking for map and parking details.","Nova Labs"),
-    ("NVCC Seefeldt Building", "Seefeldt Building room #228", "Auditorium"),
+    ("NVCC Seefeldt Building", "Seefeldt Building room #228", ""),
 ]
-
-#PartialEvent = namedtuple("PartialEvent", "meetup_id name start_time end_time venue_name find_us")
 
 def make_partial_event(venue_name = "", find_us = "", name = "Some Event"):
     """Return a partial event with some test values."""
@@ -79,12 +77,7 @@ def phrase_mappers(location_phrase_mapper, default_phrase_mapper):
 @pytest.fixture
 def location_builder(phrase_mappers):
     """Return a location builder with the test phrase mappers."""
-    return LocationBuilder(phrase_mappers, "Auditorium")
-
-def test_unknown_location(location_builder):
-    """Test handling an unknown location."""
-    partial_event = make_partial_event()
-    assert location_builder.unknown_location(partial_event) == "Auditorium"
+    return LocationBuilder(phrase_mappers)
 
 @pytest.mark.parametrize("venue_name,find_us,expected_locations", TEST_VENUE_MAPPINGS_1)
 def test_map_phrases_in_venue(venue_name, find_us, expected_locations, location_phrase_mapper):

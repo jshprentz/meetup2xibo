@@ -4,6 +4,7 @@ from .logging_context import LoggingContext
 from .meetup2xibo import Meetup2Xibo, XiboSessionProcessor, XiboEventCrudProcessor
 from .meetup_api import MeetupEventsRetriever
 from .location_builder import LocationBuilder
+from .location_chooser import LocationChooser
 from .event_converter import EventConverter
 from .event_updater import EventUpdater
 from .phrase_mapper import PhraseMapper
@@ -41,12 +42,18 @@ def inject_meetup_events_retriever(application_scope):
         group_url_name = application_scope.meetup_group_url_name,
         api_key = application_scope.meetup_api_key)
 
-def inject_location_builder(application_scope):
-    """Return a loaction builder
+def inject_location_chooser(application_scope):
+    """Return a location builder
     configured by an application scope."""
-    return LocationBuilder(
-        inject_phrase_mappers(application_scope),
+    return LocationChooser(
+        inject_location_builder(application_scope),
+        application_scope.special_locations_dict,
         application_scope.default_location)
+
+def inject_location_builder(application_scope):
+    """Return a location builder
+    configured by an application scope."""
+    return LocationBuilder(inject_phrase_mappers(application_scope))
 
 def inject_phrase_mappers(application_scope):
     """Return a list of phrase mappers
@@ -83,7 +90,7 @@ def inject_event_converter(application_scope):
     """Return an event converter
     configured by an application scope."""
     return EventConverter(
-        inject_location_builder(application_scope))
+        inject_location_chooser(application_scope))
 
 def inject_xibo_api_url_builder(application_scope):
     """Return a Xibo API URL builder

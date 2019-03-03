@@ -2,6 +2,7 @@
 
 from .context import meetup2xibo
 from meetup2xibo.event_converter import EventConverter, Event, PartialEvent
+from meetup2xibo.location_chooser import LocationChooser
 from hypothesis import given, assume, example
 from hypothesis.strategies import integers, text
 import string
@@ -137,9 +138,14 @@ SAMPLE_EVENTS = [
 ]
 
 @pytest.fixture
-def event_converter(location_builder):
-    """Return an event converter with the usual location builder."""
-    return EventConverter(location_builder)
+def location_chooser(location_builder):
+    """Return a location chooser with no special locations."""
+    return LocationChooser(location_builder, {}, "Orange Bay")
+
+@pytest.fixture
+def event_converter(location_chooser):
+    """Return an event converter with the usual location chooser."""
+    return EventConverter(location_chooser)
 
 @given(sec_since_epoch = integers(0, END_OF_EPOCH_SEC))
 def test_iso_time_converts_back(sec_since_epoch):

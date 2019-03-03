@@ -16,14 +16,14 @@ class EventConverter:
 
     logger = logging.getLogger("EventConverter")
 
-    def __init__(self, location_builder):
-        """Initialize with a location builder."""
-        self.location_builder = location_builder
+    def __init__(self, location_chooser):
+        """Initialize with a location chooser."""
+        self.location_chooser = location_chooser
 
     def convert(self, event_json):
         """Convert Meetup event JSON to an event tuple."""
         partial_event = self.partial_event(event_json)
-        location = self.location_builder.build_location(partial_event)
+        location = self.location_chooser.choose_location(partial_event)
         self.logger.debug("Location='%s' MeetupEvent=%s", location, partial_event)
         return self.event(partial_event, location)
 

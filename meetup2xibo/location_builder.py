@@ -10,10 +10,9 @@ class LocationBuilder:
 
     logger = logging.getLogger("LocationBuilder")
 
-    def __init__(self, phrase_mappers, default_location):
+    def __init__(self, phrase_mappers):
         """Initialize with a list of phrase mappers."""
         self.phrase_mappers = phrase_mappers
-        self.default_location = default_location
 
     def build_location(self, partial_event):
         """Build a location from a partial Meetup event."""
@@ -22,7 +21,7 @@ class LocationBuilder:
             deduped_locations = list(OrderedDict.fromkeys(locations))
             return self.format_location_list(deduped_locations)
         else:
-            return self.unknown_location(partial_event)
+            return ""
 
     def map_from_phrase_mappers(self, partial_event):
         """Try all phrase mappers until on finds phrases in a partial event."""
@@ -32,12 +31,6 @@ class LocationBuilder:
             if locations:
                 break
         return locations
-
-    def unknown_location(self, partial_event):
-        """Return and report a location that does not match any supplied
-        phrases."""
-        self.logger.warning('Unknown location. %s', partial_event) 
-        return self.default_location
 
     @staticmethod
     def map_phrases_in_venue(phrase_mapper, partial_event):

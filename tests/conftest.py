@@ -44,7 +44,7 @@ def phrase_mappers(location_phrase_mapper, default_phrase_mapper):
 @pytest.fixture
 def location_builder(phrase_mappers):
     """Return a location builder with the test phrase mappers."""
-    return LocationBuilder(phrase_mappers, "Orange Bay")
+    return LocationBuilder(phrase_mappers)
 
 @pytest.fixture(scope="module")
 def xibo_api_url_builder():
