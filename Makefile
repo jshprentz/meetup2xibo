@@ -11,7 +11,7 @@ test-locals:
 run:
 	. venv/bin/activate; \
 	. ./run.config; \
-	python -m meetup2xibo > run.log
+	python -m meetup2xibo -w > run.log
 
 debug:
 	. venv/bin/activate; \

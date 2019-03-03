@@ -134,6 +134,10 @@ class ApplicationScope:
         return VERSION
 
     @property
+    def warnings(self):
+        return self._args.warnings
+
+    @property
     def xibo_client_id(self):
         return self._env_vars["XIBO_CLIENT_ID"]
 

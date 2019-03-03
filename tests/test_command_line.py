@@ -25,6 +25,21 @@ def test_debug_flag_long():
     args = parse_command_line("--debug")
     assert args.debug
 
+def test_warnings_flag_off():
+    """Test the default warnings flag value."""
+    args = parse_without_args()
+    assert not args.warnings
+
+def test_warnings_flag_short():
+    """Test setting the warnings flag with the short argument."""
+    args = parse_command_line("-w")
+    assert args.warnings
+
+def test_warnings_flag_long():
+    """Test setting the warnings flag with the long argument."""
+    args = parse_command_line("--warnings")
+    assert args.warnings
+
 def test_verbose_flag_off():
     """Test the default verbose flag value."""
     args = parse_without_args()

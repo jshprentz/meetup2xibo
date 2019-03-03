@@ -13,15 +13,17 @@ class LoggingContext:
     """Logging context configures logging and reports exit exceptions."""
 
     def __init__(self, app_name, version, log_level = logging.INFO,
-            filename = None, verbose = False, mappings = False):
+            filename = None, verbose = False, warnings = False, mappings = False):
         """Initialize with an application name and version, a log level,
-        an optional log file name, a verbose flag (sending logs to stderr),
-        and a mappings flag to force location mapping logs."""
+        an optional log file name, a verbose flag (sending logs to stderr), a
+        warnings flag (sending warnings to stderr), and a mappings flag to
+        force location mapping logs."""
         self.app_name = app_name
         self.version = version
         self.log_level = log_level
         self.filename = filename
         self.verbose = verbose
+        self.warnings = warnings
         self.mappings = mappings
 
     def setup_root_logger(self):
@@ -49,9 +51,11 @@ class LoggingContext:
 
     def log_to_stderr(self, root_logger):
         """Add a stream handler that logs to standard error."""
-        if self.verbose or not self.filename:
+        if self.verbose or self.warnings or not self.filename:
             handler = logging.StreamHandler()
             handler.setFormatter(FORMATTER)
+            if self.warnings:
+                handler.setLevel(logging.WARNING)
             root_logger.addHandler(handler)
 
     def log_start_end(self, verb):
