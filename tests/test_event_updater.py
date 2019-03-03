@@ -54,14 +54,14 @@ def test_event_list_to_dict():
 
 def test_init():
     """Test converting event lists to dictionaries during initialization."""
-    event_updater = EventUpdater(MEETUP_EVENTS, XIBO_EVENTS, None, None)
+    event_updater = EventUpdater(MEETUP_EVENTS, XIBO_EVENTS, None, None, None)
     assert EXPECTED_MEETUP_EVENTS_DICT == event_updater.meetup_events
     assert EXPECTED_XIBO_EVENTS_DICT == event_updater.xibo_events
 
 def test_insert_new_events():
     """Test inserting new events."""
     mock_xibo_event_crud = MagicMock()
-    event_updater = EventUpdater(MEETUP_EVENTS, XIBO_EVENTS, mock_xibo_event_crud, None)
+    event_updater = EventUpdater(MEETUP_EVENTS, XIBO_EVENTS, mock_xibo_event_crud, None, None)
     insert_ids = {"A01", "C01"}
     event_updater.insert_new_events(insert_ids)
     calls = [call(NEW_MEETUP_EVENT), call(UNCHANGED_MEETUP_EVENT)]
@@ -70,7 +70,7 @@ def test_insert_new_events():
 def test_update_known_events():
     """Test updating known events."""
     mock_xibo_event_crud = MagicMock()
-    event_updater = EventUpdater(MEETUP_EVENTS, XIBO_EVENTS, mock_xibo_event_crud, None)
+    event_updater = EventUpdater(MEETUP_EVENTS, XIBO_EVENTS, mock_xibo_event_crud, None, None)
     update_ids = {"B01", "C01"}
     event_updater.update_known_events(update_ids)
     calls = [call(UPDATED_XIBO_EVENT, UPDATED_MEETUP_EVENT)]
@@ -80,7 +80,9 @@ def test_delete_unknown_events():
     """Test deleting unknown events."""
     anti_flapper = AntiFlapper("2017-12-11 19:00:00", "2017-12-11 22:00:00", "2017-12-31 23:00:00")
     mock_xibo_event_crud = MagicMock()
-    event_updater = EventUpdater(MEETUP_EVENTS, XIBO_EVENTS, mock_xibo_event_crud, anti_flapper)
+    mock_special_location_monitor = MagicMock()
+    event_updater = EventUpdater(MEETUP_EVENTS, XIBO_EVENTS, mock_xibo_event_crud,
+        anti_flapper, mock_special_location_monitor)
     delete_ids = {"D01", "D02", "D03"}
     event_updater.delete_unknown_events(delete_ids)
     calls = [
@@ -88,5 +90,6 @@ def test_delete_unknown_events():
         call(DELETED_FUTURE_XIBO_EVENT),
     ]
     mock_xibo_event_crud.delete_xibo_event.assert_has_calls(calls, any_order = True)
+    mock_special_location_monitor.deleted_event.assert_has_calls(calls, any_order = True)
 
 # vim: tabstop=8 expandtab shiftwidth=4 softtabstop=4 autoindent

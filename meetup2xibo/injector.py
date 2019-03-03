@@ -11,6 +11,7 @@ from .phrase_mapper import PhraseMapper
 from .xibo_api_url_builder import XiboApiUrlBuilder
 from .site_cert_assurer import SiteCertAssurer
 from .oauth2_session_starter import Oauth2SessionStarter
+from .special_location_monitor import SpecialLocationMonitor
 from .xibo_api import XiboApi
 from .xibo_dataset_id_finder import XiboDatasetIdFinder
 from .xibo_event import XiboEvent, XiboEventColumnNameManager, XiboEventColumnIdManager
@@ -229,7 +230,8 @@ def inject_event_updater_provider(application_scope, xibo_session_scope):
             xibo_session_scope.meetup_events,
             xibo_events,
             xibo_event_crud,
-            inject_anti_flapper(application_scope)
+            inject_anti_flapper(application_scope),
+            inject_special_location_monitor(application_scope)
             )
     return get
 
@@ -240,6 +242,10 @@ def inject_anti_flapper(application_scope):
         inject_current_limit(application_scope),
         inject_future_limit(application_scope)
         )
+
+def inject_special_location_monitor(application_scope):
+    """Return a special location monitor configured by an application scope."""
+    return SpecialLocationMonitor(application_scope.special_locations_dict)
 
 def inject_recent_limit(application_scope):
     """Return the recent flapping limit configured by an application scope."""

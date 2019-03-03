@@ -9,13 +9,16 @@ class EventUpdater:
 
     logger = logging.getLogger("EventUpdater")
 
-    def __init__(self, meetup_events, xibo_events, xibo_event_crud, anti_flapper):
-        """Initialize with lists (or iterables) of Meetup and Xibo events,
-        a Xibo event CRUD manager, and an anti-flapper."""
+    def __init__(self, meetup_events, xibo_events, xibo_event_crud,
+            anti_flapper, special_location_monitor):
+        """Initialize with lists (or iterables) of Meetup and Xibo events, a
+        Xibo event CRUD manager, an anti-flapper, and a special location
+        monitor."""
         self.meetup_events = self.event_list_to_dict(meetup_events)
         self.xibo_events = self.event_list_to_dict(xibo_events)
         self.xibo_event_crud = xibo_event_crud
         self.anti_flapper = anti_flapper
+        self.special_location_monitor = special_location_monitor
 
     def update_xibo(self):
         """Update the Xibo database by inserting, updating, or deleting
@@ -55,6 +58,7 @@ class EventUpdater:
             xibo_event = self.xibo_events[event_id]
             if self.anti_flapper.is_ok(xibo_event):
                 self.xibo_event_crud.delete_xibo_event(xibo_event)
+                self.special_location_monitor.deleted_event(xibo_event)
 
     @staticmethod
     def event_list_to_dict(events):
