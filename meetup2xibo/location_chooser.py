@@ -44,11 +44,10 @@ class LocationChooser:
     def resolve_with_special(self, computed_location, special_location):
         """Consider computed and the default location. Return the most appropriate location."""
         if special_location.override:
-            candidates = [special_location.location, computed_location]
+            best_location = special_location.location or computed_location or self.default_location
         else:
-            candidates = [computed_location, special_location.location]
-        valid_candidates = [location for location in candidates if location] or [self.default_location]
-        return valid_candidates[0]
+            best_location = computed_location or special_location.location or self.default_location
+        return best_location
 
     def resolve_without_special(self, partial_event, computed_location):
         """Consider computed and the default location. Return the most appropriate location."""
