@@ -18,6 +18,10 @@ debug:
 	. ./run.config; \
 	python -m meetup2xibo -v -d > run.log
 
+help:
+	. venv/bin/activate; \
+	python -m meetup2xibo -h
+
 gitlog:
 	git log --oneline --graph --decorate --all
 
