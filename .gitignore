@@ -81,7 +81,6 @@ venv/
 *.csv
 
 # Sensitive files
-config.py
 run.config
 test.config
 TODO
