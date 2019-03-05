@@ -7,6 +7,7 @@ from datetime import datetime
 
 
 THREE_HOURS_MSEC = 3 * 60 * 60 * 1000
+DEFAULT_DURATION = THREE_HOURS_MSEC
 
 Event = namedtuple("Event", "meetup_id name location start_time end_time")
 PartialEvent = namedtuple("PartialEvent", "meetup_id name start_time end_time venue_name find_us")
@@ -27,12 +28,17 @@ class EventConverter:
         self.logger.debug("Location='%s' MeetupEvent=%s", location, partial_event)
         return self.event(partial_event, location)
 
+    def convert_cancelled(self, event_json):
+        """Convert Meetup cancelled event JSON to an event tuple."""
+        partial_event = self.partial_event(event_json)
+        return self.event(partial_event, "Cancelled")
+
     def partial_event(self, event_json):
         """Convert Meetup event JSON to a partial event tuple."""
         meetup_id = event_json["id"]
         name = self.edit_name(event_json["name"])
         start_time = self.iso_time(event_json["time"])
-        duration = event_json.get("duration", THREE_HOURS_MSEC)
+        duration = event_json.get("duration", DEFAULT_DURATION)
         end_time = self.iso_time(event_json["time"] + duration)
         venue = event_json.get("venue", {"name": ""})
         venue_name = venue["name"]

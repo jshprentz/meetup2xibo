@@ -2,7 +2,7 @@
 
 from .logging_context import LoggingContext
 from .meetup2xibo import Meetup2Xibo, XiboSessionProcessor, XiboEventCrudProcessor
-from .meetup_api import MeetupEventsRetriever
+from .meetup_api import MeetupEventsRetriever, meetup_iso_offset_time
 from .location_builder import LocationBuilder
 from .location_chooser import LocationChooser
 from .event_converter import EventConverter
@@ -41,7 +41,8 @@ def inject_meetup_events_retriever(application_scope):
     configured by an application scope."""
     return MeetupEventsRetriever(
         group_url_name = application_scope.meetup_group_url_name,
-        api_key = application_scope.meetup_api_key)
+        api_key = application_scope.meetup_api_key,
+        cancelled_last_time = inject_cancelled_last_time(application_scope))
 
 def inject_location_chooser(application_scope):
     """Return a location builder
@@ -202,7 +203,6 @@ def inject_xibo_event_crud_processor(application_scope,
     """Return Xibo event CRUD processor configured by an application scope, a
     Xibo session scope and a Xibo event CRUD scope."""
     return XiboEventCrudProcessor(
-        xibo_session_scope.meetup_events,
         inject_xibo_event_crud(application_scope, xibo_session_scope, xibo_event_crud_scope),
         inject_event_updater_provider(application_scope, xibo_session_scope)
         )
@@ -228,6 +228,7 @@ def inject_event_updater_provider(application_scope, xibo_session_scope):
     def get(xibo_event_crud, xibo_events):
         return EventUpdater(
             xibo_session_scope.meetup_events,
+            xibo_session_scope.cancelled_meetup_events,
             xibo_events,
             xibo_event_crud,
             inject_anti_flapper(application_scope),
@@ -258,6 +259,11 @@ def inject_current_limit(application_scope):
 def inject_future_limit(application_scope):
     """Return the future flapping limit configured by an application scope."""
     return iso_offset_time(inject_now(), application_scope.delete_until_future_seconds)
+
+def inject_cancelled_last_time(application_scope):
+    """Return the last time allowed for cancelled Meetup events configured by
+    an application scope."""
+    return meetup_iso_offset_time(inject_now(), application_scope.ignore_cancelled_after_seconds)
 
 def inject_now():
     """Return the current local date and time."""

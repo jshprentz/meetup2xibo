@@ -61,6 +61,10 @@ class ApplicationScope:
         return self._env_vars["EVENT_DATASET_CODE"]
 
     @property
+    def ignore_cancelled_after_seconds(self):
+        return int(self._env_vars["IGNORE_CANCELLED_AFTER_DAYS"]) * SECONDS_PER_DAY
+
+    @property
     def location_column_name(self):
         return self._env_vars["LOCATION_COLUMN_NAME"]
 

@@ -1,6 +1,6 @@
 """Avoids flapping Xibo events."""
 
-from datetime import datetime, timedelta
+from datetime import timedelta
 
 
 class AntiFlapper:

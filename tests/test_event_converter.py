@@ -35,6 +35,13 @@ EVENT_WITH_VENUE = Event(
     end_time = "2017-11-20 21:30:00",
     location = "Conference Room 2")
 
+CANCELLED_EVENT_WITH_VENUE = Event(
+    meetup_id = "bztfpmywpbbc",
+    name = "Computational Mathematics: P=NP for students and engineers at Nova Labs",
+    start_time = "2017-11-20 19:15:00",
+    end_time = "2017-11-20 21:30:00",
+    location = "Cancelled")
+
 JSON_EVENT_WITH_UNKNOWN_VENUE = {
     "duration": 8100000,
     "how_to_find_us": "Somewhere",
@@ -183,6 +190,11 @@ def test_convert(json_event, expected_event, event_converter):
     """Test converting an event from Meetup JSON into an event tuple."""
     event = event_converter.convert(json_event)
     assert expected_event == event
+
+def test_convert_cancelled(event_converter):
+    """Test converting a cancelled event from Meetup JSON into an event tuple."""
+    event = event_converter.convert_cancelled(JSON_EVENT_WITH_VENUE)
+    assert CANCELLED_EVENT_WITH_VENUE == event
 
 def test_timezone():
     """Test that the timezone is set to an expected value."""
