@@ -43,6 +43,7 @@ setup(
     keywords='meetup2xibo',
     name='meetup2xibo',
     packages=find_packages(include=['meetup2xibo']),
+    scripts=['bin/location-log2csv'],
     setup_requires=setup_requirements,
     test_suite='tests',
     tests_require=test_requirements,
