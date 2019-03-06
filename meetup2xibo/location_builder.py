@@ -34,7 +34,8 @@ class LocationBuilder:
 
     @staticmethod
     def map_phrases_in_venue(phrase_mapper, partial_event):
-        """Map location phrases in the venue and find us fields of a partial event."""
+        """Map location phrases in the venue and find us fields of a partial
+        event."""
         return phrase_mapper.map_phrases(partial_event.venue_name) \
             + phrase_mapper.map_phrases(partial_event.find_us)
 

@@ -15,7 +15,10 @@ SECONDS_PER_HOUR = 60 * 60
 SECONDS_PER_DAY = 24 * SECONDS_PER_HOUR
 
 PhraseLocation = namedtuple("PhraseLocation", "phrase location")
-SpecialLocation = namedtuple("SpecialLocation", "meetup_id location override comment")
+
+SpecialLocation = namedtuple(
+        "SpecialLocation",
+        "meetup_id location override comment")
 
 
 class ApplicationScope:
@@ -34,15 +37,18 @@ class ApplicationScope:
 
     @property
     def delete_after_end_seconds(self):
-        return int(self._env_vars["DELETE_AFTER_END_HOURS"]) * SECONDS_PER_HOUR
+        return int(self._env_vars["DELETE_AFTER_END_HOURS"]) \
+                * SECONDS_PER_HOUR
 
     @property
     def delete_before_start_seconds(self):
-        return int(self._env_vars["DELETE_BEFORE_START_HOURS"]) * SECONDS_PER_HOUR
+        return int(self._env_vars["DELETE_BEFORE_START_HOURS"]) \
+                * SECONDS_PER_HOUR
 
     @property
     def delete_until_future_seconds(self):
-        return int(self._env_vars["DELETE_UNTIL_FUTURE_DAYS"]) * SECONDS_PER_DAY
+        return int(self._env_vars["DELETE_UNTIL_FUTURE_DAYS"]) \
+                * SECONDS_PER_DAY
 
     @property
     def debug(self):
@@ -62,7 +68,8 @@ class ApplicationScope:
 
     @property
     def ignore_cancelled_after_seconds(self):
-        return int(self._env_vars["IGNORE_CANCELLED_AFTER_DAYS"]) * SECONDS_PER_DAY
+        return int(self._env_vars["IGNORE_CANCELLED_AFTER_DAYS"]) \
+                * SECONDS_PER_DAY
 
     @property
     def location_column_name(self):
@@ -132,9 +139,9 @@ class ApplicationScope:
 
     @property
     def special_locations_dict(self):
-        return {d["meetup_id"]: SpecialLocation(**d)
-            for d in json.loads(self.special_locations)
-        }
+        return {
+                d["meetup_id"]: SpecialLocation(**d)
+                for d in json.loads(self.special_locations)}
 
     @property
     def start_time_column_name(self):

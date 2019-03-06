@@ -10,7 +10,9 @@ THREE_HOURS_MSEC = 3 * 60 * 60 * 1000
 DEFAULT_DURATION = THREE_HOURS_MSEC
 
 Event = namedtuple("Event", "meetup_id name location start_time end_time")
-PartialEvent = namedtuple("PartialEvent", "meetup_id name start_time end_time venue_name find_us")
+PartialEvent = namedtuple(
+        "PartialEvent",
+        "meetup_id name start_time end_time venue_name find_us")
 
 
 class EventConverter:
@@ -25,7 +27,8 @@ class EventConverter:
         """Convert Meetup event JSON to an event tuple."""
         partial_event = self.partial_event(event_json)
         location = self.location_chooser.choose_location(partial_event)
-        self.logger.debug("Location='%s' MeetupEvent=%s", location, partial_event)
+        self.logger.debug(
+                "Location='%s' MeetupEvent=%s", location, partial_event)
         return self.event(partial_event, location)
 
     def convert_cancelled(self, event_json):
@@ -43,7 +46,8 @@ class EventConverter:
         venue = event_json.get("venue", {"name": ""})
         venue_name = venue["name"]
         find_us = event_json.get("how_to_find_us", "")
-        return PartialEvent(meetup_id, name, start_time, end_time, venue_name, find_us)
+        return PartialEvent(
+                meetup_id, name, start_time, end_time, venue_name, find_us)
 
     @staticmethod
     def event(partial_event, location):
@@ -54,13 +58,13 @@ class EventConverter:
             location,
             partial_event.start_time,
             partial_event.end_time)
-                        
 
     @staticmethod
     def iso_time(epoch_ms):
         """Format a time represented as milliseconds since the Unix epoch
         in ISO YYYY-MM-DD hh:mm:ss format."""
-        return datetime.fromtimestamp(epoch_ms/1000).strftime('%Y-%m-%d %H:%M:%S')
+        a_date_time = datetime.fromtimestamp(epoch_ms/1000)
+        return a_date_time.strftime('%Y-%m-%d %H:%M:%S')
 
     @staticmethod
     def edit_name(raw_name):

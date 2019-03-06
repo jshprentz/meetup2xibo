@@ -1,10 +1,11 @@
 """Event representations in Xibo."""
 
 from collections import namedtuple
-import time
 
 
-XiboEvent = namedtuple("XiboEvent", "xibo_id meetup_id name location start_time end_time")
+XiboEvent = namedtuple(
+        "XiboEvent",
+        "xibo_id meetup_id name location start_time end_time")
 
 
 class XiboEventColumnNameManager:
@@ -20,12 +21,12 @@ class XiboEventColumnNameManager:
         """Convert a JSON event dictionary (or other mapping)
         to a XiboEvent named tuple."""
         return XiboEvent(
-            xibo_id = json_event[self.column_names.xibo_id],
-            meetup_id = json_event[self.column_names.meetup_id],
-            name = json_event[self.column_names.name],
-            location = json_event[self.column_names.location],
-            start_time = json_event[self.column_names.start_time],
-            end_time = json_event[self.column_names.end_time],
+            xibo_id=json_event[self.column_names.xibo_id],
+            meetup_id=json_event[self.column_names.meetup_id],
+            name=json_event[self.column_names.name],
+            location=json_event[self.column_names.location],
+            start_time=json_event[self.column_names.start_time],
+            end_time=json_event[self.column_names.end_time],
         )
 
     def json_to_column_ids(self, json_columns):

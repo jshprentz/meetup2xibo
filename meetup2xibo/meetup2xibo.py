@@ -1,25 +1,31 @@
-"""Retrieve events from Meetup, extract data to display on signs, and update Xibo."""
+"""Retrieve events from Meetup, extract data to display on signs, and update
+Xibo."""
 
 from collections import namedtuple
 
 
-XiboSessionScope = namedtuple("XiboSessionScope", "meetup_events cancelled_meetup_events xibo_session")
-XiboEventCrudScope = namedtuple("XiboEventCrudScope", "event_dataset_id event_column_ids")
+XiboSessionScope = namedtuple(
+        "XiboSessionScope",
+        "meetup_events cancelled_meetup_events xibo_session")
+
+XiboEventCrudScope = namedtuple(
+        "XiboEventCrudScope",
+        "event_dataset_id event_column_ids")
 
 
 class Meetup2Xibo:
 
     """Downloads Meetup events into a Xibo databse."""
 
-    def __init__(self, logging_context, meetup_events_retriever,
+    def __init__(
+            self, logging_context, meetup_events_retriever,
             event_converter, site_cert_assurer, oauth2_session_starter,
-            enter_xibo_session_scope
-            ):
+            enter_xibo_session_scope):
         """Initialize with a logging context, a Meetup events retriever, an
         event converter, a site certificate assurer, an OAuth2 session starter,
         a Xibo sesson scope entrance function """
         self.logging_context = logging_context
-        self.meetup_events_retriever = meetup_events_retriever 
+        self.meetup_events_retriever = meetup_events_retriever
         self.event_converter = event_converter
         self.site_cert_assurer = site_cert_assurer
         self.oauth2_session_starter = oauth2_session_starter
@@ -27,7 +33,7 @@ class Meetup2Xibo:
 
     def run(self):
         """Run the Meetup to Xibo conversion within a logging context."""
-        with self.logging_context as logger:
+        with self.logging_context:
             self.convert()
 
     def convert(self):
@@ -35,7 +41,8 @@ class Meetup2Xibo:
         meetup_events = self.retreive_meetup_events()
         cancelled_meetup_events = self.retreive_cancelled_meetup_events()
         xibo_session = self.start_xibo_session()
-        self.update_xibo_events(meetup_events, cancelled_meetup_events, xibo_session)
+        self.update_xibo_events(
+                meetup_events, cancelled_meetup_events, xibo_session)
 
     def retreive_meetup_events(self):
         """Retrieve a list of Meetup events."""
@@ -44,13 +51,15 @@ class Meetup2Xibo:
 
     def retreive_cancelled_meetup_events(self):
         """Retrieve a list of cancelled Meetup events."""
-        json_events = self.meetup_events_retriever.retrieve_cancelled_events_json()
+        retriever = self.meetup_events_retriever
+        json_events = retriever.retrieve_cancelled_events_json()
         return self.extract_events_from_json(json_events)
 
     def extract_events_from_json(self, json_events):
         """Extract event tuples from a list of Meetup JSON events."""
-        meetup_events = (self.event_converter.convert(event_json)
-            for event_json in json_events)
+        meetup_events = (
+                self.event_converter.convert(event_json)
+                for event_json in json_events)
         return meetup_events
 
     def start_xibo_session(self):
@@ -58,21 +67,22 @@ class Meetup2Xibo:
         self.site_cert_assurer.assure_site_cert()
         return self.oauth2_session_starter.start_session()
 
-    def update_xibo_events(self, meetup_events,
-            cancelled_meetup_events, xibo_session):
+    def update_xibo_events(
+            self, meetup_events, cancelled_meetup_events, xibo_session):
         """Update events stored in Xibo to match the Meetup events."""
-        xibo_session_scope = XiboSessionScope(meetup_events,
-            cancelled_meetup_events, xibo_session)
+        xibo_session_scope = XiboSessionScope(
+            meetup_events, cancelled_meetup_events, xibo_session)
         processor = self.enter_xibo_session_scope(xibo_session_scope)
         processor.run()
-        
+
 
 class XiboSessionProcessor:
 
     """Retreives event dataset metadata from Xibo."""
 
-    def __init__(self, event_dataset_code, dataset_id_finder,
-            column_name_manager, xibo_api, enter_xibo_event_crud_scope):
+    def __init__(
+            self, event_dataset_code, dataset_id_finder, column_name_manager,
+            xibo_api, enter_xibo_event_crud_scope):
         """Initialize with an event dataset code, a Xibo dataset ID finder, a
         Xibo event column name manager, a Xibo API manager, and a function to
         enter a Xibo event CRUD scope."""
@@ -80,7 +90,7 @@ class XiboSessionProcessor:
         self.dataset_id_finder = dataset_id_finder
         self.column_name_manager = column_name_manager
         self.xibo_api = xibo_api
-        self.enter_xibo_event_crud_scope = enter_xibo_event_crud_scope 
+        self.enter_xibo_event_crud_scope = enter_xibo_event_crud_scope
 
     def run(self):
         """Retrieve event dataset metadata from Xibo."""
@@ -99,10 +109,11 @@ class XiboSessionProcessor:
 
     def update_xibo_events(self, event_dataset_id, event_column_ids):
         """Update events stored in Xibo to match the Meetup events."""
-        xibo_event_crud_scope = XiboEventCrudScope(event_dataset_id, event_column_ids)
+        xibo_event_crud_scope = XiboEventCrudScope(
+                event_dataset_id, event_column_ids)
         processor = self.enter_xibo_event_crud_scope(xibo_event_crud_scope)
         processor.run()
-        
+
 
 class XiboEventCrudProcessor:
     """Updates events stored in Xibo to match the Meetup events."""

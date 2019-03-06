@@ -1,10 +1,8 @@
 """Access Xibo API to update events."""
 
-from urllib.parse import urljoin
+
 from itertools import chain
 import logging
-import time
-
 
 
 class XiboApi:
@@ -34,11 +32,13 @@ class XiboApi:
     def get_json_pages(self, url, **payload):
         """Return a generator of JSON pages requested from the URL."""
         start = 0
-        response = self.get_json(url, start = start, length = self.page_length, **payload)
+        response = self.get_json(
+                url, start=start, length=self.page_length, **payload)
         yield response
         while len(response) == self.page_length:
             start += self.page_length
-            response = self.get_json(url, start = start, length = self.page_length, **payload)
+            response = self.get_json(
+                    url, start=start, length=self.page_length, **payload)
             yield response
 
     def get_paged_json(self, url, **payload):
@@ -54,13 +54,13 @@ class XiboApi:
 
     def post(self, url, **payload):
         """Request posting at a URL and return the response."""
-        response = self.session.post(url, data = payload)
+        response = self.session.post(url, data=payload)
         response.raise_for_status()
         return response
 
     def put(self, url, **payload):
         """Request puting at a URL and return the response."""
-        response = self.session.put(url, data = payload)
+        response = self.session.put(url, data=payload)
         response.raise_for_status()
         return response
 
@@ -78,7 +78,7 @@ class XiboApi:
         """Get a JSON list of metadata about a dataset,
         searching by its code."""
         url = self.xibo_api_url_builder.dataset_url()
-        return self.get_json(url, code = dataset_code)
+        return self.get_json(url, code=dataset_code)
 
     def get_dataset_column_by_id(self, dataset_id):
         """Get a JSON list of dataset column metadata,
@@ -94,7 +94,8 @@ class XiboApi:
 
     def delete_dataset_data_by_id(self, dataset_id, row_id):
         """Delete the dataset row."""
-        url = self.xibo_api_url_builder.dataset_data_row_url(dataset_id, row_id)
+        url = self.xibo_api_url_builder.dataset_data_row_url(
+                dataset_id, row_id)
         return self.delete(url)
 
     def insert_dataset_data(self, dataset_id, columns):
@@ -104,7 +105,8 @@ class XiboApi:
 
     def update_dataset_data(self, dataset_id, row_id, columns):
         """Update a row of data in the Xibo database."""
-        url = self.xibo_api_url_builder.dataset_data_row_url(dataset_id, row_id)
+        url = self.xibo_api_url_builder.dataset_data_row_url(
+                dataset_id, row_id)
         return self.put(url, **columns)
 
 

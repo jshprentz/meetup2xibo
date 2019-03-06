@@ -26,14 +26,15 @@ class AntiFlapper:
         """Test whether a Xibo event falls outside the flapping windows."""
         is_past = xibo_event.end_time < self.recent_limit
         is_planned = xibo_event.start_time > self.current_limit
-        is_future = xibo_event.end_time > self.future_limit 
+        is_future = xibo_event.end_time > self.future_limit
         return (is_past or is_planned) and not is_future
+
 
 def iso_offset_time(now, future_seconds):
     """Given a date/time, now, and an offset into the future
     in seconds, computer and return the resulting date/time
     formatted in ISO YYYY-MM-DD hh:mm:ss format."""
-    offset = timedelta(seconds = future_seconds)
+    offset = timedelta(seconds=future_seconds)
     return (now + offset).strftime('%Y-%m-%d %H:%M:%S')
 
 # vim: tabstop=8 expandtab shiftwidth=4 softtabstop=4 autoindent

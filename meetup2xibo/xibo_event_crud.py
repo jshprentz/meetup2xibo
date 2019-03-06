@@ -1,6 +1,5 @@
 """Create, read, update, and delete events in Xibo."""
 
-from .exceptions import DatasetDiscoveryError
 import logging
 
 
@@ -10,10 +9,11 @@ class XiboEventCrud:
 
     logger = logging.getLogger("XiboEventCrud")
 
-    def __init__(self, xibo_api, dataset_id, column_name_manager,
+    def __init__(
+            self, xibo_api, dataset_id, column_name_manager,
             column_id_manager):
-        """Initialize with a Xibo API, a dataset ID, and
-        a column name manager."""
+        """Initialize with a Xibo API, a dataset ID, and a column name
+        manager."""
         self.xibo_api = xibo_api
         self.dataset_id = dataset_id
         self.column_name_manager = column_name_manager

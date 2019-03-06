@@ -6,7 +6,7 @@ import logging
 class LocationChooser:
 
     """Chooses locations for partial events.
-    
+
     For events with no special location, prefer any computed location over the
     default.
 
@@ -31,30 +31,40 @@ class LocationChooser:
         """Choose a location from a partial Meetup event."""
         computed_location = self.location_builder.build_location(partial_event)
         special_location = self.special_locations.get(partial_event.meetup_id)
-        return self.resolve_locations(partial_event, computed_location, special_location)
+        return self.resolve_locations(
+                partial_event, computed_location, special_location)
 
-    def resolve_locations(self, partial_event, computed_location, special_location):
-        """Consider computed and special locations for a partial event and
-        the default location. Return the most appropriate location."""
+    def resolve_locations(
+                self, partial_event, computed_location, special_location):
+        """Consider computed and special locations for a partial event and the
+        default location. Return the most appropriate location."""
         if special_location:
-            return self.resolve_with_special(computed_location, special_location)
+            return self.resolve_with_special(
+                    computed_location, special_location)
         else:
-            return self.resolve_without_special(partial_event, computed_location)
+            return self.resolve_without_special(
+                    partial_event, computed_location)
 
     def resolve_with_special(self, computed_location, special_location):
-        """Consider computed and the default location. Return the most appropriate location."""
+        """Consider computed and the default location. Return the most
+        appropriate location."""
         if special_location.override:
-            best_location = special_location.location or computed_location or self.default_location
+            best_location = special_location.location \
+                    or computed_location \
+                    or self.default_location
         else:
-            best_location = computed_location or special_location.location or self.default_location
+            best_location = computed_location \
+                    or special_location.location \
+                    or self.default_location
         return best_location
 
     def resolve_without_special(self, partial_event, computed_location):
-        """Consider computed and the default location. Return the most appropriate location."""
+        """Consider computed and the default location. Return the most
+        appropriate location."""
         if computed_location:
             return computed_location
         else:
-            self.logger.warning('Unknown location for %s', partial_event) 
+            self.logger.warning('Unknown location for %s', partial_event)
             return self.default_location
 
 

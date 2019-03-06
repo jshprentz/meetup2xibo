@@ -1,19 +1,22 @@
-"""Provide a logging context to open and close loggers and handloe
-otherwise unhandled exceptions."""
+"""Provide a logging context to open and close loggers and handloe otherwise
+unhandled exceptions."""
 
 import logging
 import logging.handlers
 
 
-FORMATTER = logging.Formatter('{asctime} - {levelname} - {name} - {message}', style='{')
+FORMATTER = logging.Formatter(
+        '{asctime} - {levelname} - {name} - {message}',
+        style='{')
 
 
 class LoggingContext:
 
     """Logging context configures logging and reports exit exceptions."""
 
-    def __init__(self, app_name, version, log_level = logging.INFO,
-            filename = None, verbose = False, warnings = False, mappings = False):
+    def __init__(
+            self, app_name, version, log_level=logging.INFO, filename=None,
+            verbose=False, warnings=False, mappings=False):
         """Initialize with an application name and version, a log level,
         an optional log file name, a verbose flag (sending logs to stderr), a
         warnings flag (sending warnings to stderr), and a mappings flag to
@@ -43,9 +46,9 @@ class LoggingContext:
         """Add a file handler that rotates daily at midnight."""
         if self.filename:
             handler = logging.handlers.TimedRotatingFileHandler(
-                    filename = self.filename,
-                    when = 'midnight',
-                    backupCount = 5)
+                    filename=self.filename,
+                    when='midnight',
+                    backupCount=5)
             handler.setFormatter(FORMATTER)
             root_logger.addHandler(handler)
 
@@ -59,8 +62,9 @@ class LoggingContext:
             root_logger.addHandler(handler)
 
     def log_start_end(self, verb):
-        """Log the start or end of an application given a verb (Start or End)."""
-        self._named_logger.info("{} {} {}".format(verb, self.app_name, self.version))
+        """Log the start or end of an application given a verb (Start or
+        End)."""
+        self._named_logger.info("%s %s %s", verb, self.app_name, self.version)
 
     def __enter__(self):
         """Enter a 'with' context and return a named logger."""
@@ -71,7 +75,8 @@ class LoggingContext:
         return self._named_logger
 
     def __exit__(self, exc_type, exc_value, traceback):
-        """Exit a 'with' context, logging any exception and shutting down logging."""
+        """Exit a 'with' context, logging any exception and shutting down
+        logging."""
         if exc_type and exc_type != SystemExit:
             self._named_logger.exception("Unexpected exception")
         self.log_start_end("End")
