@@ -1,72 +1,135 @@
-"""Retrieve events from Meetup, extract data to display on signs, and
-update the Xibo database."""
+"""Retrieve events from Meetup, extract data to display on signs, and update
+Xibo."""
 
-from config import MEETUP_API_CONFIG, LOCATION_CONFIG, XIBO_DB_CONNECTION, XIBO_DB_COLUMN_NAMES, XIBO_DB_CONFIG
-from .meetup_api import MeetupEventsRetriever
-from .location_extractor import LocationExtractor
-from .event_converter import EventConverter
-from .event_updater import EventUpdater
-from .logging_context import LoggingContext
-from  .xibo_db import connect_to_xibo_db
-import json
-import logging
+from collections import namedtuple
 
-VERSION = "1.0.1"
+
+XiboSessionScope = namedtuple(
+        "XiboSessionScope",
+        "meetup_events cancelled_meetup_events xibo_session")
+
+XiboEventCrudScope = namedtuple(
+        "XiboEventCrudScope",
+        "event_dataset_id event_column_ids")
+
 
 class Meetup2Xibo:
 
     """Downloads Meetup events into a Xibo databse."""
 
-    def __init__(self, args):
-        """Initialize with command line arguments."""
-        self.args = args
+    def __init__(
+            self, logging_context, meetup_events_retriever,
+            event_converter, site_cert_assurer, oauth2_session_starter,
+            enter_xibo_session_scope):
+        """Initialize with a logging context, a Meetup events retriever, an
+        event converter, a site certificate assurer, an OAuth2 session starter,
+        a Xibo sesson scope entrance function """
+        self.logging_context = logging_context
+        self.meetup_events_retriever = meetup_events_retriever
+        self.event_converter = event_converter
+        self.site_cert_assurer = site_cert_assurer
+        self.oauth2_session_starter = oauth2_session_starter
+        self.enter_xibo_session_scope = enter_xibo_session_scope
 
-    def main(self):
+    def run(self):
+        """Run the Meetup to Xibo conversion within a logging context."""
+        with self.logging_context:
+            self.convert()
 
-        with self.logging_context() as logger:
-            self.logger = logger
-            logger.info("Start meetup2xibo %s", VERSION)
-            json_events = self.retreive_meetup_json_events()
-            meetup_events = self.extract_events_from_json(json_events)
-            self.update_xibo_events(meetup_events)
-            logger.info("End meetup2xibo")
+    def convert(self):
+        """Convert Meetup events to Xibo events."""
+        meetup_events = self.retreive_meetup_events()
+        cancelled_meetup_events = self.retreive_cancelled_meetup_events()
+        xibo_session = self.start_xibo_session()
+        self.update_xibo_events(
+                meetup_events, cancelled_meetup_events, xibo_session)
 
-    def logging_context(self):
-        """Return a logging context."""
-        log_level = logging.DEBUG if self.args.debug else logging.INFO
-        logging_context =  LoggingContext(log_level = log_level, name = "meetup2xibo")
-        logging_context.log_to_file(self.args.logfile)
-        if self.args.verbose:
-            logging_context.log_to_stderr()
-        return logging_context
-
-    def retreive_meetup_json_events(self):
+    def retreive_meetup_events(self):
         """Retrieve a list of Meetup events."""
-        retriever = MeetupEventsRetriever(**MEETUP_API_CONFIG)
-        json_events = retriever.retrieve_events_json()
-        self.logger.debug("JSON retrieved")
-        return json_events
+        json_events = self.meetup_events_retriever.retrieve_events_json()
+        return self.extract_events_from_json(json_events)
+
+    def retreive_cancelled_meetup_events(self):
+        """Retrieve a list of cancelled Meetup events."""
+        retriever = self.meetup_events_retriever
+        json_events = retriever.retrieve_cancelled_events_json()
+        return self.extract_events_from_json(json_events)
 
     def extract_events_from_json(self, json_events):
         """Extract event tuples from a list of Meetup JSON events."""
-        location_extractor = LocationExtractor.from_location_phrases(**LOCATION_CONFIG)
-        event_converter = EventConverter(location_extractor)
-        meetup_events = (event_converter.convert(event_json) for event_json in json_events)
-        self.logger.debug("Events converted")
+        meetup_events = (
+                self.event_converter.convert(event_json)
+                for event_json in json_events)
         return meetup_events
 
-    def update_xibo_events(self, meetup_events):
-        """Update events stored in the Xibo database to match the Meetup events."""
-        db_connection = connect_to_xibo_db(XIBO_DB_CONNECTION, XIBO_DB_COLUMN_NAMES, XIBO_DB_CONFIG)
-        xibo_events = db_connection.get_xibo_events()
-        EventUpdater(meetup_events, xibo_events, db_connection).update_xibo()
+    def start_xibo_session(self):
+        """Return a new web session with the Xibo API server."""
+        self.site_cert_assurer.assure_site_cert()
+        return self.oauth2_session_starter.start_session()
+
+    def update_xibo_events(
+            self, meetup_events, cancelled_meetup_events, xibo_session):
+        """Update events stored in Xibo to match the Meetup events."""
+        xibo_session_scope = XiboSessionScope(
+            meetup_events, cancelled_meetup_events, xibo_session)
+        processor = self.enter_xibo_session_scope(xibo_session_scope)
+        processor.run()
 
 
-if __name__ == '__main__':
+class XiboSessionProcessor:
 
-    from .command_line import parse_args
+    """Retreives event dataset metadata from Xibo."""
 
-    args = parse_args()
-    Meetup2Xibo(args).main()
-            
+    def __init__(
+            self, event_dataset_code, dataset_id_finder, column_name_manager,
+            xibo_api, enter_xibo_event_crud_scope):
+        """Initialize with an event dataset code, a Xibo dataset ID finder, a
+        Xibo event column name manager, a Xibo API manager, and a function to
+        enter a Xibo event CRUD scope."""
+        self.event_dataset_code = event_dataset_code
+        self.dataset_id_finder = dataset_id_finder
+        self.column_name_manager = column_name_manager
+        self.xibo_api = xibo_api
+        self.enter_xibo_event_crud_scope = enter_xibo_event_crud_scope
+
+    def run(self):
+        """Retrieve event dataset metadata from Xibo."""
+        dataset_id = self.lookup_dataset_id()
+        column_ids = self.map_dataset_column_names(dataset_id)
+        self.update_xibo_events(dataset_id, column_ids)
+
+    def lookup_dataset_id(self):
+        """Lookup the dataset ID for a dataset code."""
+        return self.dataset_id_finder.find_dataset_id(self.event_dataset_code)
+
+    def map_dataset_column_names(self, dataset_id):
+        """Map the dataset column names to IDs for a given dataset."""
+        json_columns = self.xibo_api.get_dataset_column_by_id(dataset_id)
+        return self.column_name_manager.json_to_column_ids(json_columns)
+
+    def update_xibo_events(self, event_dataset_id, event_column_ids):
+        """Update events stored in Xibo to match the Meetup events."""
+        xibo_event_crud_scope = XiboEventCrudScope(
+                event_dataset_id, event_column_ids)
+        processor = self.enter_xibo_event_crud_scope(xibo_event_crud_scope)
+        processor.run()
+
+
+class XiboEventCrudProcessor:
+    """Updates events stored in Xibo to match the Meetup events."""
+
+    def __init__(self, xibo_event_crud, provide_event_updater):
+        """Initialize a Xibo event CRUD manager, and a function that provides
+        an event updater.  """
+        self.xibo_event_crud = xibo_event_crud
+        self.provide_event_updater = provide_event_updater
+
+    def run(self):
+        """Update events stored in Xibo to match the Meetup events."""
+        xibo_events = self.xibo_event_crud.get_xibo_events()
+        event_updater = self.provide_event_updater(
+            self.xibo_event_crud, xibo_events)
+        event_updater.update_xibo()
+
+
 # vim: tabstop=8 expandtab shiftwidth=4 softtabstop=4 autoindent

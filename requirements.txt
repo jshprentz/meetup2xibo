@@ -1,4 +1,4 @@
-hypothesis
-pytest
 requests
-mysqlclient
+oauthlib
+requests_oauthlib
+pyahocorasick

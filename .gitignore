@@ -44,6 +44,9 @@ nosetests.xml
 coverage.xml
 *,cover
 .hypothesis/
+.pytest_cache/
+tests/xibo_responses/
+tests/meetup_responses/
 
 # Translations
 *.mo
@@ -78,4 +81,6 @@ venv/
 *.csv
 
 # Sensitive files
-config.py
+run.config
+test.config
+TODO

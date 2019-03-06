@@ -1,0 +1,15 @@
+#!/bin/sh
+
+sed -n '
+1i\
+"Location Displayed","Meetup Event ID","Venue","Find Us"
+/EventConverter/ {
+	s/^.*Location=//
+	s/ MeetupEvent=.*meetup_id=/,/
+	s/ name=.*venue_name=//
+	s/ find_us=//
+	s/)$//
+	s/'"'"'/"/g
+	p
+}
+'
