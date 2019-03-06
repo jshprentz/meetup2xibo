@@ -2,10 +2,13 @@
 History
 =======
 
-2.0.1 (2019-03-05)
+2.0.2 (Future)
 ------------------
 
 * First release on PyPI.
+
+2.0.1 (2019-03-06)
+------------------
 * Improve location analysis and overrides.
 * Track cancelled events.
 * Add documentation with Sphinx and ReadTheDocs.
@@ -13,6 +16,8 @@ History
 * Replace Python configuration file with environment based configuration.
 * Restructure code with dependency injection.
 * Add Python package support.
+* Reformat to conform to PEP-8.
+* Test with multiple Python versions (3.5 and 3.6).
 
 1.0.1 (2017-12-12)
 ------------------
