@@ -44,13 +44,12 @@ def save_response(response, path):
         data = dump.dump_response(response)
         print(data.decode('utf-8'), file = f)
 
-def test_bad_status(xibo_session, xibo_api_url_builder, mocker):
+def test_bad_status(xibo_session, xibo_api_url_builder):
+    """Test raising a Xibo API error for a bad HTTP response status."""
     bad_about_url = xibo_api_url_builder.about_url() + "x"
-    mock_xibo_api_url_builder = mocker.MagicMock()
-    mock_xibo_api_url_builder.about_url = mocker.Mock(return_value=bad_about_url)
-    xibo_api = XiboApi(xibo_session, mock_xibo_api_url_builder, SAMPLE_XIBO_PAGE_LENGTH)
+    xibo_api = XiboApi(xibo_session, xibo_api_url_builder, SAMPLE_XIBO_PAGE_LENGTH)
     with pytest.raises(XiboApiError, match=r'.*HTTP status is \d+, not ok.*'):
-        xibo_api.get_about()
+        xibo_api.get_response(bad_about_url)
 
 def test_about_response(module_file_path, xibo_session, xibo_api_url_builder):
     """Save response from an "about" request to Xibo."""
