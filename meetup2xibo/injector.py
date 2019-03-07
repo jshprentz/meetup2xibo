@@ -20,6 +20,7 @@ from .xibo_event import XiboEvent, XiboEventColumnNameManager, \
 from .xibo_event_crud import XiboEventCrud
 from .anti_flapper import AntiFlapper, iso_offset_time
 from ahocorasick import Automaton
+from requests_toolbelt import user_agent
 from datetime import datetime
 import certifi
 
@@ -131,7 +132,7 @@ def inject_xibo_token_url(application_scope):
 def inject_user_agent(application_scope):
     """Return the user agent string for web requests configured by an
     application scope."""
-    return "{}/{}".format(
+    return user_agent(
         application_scope.app_name,
         application_scope.version)
 

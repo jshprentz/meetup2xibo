@@ -11,11 +11,13 @@ with open('README.rst') as readme_file:
 with open('HISTORY.rst') as history_file:
     history = history_file.read()
 
-requirements = ['requests', 'oauthlib', 'requests_oauthlib', 'pyahocorasick', ]
+requirements = [
+        'requests', 'requests-toolbelt', 'oauthlib',
+        'requests_oauthlib', 'pyahocorasick', ]
 
 setup_requirements = ['pytest-runner', ]
 
-test_requirements = ['pytest', 'pytest-mock', 'hypothesis', 'requests-toolbelt', 'tox', 'flake8']
+test_requirements = ['pytest', 'pytest-mock', 'hypothesis', 'tox', 'flake8']
 
 setup(
     author="Joel Shprentz",
