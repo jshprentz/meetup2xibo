@@ -1,9 +1,9 @@
 """Test logging unneeded special locations."""
 
 from .context import meetup2xibo
-from meetup2xibo.application_scope import SpecialLocation
-from meetup2xibo.special_location_monitor import SpecialLocationMonitor
-from meetup2xibo.xibo_event import XiboEvent
+from meetup2xibo.updater.application_scope import SpecialLocation
+from meetup2xibo.updater.special_location_monitor import SpecialLocationMonitor
+from meetup2xibo.updater.xibo_event import XiboEvent
 import pytest
 
 SAMPLE_MEETUP_ID = "A123"

@@ -1,8 +1,8 @@
 """Test the event converter from Meetup JSON to event object."""
 
 from .context import meetup2xibo
-from meetup2xibo.event_converter import EventConverter, Event, PartialEvent
-from meetup2xibo.location_chooser import LocationChooser
+from meetup2xibo.updater.event_converter import EventConverter, Event, PartialEvent
+from meetup2xibo.updater.location_chooser import LocationChooser
 from hypothesis import given, assume, example
 from hypothesis.strategies import integers, text
 import string
