@@ -1,6 +1,7 @@
 """Test generating Xibo API URLs."""
 
-from meetup2xibo.xibo_api_url_builder import XiboApiUrlBuilder
+from .context import meetup2xibo
+from meetup2xibo.updater.xibo_api_url_builder import XiboApiUrlBuilder
 
 
 def test_access_token_url_default_port():

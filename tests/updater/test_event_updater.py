@@ -1,10 +1,10 @@
 """Tests for the event updater."""
 
 from .context import meetup2xibo
-from meetup2xibo.event_converter import Event
-from meetup2xibo.xibo_event import XiboEvent
-from meetup2xibo.event_updater import EventUpdater
-from meetup2xibo.anti_flapper import AntiFlapper
+from meetup2xibo.updater.event_converter import Event
+from meetup2xibo.updater.xibo_event import XiboEvent
+from meetup2xibo.updater.event_updater import EventUpdater
+from meetup2xibo.updater.anti_flapper import AntiFlapper
 from unittest.mock import MagicMock, call
 
 

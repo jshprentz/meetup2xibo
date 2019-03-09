@@ -45,8 +45,8 @@ coverage.xml
 *,cover
 .hypothesis/
 .pytest_cache/
-tests/xibo_responses/
-tests/meetup_responses/
+tests/updater/xibo_responses/
+tests/updater/meetup_responses/
 
 # Translations
 *.mo

@@ -1,8 +1,7 @@
 """Test the phrase mapper used to extract locations."""
 
 from .context import meetup2xibo
-from meetup2xibo.phrase_mapper import PhraseMapper
-import meetup2xibo.phrase_mapper as phrase_mapper
+import meetup2xibo.updater.phrase_mapper as phrase_mapper
 import ahocorasick
 from hypothesis import given, assume, example
 import hypothesis.strategies as st

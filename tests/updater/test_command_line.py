@@ -1,5 +1,5 @@
 from .context import meetup2xibo
-import meetup2xibo.command_line as command_line
+import meetup2xibo.updater.command_line as command_line
 
 
 def parse_without_args():

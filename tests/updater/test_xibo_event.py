@@ -1,10 +1,10 @@
 """Tests for Xibo event conversions."""
 
 from .context import meetup2xibo
-from meetup2xibo.xibo_event import XiboEvent, XiboEventColumnNameManager, XiboEventColumnIdManager
+from meetup2xibo.updater.xibo_event import XiboEvent, XiboEventColumnNameManager, XiboEventColumnIdManager
 import json
 
-EXAMPLE_COLUMNS_FILE = "tests/example_dataset_columns.json"
+EXAMPLE_COLUMNS_FILE = "tests/updater/example_dataset_columns.json"
 
 COLUMN_NAMES = XiboEvent(
     xibo_id = "id",

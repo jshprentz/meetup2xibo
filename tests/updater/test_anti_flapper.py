@@ -1,8 +1,8 @@
 """Test the anti-flapper's judgements about event times."""
 
 from .context import meetup2xibo
-from meetup2xibo.xibo_event import XiboEvent
-from meetup2xibo.anti_flapper import AntiFlapper, iso_offset_time
+from meetup2xibo.updater.xibo_event import XiboEvent
+from meetup2xibo.updater.anti_flapper import AntiFlapper, iso_offset_time
 from hypothesis import given, assume, example
 import hypothesis.strategies as st
 from datetime import datetime

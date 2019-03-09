@@ -1,11 +1,11 @@
 """Test generating the Xibo API."""
 
 from .context import meetup2xibo
-from meetup2xibo.xibo_api_url_builder import XiboApiUrlBuilder
-from meetup2xibo.site_cert_assurer import assure_site_cert
-from meetup2xibo.oauth2_session_starter import Oauth2SessionStarter
-from meetup2xibo.location_builder import LocationBuilder
-from meetup2xibo.phrase_mapper import PhraseMapper
+from meetup2xibo.updater.xibo_api_url_builder import XiboApiUrlBuilder
+from meetup2xibo.updater.site_cert_assurer import assure_site_cert
+from meetup2xibo.updater.oauth2_session_starter import Oauth2SessionStarter
+from meetup2xibo.updater.location_builder import LocationBuilder
+from meetup2xibo.updater.phrase_mapper import PhraseMapper
 from ahocorasick import Automaton
 from pathlib import Path
 import os

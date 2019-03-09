@@ -35,7 +35,7 @@ setup(
     description="Load Meetup events into a Xibo digital signage CMS.",
     entry_points={
         'console_scripts': [
-            'meetup2xibo=meetup2xibo.__main__:main',
+            'meetup2xibo=meetup2xibo.updater.__main__:main',
         ],
     },
     install_requires=requirements,

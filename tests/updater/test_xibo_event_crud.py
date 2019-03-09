@@ -1,9 +1,9 @@
 """Tests for Xibo event create, read, update, and delete."""
 
 from .context import meetup2xibo
-from meetup2xibo.event_converter import Event
-from meetup2xibo.xibo_event import XiboEvent, XiboEventColumnNameManager, XiboEventColumnIdManager
-from meetup2xibo.xibo_event_crud import XiboEventCrud
+from meetup2xibo.updater.event_converter import Event
+from meetup2xibo.updater.xibo_event import XiboEvent, XiboEventColumnNameManager, XiboEventColumnIdManager
+from meetup2xibo.updater.xibo_event_crud import XiboEventCrud
 import logging
 import pytest
 
