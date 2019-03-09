@@ -56,6 +56,12 @@ lint: ## check style with flake8
 test: ## run tests quickly with the default Python
 	py.test
 
+test-summarizer: ## run log summarizer tests quickly with the default Python
+	py.test tests/log_summarizer/
+
+test-updater: ## run updater tests quickly with the default Python
+	py.test tests/updater/
+
 test-all: ## run tests on every Python version with tox
 	tox
 
