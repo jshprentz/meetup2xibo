@@ -1,6 +1,6 @@
 """Finding Xibo dataset IDs."""
 
-from .context import meetup2xibo
+from ..context import meetup2xibo
 from meetup2xibo.updater.xibo_api import XiboApi
 from meetup2xibo.updater.xibo_dataset_id_finder import XiboDatasetIdFinder
 from meetup2xibo.updater.exceptions import DatasetDiscoveryError

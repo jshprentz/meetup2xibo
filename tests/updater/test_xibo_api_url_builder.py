@@ -1,6 +1,6 @@
 """Test generating Xibo API URLs."""
 
-from .context import meetup2xibo
+from ..context import meetup2xibo
 from meetup2xibo.updater.xibo_api_url_builder import XiboApiUrlBuilder
 
 

@@ -1,6 +1,6 @@
 """Test generating the Xibo API."""
 
-from .context import meetup2xibo
+from ..context import meetup2xibo
 from meetup2xibo.updater.xibo_api import XiboApi, XiboApiError
 from meetup2xibo.updater.xibo_event import XiboEvent
 from requests_toolbelt.utils import dump

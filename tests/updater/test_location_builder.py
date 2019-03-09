@@ -1,6 +1,6 @@
 """Test building locations from a Meetup event."""
 
-from .context import meetup2xibo
+from ..context import meetup2xibo
 from meetup2xibo.updater.event_converter import PartialEvent
 from meetup2xibo.updater.location_builder import LocationBuilder
 from meetup2xibo.updater.phrase_mapper import PhraseMapper

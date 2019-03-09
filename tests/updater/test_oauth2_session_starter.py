@@ -1,6 +1,6 @@
 """Test starting an OAuth2 web session."""
 
-from .context import meetup2xibo
+from ..context import meetup2xibo
 from meetup2xibo.updater.oauth2_session_starter import Oauth2SessionStarter
 from meetup2xibo.updater.site_cert_assurer import assure_site_cert
 from requests_oauthlib import OAuth2Session

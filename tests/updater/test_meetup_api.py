@@ -1,6 +1,6 @@
 """Tests for Meetup API"""
 
-from .context import meetup2xibo
+from ..context import meetup2xibo
 from meetup2xibo.updater.meetup_api import MeetupEventsRetriever, meetup_iso_offset_time
 from datetime import datetime
 import os

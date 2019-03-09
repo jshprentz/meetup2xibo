@@ -1,4 +1,6 @@
-from .context import meetup2xibo
+"""Test the command line options."""
+
+from ..context import meetup2xibo
 import meetup2xibo.updater.command_line as command_line
 
 

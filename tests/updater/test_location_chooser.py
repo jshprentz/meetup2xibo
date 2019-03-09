@@ -1,6 +1,6 @@
 """Test choosing locations for a Meetup event."""
 
-from .context import meetup2xibo
+from ..context import meetup2xibo
 from meetup2xibo.updater.application_scope import SpecialLocation
 from meetup2xibo.updater.event_converter import PartialEvent
 from meetup2xibo.updater.location_chooser import LocationChooser

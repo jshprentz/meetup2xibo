@@ -1,6 +1,6 @@
 """Tests for the event updater."""
 
-from .context import meetup2xibo
+from ..context import meetup2xibo
 from meetup2xibo.updater.event_converter import Event
 from meetup2xibo.updater.xibo_event import XiboEvent
 from meetup2xibo.updater.event_updater import EventUpdater
