@@ -1,5 +1,7 @@
 """Provides time ordered sample log lines."""
 
+DATE_TIME_TEMPLATE = "2019-03-04 06:{minutes:02d}:12"
+
 START_TEMPLATE = \
     "2019-03-04 06:{minutes:02d}:53,454 - INFO - meetup2xibo - Start meetup2xibo 2.0.1"
 
@@ -63,7 +65,6 @@ UNKNOWN_LOCATION_TEMPLATE = \
     "Unknown location for PartialEvent(meetup_id='259565055', name='EMPOWER2MAKE', " \
     "start_time='2019-04-12 16:00:00', end_time='2019-04-12 18:00:00', venue_name='', find_us='')"
 
-
 class SampleLogLines:
 
     """Provides time ordered sample log lines."""
@@ -77,6 +78,10 @@ class SampleLogLines:
         line = template.format(minutes = self.minutes)
         self.minutes += 1
         return line
+
+    def date_time(self):
+        """Return an ISO formatted date/time."""
+        return self.make_line(DATE_TIME_TEMPLATE)
 
     def start_line(self):
         """Return a start line."""

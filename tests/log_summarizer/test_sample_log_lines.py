@@ -3,6 +3,10 @@
 from .sample_log_lines import SampleLogLines
 import pytest
 
+def test_date_time(sample_log_lines):
+    """Test getting a date/time."""
+    line = sample_log_lines.date_time()
+    assert line == "2019-03-04 06:00:12"
 
 def test_start_line(sample_log_lines):
     """Test getting a start line."""
