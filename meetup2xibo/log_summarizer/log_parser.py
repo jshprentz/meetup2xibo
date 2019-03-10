@@ -15,8 +15,12 @@ Field = namedtuple("Field", "name value")
 
 
 GRAMMER = r"""
-start_log_line = log_line_start('meetup2xibo'):s 'Start ' rest_of_line:p
-        -> StartLogLine(s.timestamp, p)
+log_lines = (log_line)*:l
+
+log_line = (start_log_line | insert_log_line | delete_log_line | update_log_line | other_log_line) '\n'
+
+start_log_line :counter = log_line_start('meetup2xibo'):s 'Start ' rest_of_line:p
+        -> counter.count(p)
 
 insert_log_line = log_line_start('XiboEventCrud'):s 'Inserted ' event:e
         -> InsertLogLine(s.timestamp, e)
@@ -57,7 +61,7 @@ quoted_value = ( '\'' | '"' ):q (escaped_char | ~exactly(q) anything)*:c exactly
 
 escaped_char = '\\' ( '\\' | '\'' | '"' )
 
-rest_of_line (~'\n' anything)*:c end_of_line -> ''.join(c)
+rest_of_line (~'\n' anything)*:c -> ''.join(c)
 
 end_of_line ('\n' | end)
 

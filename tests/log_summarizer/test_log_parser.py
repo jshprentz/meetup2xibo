@@ -2,6 +2,7 @@
 
 from ..context import meetup2xibo
 from meetup2xibo.log_summarizer.log_parser import make_log_parser_class, Field
+from meetup2xibo.log_summarizer.start_counter import StartCounter
 from parsley import ParseError
 import pytest
 
@@ -55,7 +56,7 @@ def test_name(log_parser_class):
 
 def test_rest_of_line(log_parser_class):
     """Test recognizing the rest of a line."""
-    parser = log_parser_class("The quick brown fox\n")
+    parser = log_parser_class("The quick brown fox")
     assert parser.rest_of_line() == "The quick brown fox"
 
 def test_log_line_start(log_parser_class):
@@ -65,9 +66,11 @@ def test_log_line_start(log_parser_class):
 
 def test_start_log_line(log_parser_class, sample_log_lines):
     """Test recognizing a start log line."""
+    counter = StartCounter()
     log_line = sample_log_lines.start_line()
     parser = log_parser_class(log_line)
-    assert parser.start_log_line() == ("2019-03-04 06:00:53", "meetup2xibo 2.0.1")
+    parser.start_log_line(counter)
+    assert counter.counts() == [("meetup2xibo 2.0.1", 1)]
 
 def test_quoted_value(log_parser_class):
     """Test recognizing a quoted value."""
@@ -128,26 +131,13 @@ def test_insert_log_line(log_parser_class, sample_log_lines):
     """Test recognizing an insert log line."""
     log_line = sample_log_lines.insert_line()
     parser = log_parser_class(log_line)
-    assert parser.insert_log_line() == ('2019-03-04 06:00:12', [
-            ('meetup_id', 'tmnbrqyzhbhb'),
-            ('name', 'Maker Faire Organizing Team'),
-            ('location', 'Classroom A'),
-            ('start_time', '2019-05-05 18:00:00'),
-            ('end_time', '2019-05-05 20:00:00'),
-            ])
+    assert parser.insert_log_line() == ('2019-03-04 06:00:12', sample_log_lines.insert_fields)
 
 def test_delete_log_line(log_parser_class, sample_log_lines):
     """Test recognizing a delete log line."""
     log_line = sample_log_lines.delete_line()
     parser = log_parser_class(log_line)
-    assert parser.delete_log_line() == ('2019-03-04 06:00:57', [
-            ('xibo_id', '36'),
-            ('meetup_id', '258645498'),
-            ('name', 'DIYbio: Microfluidics'),
-            ('location', 'Classroom A'),
-            ('start_time', '2019-03-03 14:00:00'),
-            ('end_time', '2019-03-03 16:00:00'),
-            ])
+    assert parser.delete_log_line() == ('2019-03-04 06:00:57', sample_log_lines.delete_fields)
 
 def test_update_log_line(log_parser_class, sample_log_lines):
     """Test recognizing a pair of update log lines."""
@@ -155,21 +145,8 @@ def test_update_log_line(log_parser_class, sample_log_lines):
     parser = log_parser_class(log_line)
     timestamp, before, after =  parser.update_log_line()
     assert timestamp == '2019-03-04 06:00:59'
-    assert before == [
-            ('xibo_id', '423'),
-            ('meetup_id', '259565142'),
-            ('name', 'EMPOWER2MAKE'),
-            ('location', 'Nova Labs'),
-            ('start_time', '2019-04-14 08:00:00'),
-            ('end_time', '2019-04-14 10:00:00'),
-            ]
-    assert after == [
-            ('meetup_id', '259565142'),
-            ('name', 'EMPOWER2MAKE'),
-            ('location', 'Orange Bay'),
-            ('start_time', '2019-04-14 08:00:00'),
-            ('end_time', '2019-04-14 10:00:00'),
-            ]
+    assert before == sample_log_lines.update_before_fields
+    assert after == sample_log_lines.update_after_fields
 
 
 # vim: tabstop=8 expandtab shiftwidth=4 softtabstop=4 autoindent
