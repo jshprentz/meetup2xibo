@@ -2,3 +2,4 @@ requests
 oauthlib
 requests_oauthlib
 pyahocorasick
+parsley

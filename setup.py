@@ -13,7 +13,7 @@ with open('HISTORY.rst') as history_file:
 
 requirements = [
         'requests', 'requests-toolbelt', 'oauthlib',
-        'requests_oauthlib', 'pyahocorasick', ]
+        'requests_oauthlib', 'pyahocorasick', 'parsley']
 
 setup_requirements = ['pytest-runner', ]
 
