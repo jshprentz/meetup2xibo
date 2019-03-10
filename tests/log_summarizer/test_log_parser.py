@@ -79,6 +79,27 @@ def test_field(log_parser_class):
     parser = log_parser_class("foo='bar'")
     assert parser.field() == ("foo", "bar")
 
+def test_field_with_single_quote(log_parser_class):
+    """Test recognizing a field containing a single quote."""
+    parser = log_parser_class('''name="Test single quote ' here"''')
+    assert parser.field() == ("name", "Test single quote ' here")
+
+def test_field_with_double_quote(log_parser_class):
+    """Test recognizing a field containing a double quote."""
+    parser = log_parser_class("""name='Test double quote " here'""")
+    assert parser.field() == ("name", 'Test double quote " here')
+
+def test_field_with_single_and_double_quote(log_parser_class):
+    """Test recognizing a field containing both a single quote and a double
+    quote."""
+    parser = log_parser_class(r"""name='Test single quote \' and double quote " together'""")
+    assert parser.field() == ("name", 'Test single quote \' and double quote " together')
+
+def test_field_with_backslash(log_parser_class):
+    """Test recognizing a field containing a backslash."""
+    parser = log_parser_class(r"""name='Test backslash \\ here'""")
+    assert parser.field() == ("name", 'Test backslash \\ here')
+
 def test_fields_1(log_parser_class):
     """Test recognizing fields with one field."""
     parser = log_parser_class("foo='bar'")

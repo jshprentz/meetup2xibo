@@ -53,7 +53,9 @@ fields = field:first (', ' field)*:rest -> [first] + rest
 
 field = name:n '=' quoted_value:v -> Field(n, v)
 
-quoted_value = '\'' (~'\'' anything)*:c '\'' -> ''.join(c)
+quoted_value = ( '\'' | '"' ):q (escaped_char | ~exactly(q) anything)*:c exactly(q) -> ''.join(c)
+
+escaped_char = '\\' ( '\\' | '\'' | '"' )
 
 rest_of_line (~'\n' anything)*:c end_of_line -> ''.join(c)
 
