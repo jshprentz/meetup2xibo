@@ -14,7 +14,7 @@ INSERT_TEMPLATE = \
 UPDATE_TEMPLATE = \
     "2019-03-04 06:{minutes:02d}:59,273 - INFO - XiboEventCrud - Updated " \
     "from XiboEvent(xibo_id='423', meetup_id='259565142', name='EMPOWER2MAKE', " \
-    "location='Nova Labs,', start_time='2019-04-14 08:00:00', end_time='2019-04-14 10:00:00')\n" \
+    "location='Nova Labs', start_time='2019-04-14 08:00:00', end_time='2019-04-14 10:00:00')\n" \
     "2019-03-04 06:{minutes:02d}:59,274 - INFO - XiboEventCrud - Updated to " \
     "Event(meetup_id='259565142', name='EMPOWER2MAKE', location='Orange Bay', " \
     "start_time='2019-04-14 08:00:00', end_time='2019-04-14 10:00:00')"

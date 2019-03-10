@@ -1,15 +1,15 @@
 """Test log parser productions."""
 
 from ..context import meetup2xibo
-from meetup2xibo.log_summarizer.log_parser import make_log_parser_class
+from meetup2xibo.log_summarizer.log_parser import make_log_parser_class, Field
 from parsley import ParseError
 import pytest
 
-def parse_error_hash(self):
-    """Define missing ParseError.__hash__()."""
-    return hash((self.position, self.formatReason()))
+#def parse_error_hash(self):
+#    """Define missing ParseError.__hash__()."""
+#    return hash((self.position, self.formatReason()))
 
-ParseError.__hash__ = parse_error_hash
+#ParseError.__hash__ = parse_error_hash
 
 
 @pytest.fixture(scope="module")
@@ -60,8 +60,8 @@ def test_rest_of_line(log_parser_class):
 
 def test_log_line_start(log_parser_class):
     """Test recognizing the start of a line."""
-    parser = log_parser_class("2019-03-04 16:52:14,131 - INFO - ")
-    assert parser.log_line_start() == ("2019-03-04 16:52:14", "INFO")
+    parser = log_parser_class("2019-03-04 16:52:14,131 - INFO - foo - ")
+    assert parser.log_line_start("foo") == ("2019-03-04 16:52:14", "INFO")
 
 def test_start_log_line(log_parser_class, sample_log_lines):
     """Test recognizing a start log line."""
@@ -114,5 +114,41 @@ def test_insert_log_line(log_parser_class, sample_log_lines):
             ('start_time', '2019-05-05 18:00:00'),
             ('end_time', '2019-05-05 20:00:00'),
             ])
+
+def test_delete_log_line(log_parser_class, sample_log_lines):
+    """Test recognizing a delete log line."""
+    log_line = sample_log_lines.delete_line()
+    parser = log_parser_class(log_line)
+    assert parser.delete_log_line() == ('2019-03-04 06:00:57', [
+            ('xibo_id', '36'),
+            ('meetup_id', '258645498'),
+            ('name', 'DIYbio: Microfluidics'),
+            ('location', 'Classroom A'),
+            ('start_time', '2019-03-03 14:00:00'),
+            ('end_time', '2019-03-03 16:00:00'),
+            ])
+
+def test_update_log_line(log_parser_class, sample_log_lines):
+    """Test recognizing a pair of update log lines."""
+    log_line = sample_log_lines.update_line()
+    parser = log_parser_class(log_line)
+    timestamp, before, after =  parser.update_log_line()
+    assert timestamp == '2019-03-04 06:00:59'
+    assert before == [
+            ('xibo_id', '423'),
+            ('meetup_id', '259565142'),
+            ('name', 'EMPOWER2MAKE'),
+            ('location', 'Nova Labs'),
+            ('start_time', '2019-04-14 08:00:00'),
+            ('end_time', '2019-04-14 10:00:00'),
+            ]
+    assert after == [
+            ('meetup_id', '259565142'),
+            ('name', 'EMPOWER2MAKE'),
+            ('location', 'Orange Bay'),
+            ('start_time', '2019-04-14 08:00:00'),
+            ('end_time', '2019-04-14 10:00:00'),
+            ]
+
 
 # vim: tabstop=8 expandtab shiftwidth=4 softtabstop=4 autoindent

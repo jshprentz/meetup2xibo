@@ -8,22 +8,34 @@ LogLineStart = namedtuple("LogLineStart", "timestamp log_level")
 StartLogLine = namedtuple("StartLogLine", "timestamp program")
 InsertLogLine = namedtuple("InsertLogLine", "timestamp event")
 DeleteLogLine = namedtuple("DeleteLogLine", "timestamp event")
+UpdateLogLine = namedtuple("UpdateLogLine", "timestamp before after")
+UpdateFromLogLine = namedtuple("UpdateFromLogLine", "timestamp event")
+UpdateToLogLine = namedtuple("UpdateToLogLine", "timestamp event")
 Field = namedtuple("Field", "name value")
 
 
 GRAMMER = r"""
-start_log_line = log_line_start:s 'meetup2xibo' dash 'Start ' rest_of_line:p
+start_log_line = log_line_start('meetup2xibo'):s 'Start ' rest_of_line:p
         -> StartLogLine(s.timestamp, p)
 
-insert_log_line = log_line_start:s 'XiboEventCrud' dash 'Inserted ' event:e
+insert_log_line = log_line_start('XiboEventCrud'):s 'Inserted ' event:e
         -> InsertLogLine(s.timestamp, e)
 
-delete_log_line = log_line_start:s 'XiboEventCrud' dash 'Deleted Xibo' event:e
+delete_log_line = log_line_start('XiboEventCrud'):s 'Deleted Xibo' event:e
         -> DeleteLogLine(s.timestamp, e)
+
+update_log_line = update_from_log_line:f '\n' update_to_log_line:t
+        -> UpdateLogLine(f.timestamp, f.event, t.event)
+
+update_from_log_line = log_line_start('XiboEventCrud'):s 'Updated from Xibo' event:e
+        -> UpdateFromLogLine(s.timestamp, e)
+
+update_to_log_line = log_line_start('XiboEventCrud'):s 'Updated to ' event:e
+        -> UpdateToLogLine(s.timestamp, e)
 
 other_log_line = log_line_start name dash rest_of_line
 
-log_line_start = timestamp:t dash level:l dash -> LogLineStart(t, l)
+log_line_start :name = timestamp:t dash level:l dash name dash -> LogLineStart(t, l)
 
 timestamp = date:d ' ' time:t -> " ".join((d, t))
 
@@ -43,7 +55,9 @@ field = name:n '=' quoted_value:v -> Field(n, v)
 
 quoted_value = '\'' (~'\'' anything)*:c '\'' -> ''.join(c)
 
-rest_of_line (~'\n' anything)*:c ('\n' | end) -> ''.join(c)
+rest_of_line (~'\n' anything)*:c end_of_line -> ''.join(c)
+
+end_of_line ('\n' | end)
 
 dash = ' - '
 """
@@ -56,6 +70,10 @@ def make_log_parser_class():
             'LogLineStart': LogLineStart,
             'StartLogLine': StartLogLine,
             'InsertLogLine': InsertLogLine,
+            'DeleteLogLine': DeleteLogLine,
+            'UpdateLogLine': UpdateLogLine,
+            'UpdateFromLogLine': UpdateFromLogLine,
+            'UpdateToLogLine': UpdateToLogLine,
             }
     return makeGrammar(GRAMMER, context)
 
