@@ -1,5 +1,8 @@
 """Provides time ordered sample log lines."""
 
+from meetup2xibo.log_summarizer.event import Event
+from meetup2xibo.log_summarizer.log_lines import InsertEventLogLine, UpdateEventLogLine, DeleteEventLogLine
+
 DATE_TIME_TEMPLATE = "2019-03-04 06:{minutes:02d}:12"
 
 START_TEMPLATE = \
@@ -129,5 +132,29 @@ class SampleLogLines:
         line."""
         return UPDATE_AFTER_FIELDS
 
+    @staticmethod
+    def make_event(fields):
+        """Make an event with supplied values."""
+        field_dict = dict(fields)
+        return Event(**field_dict)
+
+    def make_insert_log_line(self):
+        """Return an insert log line object."""
+        event = self.make_event(INSERT_FIELDS)
+        date_time = self.date_time()
+        return InsertEventLogLine(date_time, event)
+
+    def make_update_log_line(self):
+        """Return an update log line object."""
+        before_event = self.make_event(UPDATE_BEFORE_FIELDS)
+        after_event = self.make_event(UPDATE_AFTER_FIELDS)
+        date_time = self.date_time()
+        return UpdateEventLogLine(date_time, before_event, after_event)
+
+    def make_delete_log_line(self):
+        """Return a delete log line object."""
+        event = self.make_event(DELETE_FIELDS)
+        date_time = self.date_time()
+        return DeleteEventLogLine(date_time, event)
 
 # vim: tabstop=8 expandtab shiftwidth=4 softtabstop=4 autoindent
