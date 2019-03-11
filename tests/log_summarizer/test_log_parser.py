@@ -2,9 +2,14 @@
 
 from ..context import meetup2xibo
 from meetup2xibo.log_summarizer.log_parser import make_log_parser_class, Field
+from meetup2xibo.log_summarizer.event import Event
+from meetup2xibo.log_summarizer.log_lines import InsertEventLogLine, UpdateEventLogLine, DeleteEventLogLine
 from meetup2xibo.log_summarizer.start_counter import StartCounter
+from meetup2xibo.log_summarizer.crud_lister import CrudLister
 from parsley import ParseError
 import pytest
+
+#pytestmark = pytest.mark.skip("Parser being reorganized.")
 
 #def parse_error_hash(self):
 #    """Define missing ParseError.__hash__()."""
@@ -119,34 +124,53 @@ def test_event(log_parser_class):
             "Event(xibo_id='430', meetup_id='zvbxrpl2', "
             "name='Nova Labs Open House', location='Orange Bay', "
             "start_time='2019-02-26 15:00:00', end_time='2019-02-26 17:00:00')")
-    assert parser.event() == [
-            ('xibo_id', '430'),
-            ('meetup_id', 'zvbxrpl2'),
-            ('name', 'Nova Labs Open House'),
-            ('location', 'Orange Bay'),
-            ('start_time', '2019-02-26 15:00:00'),
-            ('end_time', '2019-02-26 17:00:00')]
+    expected_event = Event(
+            xibo_id='430',
+            meetup_id='zvbxrpl2',
+            name='Nova Labs Open House',
+            location='Orange Bay',
+            start_time='2019-02-26 15:00:00',
+            end_time='2019-02-26 17:00:00')
+    assert parser.event() == expected_event
 
 def test_insert_log_line(log_parser_class, sample_log_lines):
     """Test recognizing an insert log line."""
-    log_line = sample_log_lines.insert_line()
-    parser = log_parser_class(log_line)
-    assert parser.insert_log_line() == ('2019-03-04 06:00:12', sample_log_lines.insert_fields)
+    log_line_text = sample_log_lines.insert_line()
+    parser = log_parser_class(log_line_text)
+    log_line = parser.insert_log_line()
+    assert isinstance(log_line, InsertEventLogLine)
+    assert log_line.timestamp == '2019-03-04 06:00:12'
+    assert log_line.meetup_id == 'tmnbrqyzhbhb'
 
 def test_delete_log_line(log_parser_class, sample_log_lines):
     """Test recognizing a delete log line."""
-    log_line = sample_log_lines.delete_line()
-    parser = log_parser_class(log_line)
-    assert parser.delete_log_line() == ('2019-03-04 06:00:57', sample_log_lines.delete_fields)
+    log_line_text = sample_log_lines.delete_line()
+    parser = log_parser_class(log_line_text)
+    log_line = parser.delete_log_line()
+    assert isinstance(log_line, DeleteEventLogLine)
+    assert log_line.timestamp == '2019-03-04 06:00:57'
+    assert log_line.meetup_id == '258645498'
 
 def test_update_log_line(log_parser_class, sample_log_lines):
     """Test recognizing a pair of update log lines."""
-    log_line = sample_log_lines.update_line()
-    parser = log_parser_class(log_line)
-    timestamp, before, after =  parser.update_log_line()
-    assert timestamp == '2019-03-04 06:00:59'
-    assert before == sample_log_lines.update_before_fields
-    assert after == sample_log_lines.update_after_fields
+    log_line_text = sample_log_lines.update_line()
+    parser = log_parser_class(log_line_text)
+    log_line = parser.update_log_line()
+    assert isinstance(log_line, UpdateEventLogLine)
+    assert log_line.timestamp == '2019-03-04 06:00:59'
+    assert log_line.meetup_id == '259565142'
+
+def test_crud_log_line(log_parser_class, sample_log_lines):
+    """Test recognizing a CRUD log line."""
+    log_line_text = sample_log_lines.insert_line()
+    parser = log_parser_class(log_line_text)
+    crud_lister = CrudLister()
+    parser.crud_log_line(crud_lister)
+    meetup_id = 'tmnbrqyzhbhb'
+    log_line = crud_lister.event_cruds[meetup_id].log_lines[0]
+    assert isinstance(log_line, InsertEventLogLine)
+    assert log_line.timestamp == '2019-03-04 06:00:12'
+    assert log_line.meetup_id == 'tmnbrqyzhbhb'
 
 
 # vim: tabstop=8 expandtab shiftwidth=4 softtabstop=4 autoindent

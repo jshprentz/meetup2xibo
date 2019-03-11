@@ -1,15 +1,12 @@
 """Parses logs and collects the interesting information."""
 
+from .event import Event
+from .log_lines import InsertEventLogLine, DeleteEventLogLine, UpdateEventLogLine
 from parsley import makeGrammar, ParseError
 from collections import namedtuple
 
 
 LogLineStart = namedtuple("LogLineStart", "timestamp log_level")
-StartLogLine = namedtuple("StartLogLine", "timestamp program")
-InsertLogLine = namedtuple("InsertLogLine", "timestamp event")
-DeleteLogLine = namedtuple("DeleteLogLine", "timestamp event")
-UpdateLogLine = namedtuple("UpdateLogLine", "timestamp before after")
-UpdateFromLogLine = namedtuple("UpdateFromLogLine", "timestamp event")
 UpdateToLogLine = namedtuple("UpdateToLogLine", "timestamp event")
 Field = namedtuple("Field", "name value")
 
@@ -22,22 +19,25 @@ log_line = (start_log_line | insert_log_line | delete_log_line | update_log_line
 start_log_line :counter = log_line_start('meetup2xibo'):s 'Start ' rest_of_line:p
         -> counter.count(p)
 
+crud_log_line :crud_lister = (insert_log_line | delete_log_line | update_log_line):log_line
+        -> crud_lister.add_log_line(log_line)
+
 insert_log_line = log_line_start('XiboEventCrud'):s 'Inserted ' event:e
-        -> InsertLogLine(s.timestamp, e)
+        -> InsertEventLogLine(s.timestamp, e)
 
 delete_log_line = log_line_start('XiboEventCrud'):s 'Deleted Xibo' event:e
-        -> DeleteLogLine(s.timestamp, e)
+        -> DeleteEventLogLine(s.timestamp, e)
 
 update_log_line = update_from_log_line:f '\n' update_to_log_line:t
-        -> UpdateLogLine(f.timestamp, f.event, t.event)
+        -> UpdateEventLogLine(t.timestamp, f, t.event)
 
-update_from_log_line = log_line_start('XiboEventCrud'):s 'Updated from Xibo' event:e
-        -> UpdateFromLogLine(s.timestamp, e)
+update_from_log_line = log_line_start('XiboEventCrud') 'Updated from Xibo' event:e
+        -> e
 
 update_to_log_line = log_line_start('XiboEventCrud'):s 'Updated to ' event:e
         -> UpdateToLogLine(s.timestamp, e)
 
-other_log_line = log_line_start name dash rest_of_line
+other_log_line = rest_of_line
 
 log_line_start :name = timestamp:t dash level:l dash name dash -> LogLineStart(t, l)
 
@@ -51,7 +51,7 @@ level = 'INFO' | 'DEBUG' | 'WARNING' | 'ERROR' | 'CRITICAL'
 
 name = <(letterOrDigit | '_')+>
 
-event = 'Event(' fields:f ')' -> f
+event = 'Event(' fields:f ')' -> Event.from_fields(f)
 
 fields = field:first (', ' field)*:rest -> [first] + rest
 
@@ -73,12 +73,11 @@ def make_log_parser_class():
     """Make a log line parser class."""
     context = {
             'Field': Field,
+            'Event': Event,
+            'InsertEventLogLine': InsertEventLogLine,
+            'DeleteEventLogLine': DeleteEventLogLine,
+            'UpdateEventLogLine': UpdateEventLogLine,
             'LogLineStart': LogLineStart,
-            'StartLogLine': StartLogLine,
-            'InsertLogLine': InsertLogLine,
-            'DeleteLogLine': DeleteLogLine,
-            'UpdateLogLine': UpdateLogLine,
-            'UpdateFromLogLine': UpdateFromLogLine,
             'UpdateToLogLine': UpdateToLogLine,
             }
     return makeGrammar(GRAMMER, context)
