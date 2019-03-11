@@ -34,10 +34,9 @@ def make_event(
         location=SAMPLE_LOCATION,
         start_time=SAMPLE_START_TIME,
         end_time=SAMPLE_END_TIME,
-        meetup_id=SAMPLE_MEETUP_ID,
-        xibo_id=None):
+        meetup_id=SAMPLE_MEETUP_ID):
     """Make an event with default sample values."""
-    return Event(name, location, start_time, end_time, meetup_id, xibo_id)
+    return Event(name, location, start_time, end_time, meetup_id)
 
 
 def test_url():

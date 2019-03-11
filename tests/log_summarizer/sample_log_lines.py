@@ -132,28 +132,22 @@ class SampleLogLines:
         line."""
         return UPDATE_AFTER_FIELDS
 
-    @staticmethod
-    def make_event(fields):
-        """Make an event with supplied values."""
-        field_dict = dict(fields)
-        return Event(**field_dict)
-
     def make_insert_log_line(self):
         """Return an insert log line object."""
-        event = self.make_event(INSERT_FIELDS)
+        event = Event.from_fields(INSERT_FIELDS)
         date_time = self.date_time()
         return InsertEventLogLine(date_time, event)
 
     def make_update_log_line(self):
         """Return an update log line object."""
-        before_event = self.make_event(UPDATE_BEFORE_FIELDS)
-        after_event = self.make_event(UPDATE_AFTER_FIELDS)
+        before_event = Event.from_fields(UPDATE_BEFORE_FIELDS)
+        after_event = Event.from_fields(UPDATE_AFTER_FIELDS)
         date_time = self.date_time()
         return UpdateEventLogLine(date_time, before_event, after_event)
 
     def make_delete_log_line(self):
         """Return a delete log line object."""
-        event = self.make_event(DELETE_FIELDS)
+        event = Event.from_fields(DELETE_FIELDS)
         date_time = self.date_time()
         return DeleteEventLogLine(date_time, event)
 

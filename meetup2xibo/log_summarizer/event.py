@@ -10,13 +10,19 @@ class Event:
 
     def __init__(
             self, name, location, start_time, end_time, meetup_id,
-            xibo_id=None):
-        """Initialize with field values."""
+            **other_fields):
+        """Initialize with field values of concern."""
         self._name = name
         self._location = location
         self._start_time = start_time
         self._end_time = end_time
         self._meetup_id = meetup_id
+
+    @classmethod
+    def from_fields(cls, field_list):
+        """Make an event from a list for (name, value) field tuples."""
+        field_dict = dict(field_list)
+        return cls(**field_dict)
 
     def __eq__(self, other):
         """Test with this event equals another."""
@@ -36,7 +42,6 @@ class Event:
         return hash((
                 self._name, self._location, self._start_time, self._end_time,
                 self._meetup_id))
-
 
     @property
     def name(self):
