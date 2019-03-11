@@ -15,6 +15,7 @@ def test_add_insert_event(crud_lister, sample_log_lines):
     date_time = sample_log_lines.date_time()
     fields = sample_log_lines.insert_fields
     crud_lister.add_insert_event(date_time, fields)
+    assert crud_lister.event_cruds['tmnbrqyzhbhb'].final_event.meetup_id == 'tmnbrqyzhbhb'
 
 def test_add_update_event(crud_lister, sample_log_lines):
     """Test adding an update event log line to the lister."""
@@ -22,12 +23,14 @@ def test_add_update_event(crud_lister, sample_log_lines):
     before_fields = sample_log_lines.update_before_fields
     after_fields = sample_log_lines.update_after_fields
     crud_lister.add_update_event(date_time, before_fields, after_fields)
+    assert crud_lister.event_cruds['259565142'].final_event.meetup_id == '259565142'
 
 def test_add_delete_event(crud_lister, sample_log_lines):
     """Test adding a delete event log line to the lister."""
     date_time = sample_log_lines.date_time()
     fields = sample_log_lines.delete_fields
     crud_lister.add_delete_event(date_time, fields)
+    assert crud_lister.event_cruds['258645498'].final_event.meetup_id == '258645498'
 
 
 
