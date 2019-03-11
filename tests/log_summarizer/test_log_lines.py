@@ -61,6 +61,22 @@ def test_after_event_in_update_event_log_line(event):
     log_line = UpdateEventLogLine(SAMPLE_LOG_TIME, event, after_event)
     assert log_line.after_event == after_event
 
+def test_final_event_in_insert_event_log_line(event):
+    """Test getting the final event from an insert event log line."""
+    log_line = InsertEventLogLine(SAMPLE_LOG_TIME, event)
+    assert log_line.final_event == event
+
+def test_final_event_in_update_event_log_line(event):
+    """Test getting the final event from a update event log line."""
+    after_event = make_event(location="Somewhere else")
+    log_line = UpdateEventLogLine(SAMPLE_LOG_TIME, event, after_event)
+    assert log_line.final_event == after_event
+
+def test_final_event_in_delete_event_log_line(event):
+    """Test getting the final event from an delete event log line."""
+    log_line = DeleteEventLogLine(SAMPLE_LOG_TIME, event)
+    assert log_line.final_event == event
+
 
 
 # vim: tabstop=8 expandtab shiftwidth=4 softtabstop=4 autoindent

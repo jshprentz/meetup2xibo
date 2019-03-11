@@ -25,6 +25,11 @@ class EventLogLine:
         """Return the Meetup ID of this log line's event."""
         return self._event.meetup_id
 
+    @property
+    def final_event(self):
+        """Return the final event from the log line."""
+        return self.event
+
 
 class InsertEventLogLine(EventLogLine):
 
@@ -51,6 +56,11 @@ class UpdateEventLogLine(EventLogLine):
     def after_event(self):
         """Return the log line's event."""
         return self._after_event
+
+    @property
+    def final_event(self):
+        """Return the final event from the log line."""
+        return self.after_event
 
 
 class DeleteEventLogLine(EventLogLine):
