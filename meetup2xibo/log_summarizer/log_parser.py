@@ -14,7 +14,7 @@ Field = namedtuple("Field", "name value")
 GRAMMER = r"""
 log_lines = (log_line)*:l
 
-log_line = (start_log_line | insert_log_line | delete_log_line | update_log_line | other_log_line) '\n'
+log_line :counter :crud_lister = (start_log_line(counter) | crud_log_line(crud_lister) | other_log_line) '\n'
 
 start_log_line :counter = log_line_start('meetup2xibo'):s 'Start ' rest_of_line:p
         -> counter.count(p)

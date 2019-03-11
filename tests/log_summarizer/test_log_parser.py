@@ -172,5 +172,39 @@ def test_crud_log_line(log_parser_class, sample_log_lines):
     assert log_line.timestamp == '2019-03-04 06:00:12'
     assert log_line.meetup_id == 'tmnbrqyzhbhb'
 
+def test_log_line_insert(log_parser_class, sample_log_lines):
+    """Test recognizing a log line that is an insert line."""
+    log_line_text = sample_log_lines.insert_line() + "\n"
+    parser = log_parser_class(log_line_text)
+    crud_lister = CrudLister()
+    counter = StartCounter()
+    parser.log_line(counter, crud_lister)
+    meetup_id = 'tmnbrqyzhbhb'
+    log_line = crud_lister.event_cruds[meetup_id].log_lines[0]
+    assert isinstance(log_line, InsertEventLogLine)
+    assert log_line.timestamp == '2019-03-04 06:00:12'
+    assert log_line.meetup_id == 'tmnbrqyzhbhb'
+    assert counter.counts() == []
+
+def test_log_line_start(log_parser_class, sample_log_lines):
+    """Test recognizing a log line that is a start line."""
+    log_line_text = sample_log_lines.start_line() + "\n"
+    parser = log_parser_class(log_line_text)
+    crud_lister = CrudLister()
+    counter = StartCounter()
+    parser.log_line(counter, crud_lister)
+    assert counter.counts() == [("meetup2xibo 2.0.1", 1)]
+    assert crud_lister.event_cruds == {}
+
+def test_log_line_other(log_parser_class, sample_log_lines):
+    """Test recognizing a log line that is an unrecognized line."""
+    log_line_text = "Something else\n"
+    parser = log_parser_class(log_line_text)
+    crud_lister = CrudLister()
+    counter = StartCounter()
+    parser.log_line(counter, crud_lister)
+    assert counter.counts() == []
+    assert crud_lister.event_cruds == {}
+
 
 # vim: tabstop=8 expandtab shiftwidth=4 softtabstop=4 autoindent
