@@ -1,5 +1,6 @@
-requests
+jinja2
 oauthlib
-requests_oauthlib
-pyahocorasick
 parsley
+pyahocorasick
+requests
+requests_oauthlib
