@@ -4,6 +4,7 @@ from .log_summarizer import LogSummarizer
 from .log_parser import make_log_parser_class, Summary
 from .start_counter import StartCounter
 from .crud_lister import CrudLister
+from .renderer import Renderer, make_jinja2_env
 from sys import stdin, stdout
 
 def inject_log_summarizer(application_scope):
@@ -12,7 +13,8 @@ def inject_log_summarizer(application_scope):
         inject_input_stream(),
         inject_output_stream(),
         inject_summary(),
-        inject_log_parser()
+        inject_log_parser(),
+        inject_renderer()
         )
 
 def inject_summary():
@@ -47,5 +49,15 @@ def inject_enter_xibo_session_scope(application_scope):
         return inject_xibo_session_processor(
                 application_scope, xibo_session_scope)
     return enter
+
+def inject_renderer():
+    """Inject a log summary renderer."""
+    return Renderer(
+        inject_jinja2_env(),
+        "summary.html")
+
+def inject_jinja2_env():
+    """Returns a Jinja2 environment for templates in this package."""
+    return make_jinja2_env(__package__)
 
 # vim: tabstop=8 expandtab shiftwidth=4 softtabstop=4 autoindent
