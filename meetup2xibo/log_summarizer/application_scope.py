@@ -1,7 +1,7 @@
 """Application scope holds command line arguments."""
 
 
-VERSION = "2.0.1"
+VERSION = "2.1.0"
 APP_NAME = "summarize-m2x-logs"
 
 

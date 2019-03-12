@@ -7,7 +7,7 @@ import json
 from collections import namedtuple
 
 
-VERSION = "2.0.1"
+VERSION = "2.1.0"
 APP_NAME = "meetup2xibo"
 XIBO_PAGE_LENGTH = 50
 
