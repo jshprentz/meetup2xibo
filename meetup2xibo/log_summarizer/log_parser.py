@@ -9,12 +9,13 @@ from collections import namedtuple
 LogLineStart = namedtuple("LogLineStart", "timestamp log_level")
 UpdateToLogLine = namedtuple("UpdateToLogLine", "timestamp event")
 Field = namedtuple("Field", "name value")
+Summary = namedtuple("Summary", "counter crud_lister")
 
 
 GRAMMER = r"""
-log_lines = (log_line)*:l
+log_lines :summary = log_line(summary)*
 
-log_line :counter :crud_lister = (start_log_line(counter) | crud_log_line(crud_lister) | other_log_line) '\n'
+log_line :summary = (start_log_line(summary.counter) | crud_log_line(summary.crud_lister) | other_log_line) '\n'
 
 start_log_line :counter = log_line_start('meetup2xibo'):s 'Start ' rest_of_line:p
         -> counter.count(p)
@@ -61,7 +62,7 @@ quoted_value = ( '\'' | '"' ):q (escaped_char | ~exactly(q) anything)*:c exactly
 
 escaped_char = '\\' ( '\\' | '\'' | '"' )
 
-rest_of_line (~'\n' anything)*:c -> ''.join(c)
+rest_of_line <(~'\n' anything)*>
 
 end_of_line ('\n' | end)
 

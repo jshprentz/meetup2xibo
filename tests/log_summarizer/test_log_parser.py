@@ -1,7 +1,7 @@
 """Test log parser productions."""
 
 from ..context import meetup2xibo
-from meetup2xibo.log_summarizer.log_parser import make_log_parser_class, Field
+from meetup2xibo.log_summarizer.log_parser import make_log_parser_class, Field, Summary
 from meetup2xibo.log_summarizer.event import Event
 from meetup2xibo.log_summarizer.log_lines import InsertEventLogLine, UpdateEventLogLine, DeleteEventLogLine
 from meetup2xibo.log_summarizer.start_counter import StartCounter
@@ -16,7 +16,6 @@ import pytest
 #    return hash((self.position, self.formatReason()))
 
 #ParseError.__hash__ = parse_error_hash
-
 
 @pytest.fixture(scope="module")
 def log_parser_class():
@@ -170,7 +169,7 @@ def test_crud_log_line(log_parser_class, sample_log_lines):
     log_line = crud_lister.event_cruds[meetup_id].log_lines[0]
     assert isinstance(log_line, InsertEventLogLine)
     assert log_line.timestamp == '2019-03-04 06:00:12'
-    assert log_line.meetup_id == 'tmnbrqyzhbhb'
+    assert log_line.meetup_id == meetup_id
 
 def test_log_line_insert(log_parser_class, sample_log_lines):
     """Test recognizing a log line that is an insert line."""
@@ -178,7 +177,8 @@ def test_log_line_insert(log_parser_class, sample_log_lines):
     parser = log_parser_class(log_line_text)
     crud_lister = CrudLister()
     counter = StartCounter()
-    parser.log_line(counter, crud_lister)
+    summary = Summary(counter, crud_lister)
+    parser.log_line(summary)
     meetup_id = 'tmnbrqyzhbhb'
     log_line = crud_lister.event_cruds[meetup_id].log_lines[0]
     assert isinstance(log_line, InsertEventLogLine)
@@ -192,7 +192,8 @@ def test_log_line_start(log_parser_class, sample_log_lines):
     parser = log_parser_class(log_line_text)
     crud_lister = CrudLister()
     counter = StartCounter()
-    parser.log_line(counter, crud_lister)
+    summary = Summary(counter, crud_lister)
+    parser.log_line(summary)
     assert counter.counts() == [("meetup2xibo 2.0.1", 1)]
     assert crud_lister.event_cruds == {}
 
@@ -202,9 +203,28 @@ def test_log_line_other(log_parser_class, sample_log_lines):
     parser = log_parser_class(log_line_text)
     crud_lister = CrudLister()
     counter = StartCounter()
-    parser.log_line(counter, crud_lister)
+    summary = Summary(counter, crud_lister)
+    parser.log_line(summary)
     assert counter.counts() == []
     assert crud_lister.event_cruds == {}
+
+def test_log_lines(log_parser_class, sample_log_lines):
+    """Test recognizing a log lines."""
+    log_line_text = "\n".join([
+            sample_log_lines.start_line(),
+            sample_log_lines.insert_line(),
+            "Something else\n"])
+    parser = log_parser_class(log_line_text)
+    crud_lister = CrudLister()
+    counter = StartCounter()
+    summary = Summary(counter, crud_lister)
+    parser.log_lines(summary)
+    meetup_id = 'tmnbrqyzhbhb'
+    log_line = crud_lister.event_cruds[meetup_id].log_lines[0]
+    assert isinstance(log_line, InsertEventLogLine)
+    assert log_line.timestamp == '2019-03-04 06:01:12'
+    assert log_line.meetup_id == meetup_id
+    assert counter.counts() == [("meetup2xibo 2.0.1", 1)]
 
 
 # vim: tabstop=8 expandtab shiftwidth=4 softtabstop=4 autoindent
