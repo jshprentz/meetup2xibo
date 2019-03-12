@@ -5,10 +5,11 @@ class EventLogLine:
 
     """A log line reporting an event activity."""
 
-    def __init__(self, timestamp, event):
-        """Initialize with a timestamp and an event."""
+    def __init__(self, timestamp, event, action):
+        """Initialize with a timestamp, an event, and an action."""
         self._timestamp = timestamp
         self._event = event
+        self._action = action
 
     @property
     def timestamp(self):
@@ -30,10 +31,18 @@ class EventLogLine:
         """Return the final event from the log line."""
         return self.event
 
+    @property
+    def action(self):
+        """Return the action description, such as "Inserted"."""
+        return self._action
 
 class InsertEventLogLine(EventLogLine):
 
     """A log line reporting an inserted event."""
+
+    def __init__(self, timestamp, event):
+        """Initialize with a timestamp and an event."""
+        super().__init__(timestamp, event, "Inserted")
 
 
 class UpdateEventLogLine(EventLogLine):
@@ -44,7 +53,7 @@ class UpdateEventLogLine(EventLogLine):
         """Initialize with a timestamp and events before and after the
         update. The Meetup ID for both events should be the same."""
         assert before_event.meetup_id == after_event.meetup_id
-        super().__init__(timestamp, before_event)
+        super().__init__(timestamp, before_event, "Updated")
         self._after_event = after_event
 
     @property
@@ -66,6 +75,10 @@ class UpdateEventLogLine(EventLogLine):
 class DeleteEventLogLine(EventLogLine):
 
     """A log line reporting a deleted event."""
+
+    def __init__(self, timestamp, event):
+        """Initialize with a timestamp and an event."""
+        super().__init__(timestamp, event, "Deleted")
 
 
 # vim: tabstop=8 expandtab shiftwidth=4 softtabstop=4 autoindent

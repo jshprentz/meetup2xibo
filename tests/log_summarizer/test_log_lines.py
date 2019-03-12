@@ -76,6 +76,21 @@ def test_final_event_in_delete_event_log_line(event):
     log_line = DeleteEventLogLine(SAMPLE_LOG_TIME, event)
     assert log_line.final_event == event
 
+def test_insert_action():   
+    """Test that an insert log line returns the expected action."""
+    log_line = InsertEventLogLine(SAMPLE_LOG_TIME, None)
+    assert log_line.action == "Inserted"
+
+def test_update_action(event):   
+    """Test that an update log line returns the expected action."""
+    after_event = make_event(location="Somewhere else")
+    log_line = UpdateEventLogLine(SAMPLE_LOG_TIME, event, after_event)
+    assert log_line.action == "Updated"
+
+def test_delete_action():   
+    """Test that a delete log line returns the expected action."""
+    log_line = DeleteEventLogLine(SAMPLE_LOG_TIME, None)
+    assert log_line.action == "Deleted"
 
 
 # vim: tabstop=8 expandtab shiftwidth=4 softtabstop=4 autoindent
