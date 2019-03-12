@@ -1,0 +1,3 @@
+{% for name, count in counters %}
+{{ name }}: {{ count }}
+{% endfor %}

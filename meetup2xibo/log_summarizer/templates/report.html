@@ -1,0 +1,44 @@
+{% macro meetup_event_href(event) -%}
+    href="https://www.meetup.com/NOVA-Makers/events/{{ event.meetup_id }}/"
+{%- endmacro %}
+
+{% macro event_display(event) -%}
+    {{ event.name }}<br>
+    {{ event.start_time }} &ndash; {{ event.end_time }}<br>
+    at {{ event.location }}
+{%- endmacro %}
+
+{% macro linked_event_display(event) -%}
+    <strong><a {{ meetup_event_href(event) }} >{{ event.name }}</a></strong><br>
+    {{ event.start_time }} &ndash; {{ event.end_time }}<br>
+    at {{ event.location }}
+{%- endmacro %}
+
+{% macro action_display(log_line) -%}
+    {{ log_line.timestamp }} <strong>{{ log_line.action }}</strong>
+{%- endmacro %}
+
+
+{% macro log_line_display(log_line, final_event) -%}
+{% if log_line.action == "Updated" %}
+    {{ update_log_line_display(log_line, final_event) }}
+{% else %}
+    {{ basic_log_line_display(log_line, final_event) }}
+{% endif %}
+{%- endmacro %}
+
+{% macro basic_log_line_display(log_line, final_event) -%}
+    <dt>{{ action_display(log_line) }}</dt>
+{% if log_line.event != final_event %}
+    <dd>{{ event_display(log_line.event) }}</dd>
+{% endif %}
+{%- endmacro %}
+
+{% macro update_log_line_display(log_line, final_event) -%}
+{% for name, before, after in log_line.updates() %}
+    <dt>{{ action_display(log_line) }} <strong>{{ name }}</strong></dt>
+    <dd>From: {{ before }}<br>To: {{ after }}</dd>
+{% endfor %}
+{%- endmacro %}
+
+{# vim: set tabstop=8 expandtab shiftwidth=4 softtabstop=4 autoindent: #}
