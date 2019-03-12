@@ -43,6 +43,14 @@ class Event:
                 self._name, self._location, self._start_time, self._end_time,
                 self._meetup_id))
 
+    def report_sort_key(self):
+        """Return a sort key for sorting into reporting order."""
+        return (
+            self._name.lower(),
+            self._location.lower(),
+            self._start_time,
+            self._end_time)
+
     @property
     def name(self):
         return self._name
