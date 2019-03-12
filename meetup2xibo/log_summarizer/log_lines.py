@@ -71,6 +71,10 @@ class UpdateEventLogLine(EventLogLine):
         """Return the final event from the log line."""
         return self.after_event
 
+    def updates(self):
+        """Return a list of updates in (field, before, after) tuple format."""
+        return self.before_event.differences(self.after_event)
+
 
 class DeleteEventLogLine(EventLogLine):
 

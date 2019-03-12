@@ -15,8 +15,10 @@ class Renderer:
     def render(self, summary):
         """Render the log file summary as a string."""
         template = self.jinja2_env.get_template(self.template_name)
-        return template.render(counters = summary.counter.counts())
-
+        return template.render(
+                counters = summary.counter.counts(),
+                cruds=summary.crud_lister.sorted_event_cruds()
+                )
 
 def make_jinja2_env(package):
     """Make a Jinja2 environment for a Python package."""

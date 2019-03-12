@@ -76,5 +76,20 @@ class Event:
         """Return the Meetup URL for this event."""
         return MEETUP_EVENT_URL_TEMPLATE.format(self._meetup_id)
 
+    def differences(self, other):
+        """Return a list of differences between this and another later event in
+        (field, before, after) tuple format."""
+        differences = []
+        if self._name != other._name:
+            differences.append(("name", self._name, other._name))
+        if self._location != other._location:
+            differences.append(("location", self._location, other._location))
+        if self._start_time != other._start_time:
+            differences.append(("start_time", self._start_time, other._start_time))
+        if self._end_time != other._end_time:
+            differences.append(("end_time", self._end_time, other._end_time))
+        if self._meetup_id != other._meetup_id:
+            differences.append(("meetup_id", self._meetup_id, other._meetup_id))
+        return differences
 
 # vim: tabstop=8 expandtab shiftwidth=4 softtabstop=4 autoindent

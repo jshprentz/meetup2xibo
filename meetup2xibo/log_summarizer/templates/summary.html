@@ -1,6 +1,8 @@
+{% import 'report.html' as report %}
 <html lang="en">
 <head>
     <title>Meetup Event Changes on Xibo Signs</title>
+    <meta charset="UTF-8"> 
 </head>
 <body>
     <h2>Program Execution</h2>
@@ -13,12 +15,25 @@
 {% for name, count in counters %}
         <tr>
             <td>{{ name }}</td>
-            <td>{{ count }}</td>
+            <td>{{ count|safe }}</td>
         </tr>
 {% endfor %}
     </table>
 {% else %}
     <p>None</p>
+{% endif %}
+{% if cruds %}
+    <h2>Changes to Xibo Event Listings</h2>
+        <dl>
+{% for event_crud in cruds %}
+            <dt>{{ report.linked_event_display(event_crud.final_event) }}</dt>
+            <dd><dl>
+{% for log_line in event_crud.log_lines %}
+                {{ report.log_line_display(log_line, event_crud.final_event) }}
+{% endfor %}
+            </dl></dd>
+{% endfor %}
+        </dl>
 {% endif %}
 </body>
 </html>
