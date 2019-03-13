@@ -2,10 +2,19 @@
 History
 =======
 
-2.0.2 (Future)
+2.3 (Future)
 ------------------
 
 * First release on PyPI.
+
+Next Release
+------------------
+* Add comand line arguments to log summarizer: input, output, email headers.
+* Add yesterday script.
+
+2.1.0 (2019-03-13)
+------------------
+* Add tools to summarize meetup2xibo logs
 
 2.0.1 (2019-03-06)
 ------------------
