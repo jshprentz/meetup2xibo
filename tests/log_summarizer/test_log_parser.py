@@ -122,7 +122,7 @@ def test_event(log_parser_class):
     parser = log_parser_class(
             "Event(xibo_id='430', meetup_id='zvbxrpl2', "
             "name='Nova Labs Open House', location='Orange Bay', "
-            "start_time='2019-02-26 15:00', end_time='2019-02-26 17:00')")
+            "start_time='2019-02-26 15:00:00', end_time='2019-02-26 17:00:00')")
     expected_event = Event(
             xibo_id='430',
             meetup_id='zvbxrpl2',

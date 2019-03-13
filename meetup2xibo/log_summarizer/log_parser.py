@@ -44,9 +44,13 @@ log_line_start :name = timestamp:t dash level:l dash name dash -> LogLineStart(t
 
 timestamp = date:d ' ' time:t -> " ".join((d, t))
 
+event_timestamp = date:d ' ' event_time:t -> " ".join((d, t))
+
 date = <digit{4} '-' digit{2} '-' digit{2}>
 
 time = <digit{2} ':' digit{2}>:t ':' digit{2} ',' digit{3} -> t
+
+event_time = <digit{2} ':' digit{2}>:t ':' digit{2} -> t
 
 level = 'INFO' | 'DEBUG' | 'WARNING' | 'ERROR' | 'CRITICAL'
 
@@ -56,7 +60,13 @@ event = 'Event(' fields:f ')' -> Event.from_fields(f)
 
 fields = field:first (', ' field)*:rest -> [first] + rest
 
-field = name:n '=' quoted_value:v -> Field(n, v)
+field = time_field | other_field
+
+time_field = time_field_name:n '=\'' event_timestamp:v '\'' -> Field(n, v)
+
+time_field_name = 'start_time' | 'end_time'
+
+other_field = name:n '=' quoted_value:v -> Field(n, v)
 
 quoted_value = ( '\'' | '"' ):q (escaped_char | ~exactly(q) anything)*:c exactly(q) -> ''.join(c)
 
