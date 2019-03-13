@@ -4,7 +4,8 @@ from .log_summarizer import LogSummarizer
 from .log_parser import make_log_parser_class, Summary
 from .start_counter import StartCounter
 from .crud_lister import CrudLister
-from .renderer import Renderer, make_jinja2_env
+from .renderer import Renderer, EmailHeaderRenderer, SummaryRenderer, \
+        make_jinja2_env
 from sys import stdin, stdout
 
 def inject_log_summarizer(application_scope):
@@ -14,7 +15,7 @@ def inject_log_summarizer(application_scope):
         inject_output_stream(application_scope),
         inject_summary(),
         inject_log_parser(),
-        inject_renderer()
+        inject_renderer(application_scope)
         )
 
 def inject_summary():
@@ -50,9 +51,23 @@ def inject_enter_xibo_session_scope(application_scope):
                 application_scope, xibo_session_scope)
     return enter
 
-def inject_renderer():
-    """Inject a log summary renderer."""
+def inject_renderer(application_scope):
+    """Inject a renderer."""
     return Renderer(
+        inject_email_header_renderer(application_scope),
+        inject_summary_renderer())
+
+def inject_email_header_renderer(application_scope):
+    """Inject an email header renderer."""
+    return EmailHeaderRenderer(
+        inject_jinja2_env(),
+        "email_headers.txt",
+        application_scope.email_to,
+        application_scope.email_subject)
+
+def inject_summary_renderer():
+    """Inject a log summary renderer."""
+    return SummaryRenderer(
         inject_jinja2_env(),
         "summary.html")
 

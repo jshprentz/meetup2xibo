@@ -21,13 +21,13 @@ parser.add_argument(
 parser.add_argument(
         '-s', '--subject',
         dest='email_subject',
-        default=None,
+        default="",
         help='Generate email headers including this Subject.')
 
 parser.add_argument(
         '-t', '--to',
         dest='email_to',
-        default=None,
+        default="",
         help='Generate email headers including this To address.')
 
 
