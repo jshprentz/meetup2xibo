@@ -10,8 +10,8 @@ from sys import stdin, stdout
 def inject_log_summarizer(application_scope):
     """Return a log summarizer configured by an application scope."""
     return LogSummarizer(
-        inject_input_stream(),
-        inject_output_stream(),
+        inject_input_stream(application_scope),
+        inject_output_stream(application_scope),
         inject_summary(),
         inject_log_parser(),
         inject_renderer()
@@ -21,13 +21,13 @@ def inject_summary():
     """Return a summary."""
     return Summary(inject_start_counter(), inject_crud_lister())
 
-def inject_input_stream():
-    """Return the input stream, stdin for now."""
-    return stdin
+def inject_input_stream(application_scope):
+    """Return the input stream."""
+    return application_scope.infile
 
-def inject_output_stream():
-    """Return the output stream, stdout for now."""
-    return stdout
+def inject_output_stream(application_scope):
+    """Return the output stream."""
+    return application_scope.outfile
 
 def inject_start_counter():
     """Return an empty program start counter."""
