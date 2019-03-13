@@ -1,0 +1,24 @@
+#!/bin/sh
+
+# Summarize yesterday's Meetup to Xibo conversions and send the report via
+# email.
+
+LOG_DIR="$1"
+MAIL_TO="$2"
+
+YESTERDAY=`date -d "yesterday 13:00" -I`
+MAIL_DATE=`date -R`
+
+LOG_FILE_NAME=meetup2xibo.log
+
+LOG_FILE_PATH="${LOG_DIR}/${LOG_FILE_NAME}.${YESTERDAY}"
+
+MAIL_HEADERS="Subject: Meetup to Xibo Summary for ${YESTERDAY}
+To: ${MAIL_TO}
+Date: ${MAIL_DATE}
+MIME-Version: 1.0
+Content-Type: text/html; charset=utf-8
+"
+
+( echo "${MAIL_HEADERS}" ; summarize-m2x-logs < "${LOG_FILE_PATH}" ) | ssmtp -t
+

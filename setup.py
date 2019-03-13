@@ -36,6 +36,7 @@ setup(
     entry_points={
         'console_scripts': [
             'meetup2xibo=meetup2xibo.updater.__main__:main',
+            'summarize-m2x-logs=meetup2xibo.log_summarizer.__main__:main',
         ],
     },
     install_requires=requirements,
@@ -45,7 +46,10 @@ setup(
     keywords='meetup2xibo',
     name='meetup2xibo',
     packages=find_packages(include=['meetup2xibo']),
-    scripts=['bin/location-log2csv'],
+    scripts=[
+	'bin/location-log2csv',
+	'bin/mail-yesterdays-m2x-summary',
+	],
     setup_requires=setup_requirements,
     test_suite='tests',
     tests_require=test_requirements,
