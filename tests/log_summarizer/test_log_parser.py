@@ -34,14 +34,14 @@ def test_date(log_parser_class):
     assert parser.date() == "2019-03-08"
 
 def test_time(log_parser_class):
-    """Test recognizing a time."""
+    """Test recognizing a time, keeping only hh:mm."""
     parser = log_parser_class("06:14:59,274")
-    assert parser.time() == "06:14:59"
+    assert parser.time() == "06:14"
 
 def test_date_time(log_parser_class):
     """Test recognizing a timestamp."""
     parser = log_parser_class("2019-02-18 16:34:52,274")
-    assert parser.timestamp() == "2019-02-18 16:34:52"
+    assert parser.timestamp() == "2019-02-18 16:34"
 
 def test_level_info(log_parser_class):
     """Test recognizing the info logging level."""
@@ -66,7 +66,7 @@ def test_rest_of_line(log_parser_class):
 def test_log_line_start(log_parser_class):
     """Test recognizing the start of a line."""
     parser = log_parser_class("2019-03-04 16:52:14,131 - INFO - foo - ")
-    assert parser.log_line_start("foo") == ("2019-03-04 16:52:14", "INFO")
+    assert parser.log_line_start("foo") == ("2019-03-04 16:52", "INFO")
 
 def test_start_log_line(log_parser_class, sample_log_lines):
     """Test recognizing a start log line."""
@@ -122,14 +122,14 @@ def test_event(log_parser_class):
     parser = log_parser_class(
             "Event(xibo_id='430', meetup_id='zvbxrpl2', "
             "name='Nova Labs Open House', location='Orange Bay', "
-            "start_time='2019-02-26 15:00:00', end_time='2019-02-26 17:00:00')")
+            "start_time='2019-02-26 15:00', end_time='2019-02-26 17:00')")
     expected_event = Event(
             xibo_id='430',
             meetup_id='zvbxrpl2',
             name='Nova Labs Open House',
             location='Orange Bay',
-            start_time='2019-02-26 15:00:00',
-            end_time='2019-02-26 17:00:00')
+            start_time='2019-02-26 15:00',
+            end_time='2019-02-26 17:00')
     assert parser.event() == expected_event
 
 def test_insert_log_line(log_parser_class, sample_log_lines):
@@ -138,7 +138,7 @@ def test_insert_log_line(log_parser_class, sample_log_lines):
     parser = log_parser_class(log_line_text)
     log_line = parser.insert_log_line()
     assert isinstance(log_line, InsertEventLogLine)
-    assert log_line.timestamp == '2019-03-04 06:00:12'
+    assert log_line.timestamp == '2019-03-04 06:00'
     assert log_line.meetup_id == 'tmnbrqyzhbhb'
 
 def test_delete_log_line(log_parser_class, sample_log_lines):
@@ -147,7 +147,7 @@ def test_delete_log_line(log_parser_class, sample_log_lines):
     parser = log_parser_class(log_line_text)
     log_line = parser.delete_log_line()
     assert isinstance(log_line, DeleteEventLogLine)
-    assert log_line.timestamp == '2019-03-04 06:00:57'
+    assert log_line.timestamp == '2019-03-04 06:00'
     assert log_line.meetup_id == '258645498'
 
 def test_update_log_line(log_parser_class, sample_log_lines):
@@ -156,7 +156,7 @@ def test_update_log_line(log_parser_class, sample_log_lines):
     parser = log_parser_class(log_line_text)
     log_line = parser.update_log_line()
     assert isinstance(log_line, UpdateEventLogLine)
-    assert log_line.timestamp == '2019-03-04 06:00:59'
+    assert log_line.timestamp == '2019-03-04 06:00'
     assert log_line.meetup_id == '259565142'
 
 def test_crud_log_line(log_parser_class, sample_log_lines):
@@ -168,7 +168,7 @@ def test_crud_log_line(log_parser_class, sample_log_lines):
     meetup_id = 'tmnbrqyzhbhb'
     log_line = crud_lister.event_cruds[meetup_id].log_lines[0]
     assert isinstance(log_line, InsertEventLogLine)
-    assert log_line.timestamp == '2019-03-04 06:00:12'
+    assert log_line.timestamp == '2019-03-04 06:00'
     assert log_line.meetup_id == meetup_id
 
 def test_log_line_insert(log_parser_class, sample_log_lines):
@@ -182,7 +182,7 @@ def test_log_line_insert(log_parser_class, sample_log_lines):
     meetup_id = 'tmnbrqyzhbhb'
     log_line = crud_lister.event_cruds[meetup_id].log_lines[0]
     assert isinstance(log_line, InsertEventLogLine)
-    assert log_line.timestamp == '2019-03-04 06:00:12'
+    assert log_line.timestamp == '2019-03-04 06:00'
     assert log_line.meetup_id == 'tmnbrqyzhbhb'
     assert counter.counts() == []
 
@@ -222,7 +222,7 @@ def test_log_lines(log_parser_class, sample_log_lines):
     meetup_id = 'tmnbrqyzhbhb'
     log_line = crud_lister.event_cruds[meetup_id].log_lines[0]
     assert isinstance(log_line, InsertEventLogLine)
-    assert log_line.timestamp == '2019-03-04 06:01:12'
+    assert log_line.timestamp == '2019-03-04 06:01'
     assert log_line.meetup_id == meetup_id
     assert counter.counts() == [("meetup2xibo 2.0.1", 1)]
 

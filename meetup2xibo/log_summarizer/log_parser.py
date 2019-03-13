@@ -46,7 +46,7 @@ timestamp = date:d ' ' time:t -> " ".join((d, t))
 
 date = <digit{4} '-' digit{2} '-' digit{2}>
 
-time = <digit{2} ':' digit{2} ':' digit{2}>:t ',' digit{3} -> t
+time = <digit{2} ':' digit{2}>:t ':' digit{2} ',' digit{3} -> t
 
 level = 'INFO' | 'DEBUG' | 'WARNING' | 'ERROR' | 'CRITICAL'
 
