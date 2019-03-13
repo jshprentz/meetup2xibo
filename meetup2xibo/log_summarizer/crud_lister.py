@@ -1,8 +1,6 @@
 """Collects and lists CRUD event log lines."""
 
-from .event import Event
 from .event_crud import EventCrud
-from .log_lines import InsertEventLogLine, UpdateEventLogLine, DeleteEventLogLine
 from collections import defaultdict
 
 

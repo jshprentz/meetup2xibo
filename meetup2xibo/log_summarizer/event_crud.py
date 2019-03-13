@@ -1,5 +1,6 @@
 """Collects and reports event CRUD activity."""
 
+
 class EventCrud:
 
     """Collects and reports event CRUD activity."""

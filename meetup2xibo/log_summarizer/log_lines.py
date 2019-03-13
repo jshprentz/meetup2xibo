@@ -36,6 +36,7 @@ class EventLogLine:
         """Return the action description, such as "Inserted"."""
         return self._action
 
+
 class InsertEventLogLine(EventLogLine):
 
     """A log line reporting an inserted event."""

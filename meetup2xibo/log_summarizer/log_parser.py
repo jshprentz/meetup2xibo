@@ -1,7 +1,8 @@
 """Parses logs and collects the interesting information."""
 
 from .event import Event
-from .log_lines import InsertEventLogLine, DeleteEventLogLine, UpdateEventLogLine
+from .log_lines import InsertEventLogLine, DeleteEventLogLine, \
+    UpdateEventLogLine
 from parsley import makeGrammar, ParseError
 from collections import namedtuple
 
@@ -15,12 +16,17 @@ Summary = namedtuple("Summary", "counter crud_lister")
 GRAMMER = r"""
 log_lines :summary = log_line(summary)*
 
-log_line :summary = (start_log_line(summary.counter) | crud_log_line(summary.crud_lister) | other_log_line) '\n'
+log_line :summary = (start_log_line(summary.counter)
+        | crud_log_line(summary.crud_lister)
+        | other_log_line) '\n'
 
-start_log_line :counter = log_line_start('meetup2xibo'):s 'Start ' rest_of_line:p
+start_log_line :counter = log_line_start('meetup2xibo'):s
+        'Start ' rest_of_line:p
         -> counter.count(p)
 
-crud_log_line :crud_lister = (insert_log_line | delete_log_line | update_log_line):log_line
+crud_log_line :crud_lister = (insert_log_line
+        | delete_log_line
+        | update_log_line):log_line
         -> crud_lister.add_log_line(log_line)
 
 insert_log_line = log_line_start('XiboEventCrud'):s 'Inserted ' event:e
@@ -32,15 +38,18 @@ delete_log_line = log_line_start('XiboEventCrud'):s 'Deleted Xibo' event:e
 update_log_line = update_from_log_line:f '\n' update_to_log_line:t
         -> UpdateEventLogLine(t.timestamp, f, t.event)
 
-update_from_log_line = log_line_start('XiboEventCrud') 'Updated from Xibo' event:e
+update_from_log_line = log_line_start('XiboEventCrud')
+        'Updated from Xibo' event:e
         -> e
 
-update_to_log_line = log_line_start('XiboEventCrud'):s 'Updated to ' event:e
+update_to_log_line = log_line_start('XiboEventCrud'):s
+        'Updated to ' event:e
         -> UpdateToLogLine(s.timestamp, e)
 
 other_log_line = rest_of_line
 
-log_line_start :name = timestamp:t dash level:l dash name dash -> LogLineStart(t, l)
+log_line_start :name = timestamp:t dash level:l dash name dash
+        -> LogLineStart(t, l)
 
 timestamp = date:d ' ' time:t -> " ".join((d, t))
 
@@ -68,7 +77,10 @@ time_field_name = 'start_time' | 'end_time'
 
 other_field = name:n '=' quoted_value:v -> Field(n, v)
 
-quoted_value = ( '\'' | '"' ):q (escaped_char | ~exactly(q) anything)*:c exactly(q) -> ''.join(c)
+quoted_value = ( '\'' | '"' ):q
+        (escaped_char | ~exactly(q) anything)*:c
+        exactly(q)
+        -> ''.join(c)
 
 escaped_char = '\\' ( '\\' | '\'' | '"' )
 
@@ -97,6 +109,7 @@ def make_log_parser_class():
 def parse_error_hash(self):
     """Define missing ParseError.__hash__()."""
     return hash((self.position, self.formatReason()))
+
 
 ParseError.__hash__ = parse_error_hash
 

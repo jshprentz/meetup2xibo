@@ -16,7 +16,7 @@ class Renderer:
     def render(self, summary):
         """Render the email headers and log file summary as a string."""
         return self.email_header_renderer.render() \
-                + self.summary_renderer.render(summary)
+            + self.summary_renderer.render(summary)
 
 
 class EmailHeaderRenderer:
@@ -33,7 +33,7 @@ class EmailHeaderRenderer:
     def render(self):
         """Render the email headers as a string."""
         template = self.jinja2_env.get_template(self.template_name)
-        now_formatted =formatdate(localtime=True)
+        now_formatted = formatdate(localtime=True)
         return template.render(
                 email_to=self.email_to,
                 email_subject=self.email_subject,
@@ -54,9 +54,10 @@ class SummaryRenderer:
         """Render the log file summary as a string."""
         template = self.jinja2_env.get_template(self.template_name)
         return template.render(
-                counters = summary.counter.counts(),
+                counters=summary.counter.counts(),
                 cruds=summary.crud_lister.sorted_event_cruds()
                 )
+
 
 def make_jinja2_env(package):
     """Make a Jinja2 environment for a Python package."""
