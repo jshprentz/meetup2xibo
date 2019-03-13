@@ -48,7 +48,7 @@ setup(
     packages=find_packages(include=['meetup2xibo']),
     scripts=[
 	'bin/location-log2csv',
-	'bin/mail-yesterdays-m2x-summary',
+	'bin/yesterday',
 	],
     setup_requires=setup_requirements,
     test_suite='tests',
