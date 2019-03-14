@@ -10,13 +10,15 @@ parser.add_argument(
         'infile',
         nargs='?',
         type=argparse.FileType('r'),
-        default=sys.stdin)
+        default=sys.stdin,
+        help="Input file path [default: standard input]")
 
 parser.add_argument(
         'outfile',
         nargs='?',
         type=argparse.FileType('w'),
-        default=sys.stdout)
+        default=sys.stdout,
+        help="Output file path [default: standard output]")
 
 parser.add_argument(
         '-s', '--subject',
