@@ -1,8 +1,9 @@
 """Parses logs and collects the interesting information."""
 
 from .event import Event
+#from .special_location import SpecialLocation
 from .log_lines import InsertEventLogLine, DeleteEventLogLine, \
-    UpdateEventLogLine, UnknownLocationLogLine
+    UpdateEventLogLine, UnknownLocationLogLine, SpecialLocationLogLine
 from parsley import makeGrammar, ParseError
 from collections import namedtuple
 
@@ -11,6 +12,9 @@ LogLineStart = namedtuple("LogLineStart", "timestamp log_level")
 UpdateToLogLine = namedtuple("UpdateToLogLine", "timestamp event")
 Field = namedtuple("Field", "name value")
 Summary = namedtuple("Summary", "counter crud_lister")
+SpecialLocation = namedtuple(
+        "SpecialLocation",
+        "meetup_id location override comment")
 
 
 GRAMMER = r"""
@@ -27,7 +31,8 @@ start_log_line :counter = log_line_start('meetup2xibo'):s
 event_log_line :crud_lister = (insert_log_line
         | delete_log_line
         | update_log_line
-        | unknown_location_log_line):log_line
+        | unknown_location_log_line
+        | special_location_log_line):log_line
         -> crud_lister.add_log_line(log_line)
 
 insert_log_line = log_line_start('XiboEventCrud'):s 'Inserted ' event:e
@@ -51,6 +56,12 @@ unknown_location_log_line = log_line_start('LocationChooser'):s
         'Unknown location for Partial' event:e
         -> UnknownLocationLogLine(s.timestamp, e)
 
+special_location_log_line = log_line_start('SpecialEventsMonitor'):s
+        'No longer needed ' special_location:l
+        -> SpecialLocationLogLine(s.timestamp, l)
+
+special_location = 'SpecialLocation(' fields:f ')' -> SpecialLocation(**dict(f))
+
 other_log_line = rest_of_line
 
 log_line_start :name = timestamp:t dash level:l dash name dash
@@ -70,15 +81,23 @@ level = 'INFO' | 'DEBUG' | 'WARNING' | 'ERROR' | 'CRITICAL'
 
 name = <(letterOrDigit | '_')+>
 
+
 event = 'Event(' fields:f ')' -> Event.from_fields(f)
 
 fields = field:first (', ' field)*:rest -> [first] + rest
 
-field = time_field | other_field
+field = time_field | boolean_field | other_field
 
 time_field = time_field_name:n '=\'' event_timestamp:v '\'' -> Field(n, v)
 
 time_field_name = 'start_time' | 'end_time'
+
+boolean_field = boolean_field_name:n '=' boolean_value:v -> Field(n, v)
+
+boolean_value = 'True' -> True
+        | 'False' -> False
+
+boolean_field_name = 'override'
 
 other_field = name:n '=' quoted_value:v -> Field(n, v)
 
@@ -106,6 +125,8 @@ def make_log_parser_class():
             'DeleteEventLogLine': DeleteEventLogLine,
             'UpdateEventLogLine': UpdateEventLogLine,
             'UnknownLocationLogLine': UnknownLocationLogLine,
+            'SpecialLocation': SpecialLocation,
+            'SpecialLocationLogLine': SpecialLocationLogLine,
             'LogLineStart': LogLineStart,
             'UpdateToLogLine': UpdateToLogLine,
             }

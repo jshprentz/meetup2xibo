@@ -1,20 +1,38 @@
 """Various type of log lines."""
 
 
-class EventLogLine:
+class LogLine:
 
-    """A log line reporting an event activity."""
+    """A log line reporting an activity."""
 
-    def __init__(self, timestamp, event, action):
-        """Initialize with a timestamp, an event, and an action."""
+    def __init__(self, timestamp, action):
+        """Initialize with a timestamp and an action."""
         self._timestamp = timestamp
-        self._event = event
         self._action = action
 
     @property
     def timestamp(self):
         """Return the log line's timestamp."""
         return self._timestamp
+
+    @property
+    def action(self):
+        """Return the action description, such as "Inserted"."""
+        return self._action
+
+    def add_to_event_crud(self, event_crud):
+        """Add this log line to an event CRUD tracker."""
+        event_crud.add_log_line(self)
+
+
+class EventLogLine(LogLine):
+
+    """A log line reporting an event activity."""
+
+    def __init__(self, timestamp, event, action):
+        """Initialize with a timestamp, an event, and an action."""
+        super().__init__(timestamp, action)
+        self._event = event
 
     @property
     def event(self):
@@ -30,11 +48,6 @@ class EventLogLine:
     def final_event(self):
         """Return the final event from the log line."""
         return self.event
-
-    @property
-    def action(self):
-        """Return the action description, such as "Inserted"."""
-        return self._action
 
     def add_to_event_crud(self, event_crud):
         """Add this log line to an event CRUD tracker."""
@@ -101,6 +114,26 @@ class UnknownLocationLogLine(EventLogLine):
     def add_to_event_crud(self, event_crud):
         """Add this log line to an event CRUD tracker."""
         event_crud.add_unknown_location_log_line(self)
+
+
+class SpecialLocationLogLine(LogLine):
+
+    """A log line reporting an special locaation."""
+
+    def __init__(self, timestamp, special_location):
+        """Initialize with a timestamp and an event."""
+        super().__init__(timestamp, "Special Location Concluded")
+        self._special_location = special_location
+
+    @property
+    def special_location(self):
+        """Return the log line's special location."""
+        return self._special_location
+
+    @property
+    def meetup_id(self):
+        """Return the Meetup ID of this log line's speical location."""
+        return self.special_location.meetup_id
 
 
 # vim: tabstop=8 expandtab shiftwidth=4 softtabstop=4 autoindent

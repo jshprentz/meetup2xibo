@@ -78,6 +78,18 @@ UNKNOWN_LOCATION_FIELDS = [
     ('find_us', ''),
     ]
 
+SPECIAL_LOCATION_TEMPLATE = \
+    "2019-03-04 06:{minutes:02d}:05,290 - WARNING - SpecialEventsMonitor - " \
+    "No longer needed SpecialLocation(meetup_id='258645498', " \
+    "location='Orange Bay', override=False, comment='Just testing')"
+
+SPECIAL_LOCATION_FIELDS = [
+    ('meetup_id', '258645498'),
+    ('location', 'Orange Bay'),
+    ('override', False),
+    ('comment', 'Just testing'),
+    ]
+
 class SampleLogLines:
 
     """Provides time ordered sample log lines."""
@@ -117,8 +129,12 @@ class SampleLogLines:
         return self.make_line(DELETE_TEMPLATE)
 
     def unknown_location_line(self):
-        """Return an unknown_ line."""
+        """Return an unknown location line."""
         return self.make_line(UNKNOWN_LOCATION_TEMPLATE)
+
+    def special_location_line(self):
+        """Return an special location line."""
+        return self.make_line(SPECIAL_LOCATION_TEMPLATE)
 
     @property
     def insert_fields(self):
@@ -172,5 +188,12 @@ class SampleLogLines:
         event = Event.from_fields(UNKNOWN_LOCATION_FIELDS)
         date_time = self.date_time()
         return UnknownLocationLogLine(date_time, event)
+
+    def make_special_location_log_line(self):
+        """Return an special location log line object."""
+        special_location = SpecialLocation(**dict(SPECIAL_LOCATION_FIELDS))
+        date_time = self.date_time()
+        return SpecialLocationLogLine(date_time, special_location)
+
 
 # vim: tabstop=8 expandtab shiftwidth=4 softtabstop=4 autoindent
