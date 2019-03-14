@@ -21,6 +21,15 @@
     Find Us: {{ event.find_us }}
 {%- endmacro %}
 
+{% macro special_location_display(location) -%}
+    Meetup ID: {{ location.meetup_id }}<br>
+    Location: {{ location.location }}<br>
+    Override: {{ location.override }}
+{% if location.comment %}
+    <br>Comment: {{ location.comment }}   
+{% endif %}
+{%- endmacro %}
+
 {% macro action_display(log_line, css_class="action") -%}
     {{ log_line.timestamp }} <span class="{{ css_class }}">{{ log_line.action }}</span>
 {%- endmacro %}
@@ -30,6 +39,8 @@
     {{ update_log_line_display(log_line, final_event) }}
 {% elif log_line.action == "Unknown Location"  %}
     {{ unknown_location_log_line_display(log_line) }}
+{% elif log_line.action == "Special Location Concluded"  %}
+    {{ special_location_log_line_display(log_line) }}
 {% else %}
     {{ basic_log_line_display(log_line, final_event) }}
 {% endif %}
@@ -45,6 +56,11 @@
 {% macro unknown_location_log_line_display(log_line) -%}
     <dt>{{ action_display(log_line, css_class="warning") }}</dt>
     <dd>{{ unknown_location_display(log_line.event) }}</dd>
+{%- endmacro %}
+
+{% macro special_location_log_line_display(log_line) -%}
+    <dt>{{ action_display(log_line, css_class="warning") }}</dt>
+    <dd>{{ special_location_display(log_line.special_location) }}</dd>
 {%- endmacro %}
 
 {% macro update_log_line_display(log_line, final_event) -%}
