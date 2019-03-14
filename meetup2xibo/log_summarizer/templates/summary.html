@@ -4,30 +4,74 @@
     <title>Meetup Event Changes on Xibo Signs</title>
     <meta charset="UTF-8"> 
     <style>
-        .action {
-            font-weight: bold;
-        }
+dt {
+    margin-top: 0.75em;
+}
+.action {
+    font-weight: bold;
+}
 
-        .warning {
-            font-weight: bold;
-            color: Red;
-        }
+.warning {
+    font-weight: bold;
+    color: Red;
+}
+
+table.blueTable {
+  border: 1px solid #1C6EA4;
+  background-color: #EEEEEE;
+  text-align: left;
+  border-collapse: collapse;
+}
+table.blueTable td, table.blueTable th {
+  border: 1px solid #AAAAAA;
+  padding: 3px 5px;
+}
+table.blueTable tbody td {
+  font-size: 1em;
+}
+table.blueTable tbody td.count {
+  text-align: right;
+}
+table.blueTable tr:nth-child(even) {
+  background: #D0E4F5;
+}
+table.blueTable thead {
+  background: #1C6EA4;
+  background: -moz-linear-gradient(top, #5592bb 0%, #327cad 66%, #1C6EA4 100%);
+  background: -webkit-linear-gradient(top, #5592bb 0%, #327cad 66%, #1C6EA4 100%);
+  background: linear-gradient(to bottom, #5592bb 0%, #327cad 66%, #1C6EA4 100%);
+  border-bottom: 2px solid #444444;
+}
+table.blueTable thead th {
+  font-size: 1.1em;
+  font-weight: bold;
+  color: #FFFFFF;
+  text-align: center;
+  border-left: 2px solid #D0E4F5;
+}
+table.blueTable thead th:first-child {
+  border-left: none;
+}
     </style
 </head>
 <body>
     <h2>Program Execution</h2>
 {% if counters %}
-    <table>
-        <tr>
-            <th>Version</th>
-            <th>Count</th>
-        </tr>
+    <table class="blueTable">
+        <thead>
+            <tr>
+                <th>Version</th>
+                <th>Count</th>
+            </tr>
+        </thead>
+        <tbody>
 {% for name, count in counters %}
-        <tr>
-            <td>{{ name }}</td>
-            <td>{{ count|safe }}</td>
-        </tr>
+            <tr>
+                <td>{{ name }}</td>
+                <td class="count">{{ count|safe }}</td>
+            </tr>
 {% endfor %}
+        </tbody>
     </table>
 {% else %}
     <p>None</p>
