@@ -11,6 +11,8 @@ Next Release
 ------------------
 * Add comand line arguments to log summarizer: input, output, email headers.
 * Add yesterday script.
+* Simplify all times to HH:MM, omitting seconds.
+* Report unknown location warnings.
 
 2.1.0 (2019-03-13)
 ------------------
