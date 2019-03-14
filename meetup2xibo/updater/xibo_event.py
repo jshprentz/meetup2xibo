@@ -5,7 +5,7 @@ from collections import namedtuple
 
 XiboEvent = namedtuple(
         "XiboEvent",
-        "xibo_id meetup_id name location start_time end_time")
+        "meetup_id name location start_time end_time xibo_id")
 
 
 class XiboEventColumnNameManager:

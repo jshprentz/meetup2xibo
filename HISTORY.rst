@@ -9,6 +9,9 @@ History
 
 Next Release
 ------------------
+* Add special locations no longer needed to log summary reports.
+* Improve formatting of log summary reports.
+* Move xibo_id to end of XiboEvent tuples to ease visual comparison with PartialEvent tuples in logs.
 
 2.2.0 (2019-03-13)
 ------------------

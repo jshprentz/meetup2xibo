@@ -31,11 +31,11 @@ def test_add_unknown_locaation_log_line_repeated(event_log, sample_log_lines):
     assert event_log.log_lines == [log_line_1]
 
 def test_final_event(event_log, sample_log_lines):
-    """Test getting the final log line."""
+    """Test getting the final event."""
     insert_log_line = sample_log_lines.make_insert_log_line()
     update_log_line = sample_log_lines.make_update_log_line()
-    event_log.add_log_line(insert_log_line)
-    event_log.add_log_line(update_log_line)
+    event_log.add_event_log_line(insert_log_line)
+    event_log.add_event_log_line(update_log_line)
     assert event_log.final_event == update_log_line.after_event
 
 
