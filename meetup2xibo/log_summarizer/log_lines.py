@@ -38,7 +38,7 @@ class EventLogLine:
 
     def add_to_event_crud(self, event_crud):
         """Add this log line to an event CRUD tracker."""
-        event_crud.add_log_line(self)
+        event_crud.add_event_log_line(self)
 
 
 class InsertEventLogLine(EventLogLine):

@@ -9,6 +9,7 @@ class EventLog:
         """Initialize ..."""
         self._log_lines = []
         self._unknown_locations = set()
+        self._final_event = None
         self._sort_key = None
 
     @property
@@ -19,17 +20,22 @@ class EventLog:
     @property
     def final_event(self):
         """Return the final event from the log line list."""
-        return self._log_lines[-1].final_event
+        return self._final_event
 
     def add_log_line(self, log_line):
         """Add a log line to the list."""
         self._log_lines.append(log_line)
 
+    def add_event_log_line(self, log_line):
+        """Add a log line to the list."""
+        self._final_event = log_line.final_event
+        self.add_log_line(log_line)
+
     def add_unknown_location_log_line(self, log_line):
         """Add an unknown location log line to the list if new."""
         if log_line.event not in self._unknown_locations:
             self._unknown_locations.add(log_line.event)
-            self.add_log_line(log_line)
+            self.add_event_log_line(log_line)
 
     def report_sort_key(self):
         """Return a key for sorting into report order."""
