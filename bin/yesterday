@@ -1,0 +1,5 @@
+#!/bin/sh
+
+# Display yesterday's date in YYYY-MM-DD format.
+
+date -d "yesterday 13:00" -I

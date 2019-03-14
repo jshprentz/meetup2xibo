@@ -5,7 +5,9 @@ class LogSummarizer:
 
     """Summarizes meetup2xibo logs, reporting meeting changes."""
 
-    def __init__(self, input_stream, output_stream, summary, log_parser, renderer):
+    def __init__(
+            self, input_stream, output_stream, summary, log_parser,
+            renderer):
         """Initialize with input and output streams, an empty summary, a
         log parser, and a renderer."""
         self.input_stream = input_stream

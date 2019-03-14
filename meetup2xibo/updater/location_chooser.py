@@ -64,7 +64,7 @@ class LocationChooser:
         if computed_location:
             return computed_location
         else:
-            self.logger.warning('Unknown location for %s', partial_event)
+            self.logger.info('Unknown location for %s', partial_event)
             return self.default_location
 
 

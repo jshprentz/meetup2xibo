@@ -1,7 +1,8 @@
 """Provides time ordered sample log lines."""
 
 from meetup2xibo.log_summarizer.event import Event
-from meetup2xibo.log_summarizer.log_lines import InsertEventLogLine, UpdateEventLogLine, DeleteEventLogLine
+from meetup2xibo.log_summarizer.log_lines import InsertEventLogLine, \
+    UpdateEventLogLine, DeleteEventLogLine, UnknownLocationLogLine
 
 DATE_TIME_TEMPLATE = "2019-03-04 06:{minutes:02d}:12"
 
@@ -68,6 +69,15 @@ UNKNOWN_LOCATION_TEMPLATE = \
     "Unknown location for PartialEvent(meetup_id='259565055', name='EMPOWER2MAKE', " \
     "start_time='2019-04-12 16:00:00', end_time='2019-04-12 18:00:00', venue_name='', find_us='')"
 
+UNKNOWN_LOCATION_FIELDS = [
+    ('meetup_id', '259565055'),
+    ('name', 'EMPOWER2MAKE'),
+    ('start_time', '2019-04-12 16:00:00'),
+    ('end_time', '2019-04-12 18:00:00'),
+    ('venue_name', ''),
+    ('find_us', ''),
+    ]
+
 class SampleLogLines:
 
     """Provides time ordered sample log lines."""
@@ -132,6 +142,12 @@ class SampleLogLines:
         line."""
         return UPDATE_AFTER_FIELDS
 
+    @property
+    def unknown_location_fields(self):
+        """return fields that should be extracted from an unknown location log
+        line."""
+        return UNKNOWN_LOCATION_FIELDS
+
     def make_insert_log_line(self):
         """Return an insert log line object."""
         event = Event.from_fields(INSERT_FIELDS)
@@ -150,5 +166,11 @@ class SampleLogLines:
         event = Event.from_fields(DELETE_FIELDS)
         date_time = self.date_time()
         return DeleteEventLogLine(date_time, event)
+
+    def make_unknown_location_log_line(self):
+        """Return an unknown location log line object."""
+        event = Event.from_fields(UNKNOWN_LOCATION_FIELDS)
+        date_time = self.date_time()
+        return UnknownLocationLogLine(date_time, event)
 
 # vim: tabstop=8 expandtab shiftwidth=4 softtabstop=4 autoindent

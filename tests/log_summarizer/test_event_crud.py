@@ -16,6 +16,20 @@ def test_add_log_line(event_crud, sample_log_lines):
     event_crud.add_log_line(log_line)
     assert event_crud.log_lines == [log_line]
 
+def test_add_unknown_locaation_log_line(event_crud, sample_log_lines):
+    """Test adding an unknown location log line."""
+    log_line = sample_log_lines.make_unknown_location_log_line()
+    event_crud.add_unknown_location_log_line(log_line)
+    assert event_crud.log_lines == [log_line]
+
+def test_add_unknown_locaation_log_line_repeated(event_crud, sample_log_lines):
+    """Test adding a repeated unknown location log line."""
+    log_line_1 = sample_log_lines.make_unknown_location_log_line()
+    log_line_2 = sample_log_lines.make_unknown_location_log_line()
+    event_crud.add_unknown_location_log_line(log_line_1)
+    event_crud.add_unknown_location_log_line(log_line_2)
+    assert event_crud.log_lines == [log_line_1]
+
 def test_final_event(event_crud, sample_log_lines):
     """Test getting the final log line."""
     insert_log_line = sample_log_lines.make_insert_log_line()

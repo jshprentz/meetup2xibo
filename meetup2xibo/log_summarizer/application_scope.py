@@ -18,8 +18,24 @@ class ApplicationScope:
         return APP_NAME
 
     @property
-    def debug(self):
-        return self._args.debug
+    def email_subject(self):
+        """Return the email subject."""
+        return self._args.email_subject
+
+    @property
+    def email_to(self):
+        """Return the email "To" address."""
+        return self._args.email_to
+
+    @property
+    def infile(self):
+        """Return the open input file."""
+        return self._args.infile
+
+    @property
+    def outfile(self):
+        """Return the open output file."""
+        return self._args.outfile
 
 
 # vim: tabstop=8 expandtab shiftwidth=4 softtabstop=4 autoindent

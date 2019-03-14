@@ -4,6 +4,7 @@ from ..context import meetup2xibo
 from meetup2xibo.updater.application_scope import SpecialLocation
 from meetup2xibo.updater.event_converter import PartialEvent
 from meetup2xibo.updater.location_chooser import LocationChooser
+import logging
 import pytest
 
 
@@ -37,10 +38,11 @@ def has_warnings(log_records):
 def test_resolve_locations_no_locations(minimal_location_chooser, caplog):
     """Test returning the default location when there is neither a computed
     location nor a special location."""
+    caplog.set_level(logging.INFO)
     partial_event = make_partial_event()
     location =  minimal_location_chooser.resolve_locations(partial_event, "", None)
     assert location == SAMPLE_DEFAULT_LOCATION
-    assert has_warnings(caplog.records)
+    assert "Unknown location" in caplog.text
 
 def test_resolve_locations_event_location(minimal_location_chooser, caplog):
     """Test returning the default location when there is a computed location

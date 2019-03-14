@@ -25,7 +25,7 @@ def make_event(
         end_time=SAMPLE_END_TIME,
         meetup_id=SAMPLE_MEETUP_ID):
     """Make an event with default sample values."""
-    return Event(name, location, start_time, end_time, meetup_id)
+    return Event(name, start_time, end_time, meetup_id, location)
 
 @pytest.fixture
 def event():
