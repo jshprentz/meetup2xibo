@@ -1,0 +1,22 @@
+<html lang="en">
+<head>
+    <title>Meetup Event Changes on Xibo Signs</title>
+</head>
+<body>
+    <h2>Program Execution</h2>
+    <table>
+        <tr>
+            <th>Version</th>
+            <th>Count</th>
+        </tr>
+        {% for program in counters %}
+            <tr>
+                <th>program.name</th>
+                <th>program.count</th>
+            </tr>
+        {% endfor %}
+    </table>
+    {# a comment #}
+</body>
+</html>
+{# vim: set tabstop=8 expandtab shiftwidth=4 softtabstop=4 autoindent: #}

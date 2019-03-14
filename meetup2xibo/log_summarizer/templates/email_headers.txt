@@ -1,0 +1,7 @@
+{% if email_to or email_subject %}To: {{ email_to }}
+Subject: {{ email_subject }}
+Date: {{ email_date }}
+MIME-Version: 1.0
+Content-Type: text/html; charset=utf-8
+
+{% endif %}

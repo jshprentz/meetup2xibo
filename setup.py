@@ -11,11 +11,13 @@ with open('README.rst') as readme_file:
 with open('HISTORY.rst') as history_file:
     history = history_file.read()
 
-requirements = ['requests', 'oauthlib', 'requests_oauthlib', 'pyahocorasick', ]
+requirements = [
+        'requests', 'requests-toolbelt', 'oauthlib', 'jinja2',
+        'requests_oauthlib', 'pyahocorasick', 'parsley']
 
 setup_requirements = ['pytest-runner', ]
 
-test_requirements = ['pytest', 'pytest-mock', 'hypothesis', 'requests-toolbelt', 'tox', 'flake8']
+test_requirements = ['pytest', 'pytest-mock', 'hypothesis', 'tox', 'flake8']
 
 setup(
     author="Joel Shprentz",
@@ -33,7 +35,8 @@ setup(
     description="Load Meetup events into a Xibo digital signage CMS.",
     entry_points={
         'console_scripts': [
-            'meetup2xibo=meetup2xibo.__main__:main',
+            'meetup2xibo=meetup2xibo.updater.__main__:main',
+            'summarize-m2x-logs=meetup2xibo.log_summarizer.__main__:main',
         ],
     },
     install_requires=requirements,
@@ -43,11 +46,14 @@ setup(
     keywords='meetup2xibo',
     name='meetup2xibo',
     packages=find_packages(include=['meetup2xibo']),
-    scripts=['bin/location-log2csv'],
+    scripts=[
+	'bin/location-log2csv',
+	'bin/yesterday',
+	],
     setup_requires=setup_requirements,
     test_suite='tests',
     tests_require=test_requirements,
     url='https://github.com/jshprentz/meetup2xibo',
-    version='2.0.1',
+    version='2.2.0',
     zip_safe=False,
 )
