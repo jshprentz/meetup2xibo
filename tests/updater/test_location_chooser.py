@@ -47,55 +47,61 @@ def test_resolve_locations_no_locations(minimal_location_chooser, caplog):
 def test_resolve_locations_event_location(minimal_location_chooser, caplog):
     """Test returning the default location when there is a computed location
     and no special location."""
+    caplog.set_level(logging.INFO)
     partial_event = make_partial_event(LOCATION_1)
     location =  minimal_location_chooser.resolve_locations(partial_event, LOCATION_1, None)
     assert location == LOCATION_1
-    assert not has_warnings(caplog.records)
+    assert "Unknown location" not in caplog.text
 
 def test_resolve_locations_special_no_locations(minimal_location_chooser, caplog):
     """Test returning the default location when there is no computed
     location and a special location without a location."""
+    caplog.set_level(logging.INFO)
     partial_event = make_partial_event()
     special_location = make_special_location(location = "")
     location =  minimal_location_chooser.resolve_locations(partial_event, "", special_location)
     assert location == SAMPLE_DEFAULT_LOCATION
-    assert not has_warnings(caplog.records)
+    assert "Unknown location" not in caplog.text
 
 def test_resolve_locations_special_location(minimal_location_chooser, caplog):
     """Test returning the default location when there is no computed
     location and a special location with a location."""
+    caplog.set_level(logging.INFO)
     partial_event = make_partial_event()
     special_location = make_special_location()
     location =  minimal_location_chooser.resolve_locations(partial_event, "", special_location)
     assert location == LOCATION_2
-    assert not has_warnings(caplog.records)
+    assert "Unknown location" not in caplog.text
 
 def test_resolve_locations_both_locations_no_override(minimal_location_chooser, caplog):
     """Test returning the default location when there is a computed location
     and a special location with a location, but no override."""
+    caplog.set_level(logging.INFO)
     partial_event = make_partial_event(LOCATION_1)
     special_location = make_special_location()
     location =  minimal_location_chooser.resolve_locations(partial_event, LOCATION_1, special_location)
     assert location == LOCATION_1
-    assert not has_warnings(caplog.records)
+    assert "Unknown location" not in caplog.text
 
 def test_resolve_locations_both_locations_override(minimal_location_chooser, caplog):
     """Test returning the default location when there is a computed location
     and a special location with a location and an override."""
+    caplog.set_level(logging.INFO)
     partial_event = make_partial_event(LOCATION_1)
     special_location = make_special_location(override = True)
     location =  minimal_location_chooser.resolve_locations(partial_event, LOCATION_1, special_location)
     assert location == LOCATION_2
-    assert not has_warnings(caplog.records)
+    assert "Unknown location" not in caplog.text
 
 def test_choose_location_computed(location_builder, caplog):
     """Test choosing a location from an event's venue name and "how to
     find us" information when there is no special location."""
+    caplog.set_level(logging.INFO)
     partial_event = make_partial_event("Metal Shop")
     location_chooser = LocationChooser(location_builder, {}, SAMPLE_DEFAULT_LOCATION)
     location = location_chooser.choose_location(partial_event)
     assert location == "Metal Shop"
-    assert not has_warnings(caplog.records)
+    assert "Unknown location" not in caplog.text
 
 def test_choose_location_special(location_builder, caplog):
     """Test choosing a location from an event's venue name and "how to
