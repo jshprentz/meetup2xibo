@@ -19,7 +19,7 @@ class SpecialLocationMonitor:
         location."""
         special_location = self.special_locations.get(xibo_event.meetup_id)
         if special_location:
-            self.logger.warning("No longer needed %s", special_location)
+            self.logger.info("No longer needed %s", special_location)
 
 
 # vim: tabstop=8 expandtab shiftwidth=4 softtabstop=4 autoindent
