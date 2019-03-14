@@ -1,9 +1,9 @@
-"""Collects and reports event CRUD activity."""
+"""Collects and reports event log activity."""
 
 
-class EventCrud:
+class EventLog:
 
-    """Collects and reports event CRUD activity."""
+    """Collects and reports event log activity."""
 
     def __init__(self):
         """Initialize ..."""

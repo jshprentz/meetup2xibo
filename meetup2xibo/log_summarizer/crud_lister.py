@@ -1,6 +1,6 @@
 """Collects and lists CRUD event log lines."""
 
-from .event_crud import EventCrud
+from .event_log import EventLog
 from collections import defaultdict
 
 
@@ -10,7 +10,7 @@ class CrudLister:
 
     def __init__(self):
         """Initialize with no Meetup event CRUDs."""
-        self.event_cruds = defaultdict(EventCrud)
+        self.event_cruds = defaultdict(EventLog)
 
     def add_log_line(self, log_line):
         """Add a log line."""
@@ -20,7 +20,7 @@ class CrudLister:
     def sorted_event_cruds(self):
         """Return a list of event cruds sorted for reporting."""
         crud_list = list(self.event_cruds.values())
-        crud_list.sort(key=EventCrud.report_sort_key)
+        crud_list.sort(key=EventLog.report_sort_key)
         return crud_list
 
 
