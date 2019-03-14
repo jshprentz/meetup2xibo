@@ -4,7 +4,8 @@ from ..context import meetup2xibo
 from meetup2xibo.log_summarizer.log_parser import make_log_parser_class, Field, Summary
 from meetup2xibo.log_summarizer.event import Event
 from meetup2xibo.log_summarizer.log_lines import InsertEventLogLine, \
-    UpdateEventLogLine, DeleteEventLogLine, UnknownLocationLogLine
+    UpdateEventLogLine, DeleteEventLogLine, UnknownLocationLogLine, \
+    SpecialLocationLogLine
 from meetup2xibo.log_summarizer.start_counter import StartCounter
 from meetup2xibo.log_summarizer.crud_lister import CrudLister
 from parsley import ParseError
@@ -181,6 +182,16 @@ def test_unknown_location_log_line(log_parser_class, sample_log_lines):
     assert log_line.timestamp == '2019-03-04 06:00'
     assert log_line.meetup_id == '259565055'
 
+def test_special_location_log_line(log_parser_class, sample_log_lines):
+    """Test recognizing an special location log line."""
+    log_line_text = sample_log_lines.special_location_line()
+    parser = log_parser_class(log_line_text)
+    log_line = parser.special_location_log_line()
+    assert isinstance(log_line, SpecialLocationLogLine)
+    assert log_line.timestamp == '2019-03-04 06:00'
+    assert log_line.meetup_id == '258645498'
+    assert log_line.special_location.override is False
+
 def test_event_log_line(log_parser_class, sample_log_lines):
     """Test recognizing an event log line."""
     log_line_text = sample_log_lines.insert_line()
@@ -247,6 +258,31 @@ def test_log_lines(log_parser_class, sample_log_lines):
     assert log_line.timestamp == '2019-03-04 06:01'
     assert log_line.meetup_id == meetup_id
     assert counter.counts() == [("meetup2xibo 2.0.1", 1)]
+
+def test_log_lines_with_special_location(log_parser_class, sample_log_lines):
+    """Test recognizing a log lines with a special location."""
+    delete_line_text = sample_log_lines.delete_line()
+    special_location_line_text =sample_log_lines.special_location_line()
+    log_line_text = "\n".join([
+            delete_line_text,
+            special_location_line_text,
+            "Something else\n"])
+    parser = log_parser_class(log_line_text)
+    crud_lister = CrudLister()
+    counter = StartCounter()
+    summary = Summary(counter, crud_lister)
+    parser.log_lines(summary)
+    meetup_id = '258645498'
+    event_crud = crud_lister.event_cruds[meetup_id]
+    log_line_0 = event_crud.log_lines[0]
+    assert isinstance(log_line_0, DeleteEventLogLine)
+    assert log_line_0.timestamp == '2019-03-04 06:00'
+    assert log_line_0.meetup_id == meetup_id
+    assert event_crud.final_event == log_line_0.final_event
+    log_line_1 = event_crud.log_lines[1]
+    assert isinstance(log_line_1, SpecialLocationLogLine)
+    assert log_line_1.timestamp == '2019-03-04 06:01'
+    assert log_line_1.meetup_id == meetup_id
 
 
 # vim: tabstop=8 expandtab shiftwidth=4 softtabstop=4 autoindent

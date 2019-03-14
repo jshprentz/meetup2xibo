@@ -4,6 +4,7 @@ from ..context import meetup2xibo
 from meetup2xibo.updater.application_scope import SpecialLocation
 from meetup2xibo.updater.special_location_monitor import SpecialLocationMonitor
 from meetup2xibo.updater.xibo_event import XiboEvent
+import logging
 import pytest
 
 SAMPLE_MEETUP_ID = "A123"
@@ -29,17 +30,19 @@ def has_warnings(log_records):
 
 def test_deleted_event_with_special_location(caplog):
     """Test logging the special location for a deleted Xibo event."""
+    caplog.set_level(logging.INFO)
     special_location = make_special_location()
     special_location_dict = {SAMPLE_MEETUP_ID: special_location}
     special_location_monitor = SpecialLocationMonitor(special_location_dict)
     special_location_monitor.deleted_event(SAMPLE_XIBO_EVENT)
-    assert has_warnings(caplog.records)
+    assert "No longer needed" in caplog.text
 
 def test_deleted_event_no_special_location(caplog):
     """Test not logging a deleted Xibo event with no special location."""
+    caplog.set_level(logging.INFO)
     special_location_dict = {}
     special_location_monitor = SpecialLocationMonitor(special_location_dict)
     special_location_monitor.deleted_event(SAMPLE_XIBO_EVENT)
-    assert not has_warnings(caplog.records)
+    assert "No longer needed" not in caplog.text
 
 # vim: tabstop=8 expandtab shiftwidth=4 softtabstop=4 autoindent
