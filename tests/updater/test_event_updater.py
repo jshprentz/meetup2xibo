@@ -13,24 +13,24 @@ NEW_MEETUP_EVENT = Event("A01", "Sewing Class", "Crafter's Corner", "2017-12-12 
 
 # Updated event
 UPDATED_MEETUP_EVENT = Event("B01", "Metal Class", "Room 1", "2017-12-11 19:00:00", "2017-12-11 21:00:00")
-UPDATED_XIBO_EVENT = XiboEvent(101, "B01", "Metal Class", "Metal Shop", "2017-12-11 19:15:00", "2017-12-11 21:00:00")
+UPDATED_XIBO_EVENT = XiboEvent("B01", "Metal Class", "Metal Shop", "2017-12-11 19:15:00", "2017-12-11 21:00:00", 101)
 
 # Unchanged event
 UNCHANGED_MEETUP_EVENT = Event("C01", "Wood Class", "Room 2", "2017-12-11 19:30:00", "2017-12-11 21:30:00")
-UNCHANGED_XIBO_EVENT = XiboEvent(102, "C01", "Wood Class", "Room 2", "2017-12-11 19:30:00", "2017-12-11 21:30:00")
+UNCHANGED_XIBO_EVENT = XiboEvent("C01", "Wood Class", "Room 2", "2017-12-11 19:30:00", "2017-12-11 21:30:00", 102)
 
 # Deleted event past
-DELETED_PAST_XIBO_EVENT = XiboEvent(103, "D01", "Lathe Class", "Room 3", "2017-12-09 18:00:00", "2017-12-09 22:00:00")
+DELETED_PAST_XIBO_EVENT = XiboEvent("D01", "Lathe Class", "Room 3", "2017-12-09 18:00:00", "2017-12-09 22:00:00", 103)
 
 # Deleted event current
-DELETED_CURRENT_XIBO_EVENT = XiboEvent(104, "D02", "Laser Class", "Room 4", "2017-12-11 20:00:00", "2017-12-11 23:00:00")
+DELETED_CURRENT_XIBO_EVENT = XiboEvent("D02", "Laser Class", "Room 4", "2017-12-11 20:00:00", "2017-12-11 23:00:00", 104)
 
 # Deleted event future
-DELETED_FUTURE_XIBO_EVENT = XiboEvent(105, "D03", "Casting Class", "Room 5", "2017-12-13 17:00:00", "2017-12-13 19:00:00")
+DELETED_FUTURE_XIBO_EVENT = XiboEvent("D03", "Casting Class", "Room 5", "2017-12-13 17:00:00", "2017-12-13 19:00:00", 105)
 
 # Cancelled event
 CANCELLED_MEETUP_EVENT = Event("E01", "3D Printer Class", "Cancelled", "2017-12-14 19:00:00", "2017-12-14 21:00:00")
-CANCELLED_XIBO_EVENT = XiboEvent(106, "E01", "3D Printer Class", "Room 6", "2017-12-14 19:15:00", "2017-12-14 21:00:00")
+CANCELLED_XIBO_EVENT = XiboEvent("E01", "3D Printer Class", "Room 6", "2017-12-14 19:15:00", "2017-12-14 21:00:00", 106)
 
 # Cancelled event already deleted from Xibo
 OLD_CANCELLED_MEETUP_EVENT = Event("F01", "Electonics Class", "Cancelled", "2017-12-15 19:00:00", "2017-12-15 21:00:00")
