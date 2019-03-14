@@ -14,14 +14,22 @@
     at {{ event.location }}
 {%- endmacro %}
 
-{% macro action_display(log_line) -%}
-    {{ log_line.timestamp }} <strong>{{ log_line.action }}</strong>
+{% macro unknown_location_display(event) -%}
+    {{ event.name }}<br>
+    {{ event.start_time }} &ndash; {{ event.end_time }}<br>
+    Venue: {{ event.venue }}<br>
+    Find Us: {{ event.find_us }}
 {%- endmacro %}
 
+{% macro action_display(log_line, css_class="action") -%}
+    {{ log_line.timestamp }} <span class="{{ css_class }}">{{ log_line.action }}</span>
+{%- endmacro %}
 
 {% macro log_line_display(log_line, final_event) -%}
 {% if log_line.action == "Updated" %}
     {{ update_log_line_display(log_line, final_event) }}
+{% elif log_line.action == "Unknown Location"  %}
+    {{ unknown_location_log_line_display(log_line) }}
 {% else %}
     {{ basic_log_line_display(log_line, final_event) }}
 {% endif %}
@@ -32,6 +40,11 @@
 {% if log_line.event != final_event %}
     <dd>{{ event_display(log_line.event) }}</dd>
 {% endif %}
+{%- endmacro %}
+
+{% macro unknown_location_log_line_display(log_line) -%}
+    <dt>{{ action_display(log_line, css_class="warning") }}</dt>
+    <dd>{{ unknown_location_display(log_line.event) }}</dd>
 {%- endmacro %}
 
 {% macro update_log_line_display(log_line, final_event) -%}

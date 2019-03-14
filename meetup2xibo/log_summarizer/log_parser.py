@@ -2,7 +2,7 @@
 
 from .event import Event
 from .log_lines import InsertEventLogLine, DeleteEventLogLine, \
-    UpdateEventLogLine
+    UpdateEventLogLine, UnknownLocationLogLine
 from parsley import makeGrammar, ParseError
 from collections import namedtuple
 
@@ -17,16 +17,17 @@ GRAMMER = r"""
 log_lines :summary = log_line(summary)*
 
 log_line :summary = (start_log_line(summary.counter)
-        | crud_log_line(summary.crud_lister)
+        | event_log_line(summary.crud_lister)
         | other_log_line) '\n'
 
 start_log_line :counter = log_line_start('meetup2xibo'):s
         'Start ' rest_of_line:p
         -> counter.count(p)
 
-crud_log_line :crud_lister = (insert_log_line
+event_log_line :crud_lister = (insert_log_line
         | delete_log_line
-        | update_log_line):log_line
+        | update_log_line
+        | unknown_location_log_line):log_line
         -> crud_lister.add_log_line(log_line)
 
 insert_log_line = log_line_start('XiboEventCrud'):s 'Inserted ' event:e
@@ -45,6 +46,10 @@ update_from_log_line = log_line_start('XiboEventCrud')
 update_to_log_line = log_line_start('XiboEventCrud'):s
         'Updated to ' event:e
         -> UpdateToLogLine(s.timestamp, e)
+
+unknown_location_log_line = log_line_start('LocationChooser'):s
+        'Unknown location for Partial' event:e
+        -> UnknownLocationLogLine(s.timestamp, e)
 
 other_log_line = rest_of_line
 
@@ -100,6 +105,7 @@ def make_log_parser_class():
             'InsertEventLogLine': InsertEventLogLine,
             'DeleteEventLogLine': DeleteEventLogLine,
             'UpdateEventLogLine': UpdateEventLogLine,
+            'UnknownLocationLogLine': UnknownLocationLogLine,
             'LogLineStart': LogLineStart,
             'UpdateToLogLine': UpdateToLogLine,
             }

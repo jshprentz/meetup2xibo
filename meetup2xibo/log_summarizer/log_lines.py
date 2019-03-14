@@ -36,6 +36,10 @@ class EventLogLine:
         """Return the action description, such as "Inserted"."""
         return self._action
 
+    def add_to_event_crud(self, event_crud):
+        """Add this log line to an event CRUD tracker."""
+        event_crud.add_log_line(self)
+
 
 class InsertEventLogLine(EventLogLine):
 
@@ -84,6 +88,19 @@ class DeleteEventLogLine(EventLogLine):
     def __init__(self, timestamp, event):
         """Initialize with a timestamp and an event."""
         super().__init__(timestamp, event, "Deleted")
+
+
+class UnknownLocationLogLine(EventLogLine):
+
+    """A log line reporting an unknown locaation."""
+
+    def __init__(self, timestamp, event):
+        """Initialize with a timestamp and an event."""
+        super().__init__(timestamp, event, "Unknown Location")
+
+    def add_to_event_crud(self, event_crud):
+        """Add this log line to an event CRUD tracker."""
+        event_crud.add_unknown_location_log_line(self)
 
 
 # vim: tabstop=8 expandtab shiftwidth=4 softtabstop=4 autoindent

@@ -3,7 +3,8 @@
 from ..context import meetup2xibo
 from meetup2xibo.log_summarizer.log_parser import make_log_parser_class, Field, Summary
 from meetup2xibo.log_summarizer.event import Event
-from meetup2xibo.log_summarizer.log_lines import InsertEventLogLine, UpdateEventLogLine, DeleteEventLogLine
+from meetup2xibo.log_summarizer.log_lines import InsertEventLogLine, \
+    UpdateEventLogLine, DeleteEventLogLine, UnknownLocationLogLine
 from meetup2xibo.log_summarizer.start_counter import StartCounter
 from meetup2xibo.log_summarizer.crud_lister import CrudLister
 from parsley import ParseError
@@ -107,6 +108,18 @@ def test_field_with_backslash(log_parser_class):
     parser = log_parser_class(r"""name='Test backslash \\ here'""")
     assert parser.field() == ("name", 'Test backslash \\ here')
 
+def test_field_with_start_time(log_parser_class):
+    """Test recognizing a field containing a start time, which should suppress
+    seconds."""
+    parser = log_parser_class("start_time='2019-02-24 11:22:33'")
+    assert parser.field() == ("start_time", "2019-02-24 11:22")
+
+def test_field_with_end_time(log_parser_class):
+    """Test recognizing a field containing a end time, which should suppress
+    seconds."""
+    parser = log_parser_class("end_time='2019-02-24 11:22:33'")
+    assert parser.field() == ("end_time", "2019-02-24 11:22")
+
 def test_fields_1(log_parser_class):
     """Test recognizing fields with one field."""
     parser = log_parser_class("foo='bar'")
@@ -159,12 +172,21 @@ def test_update_log_line(log_parser_class, sample_log_lines):
     assert log_line.timestamp == '2019-03-04 06:00'
     assert log_line.meetup_id == '259565142'
 
-def test_crud_log_line(log_parser_class, sample_log_lines):
-    """Test recognizing a CRUD log line."""
+def test_unknown_location_log_line(log_parser_class, sample_log_lines):
+    """Test recognizing an unknown location log line."""
+    log_line_text = sample_log_lines.unknown_location_line()
+    parser = log_parser_class(log_line_text)
+    log_line = parser.unknown_location_log_line()
+    assert isinstance(log_line, UnknownLocationLogLine)
+    assert log_line.timestamp == '2019-03-04 06:00'
+    assert log_line.meetup_id == '259565055'
+
+def test_event_log_line(log_parser_class, sample_log_lines):
+    """Test recognizing an event log line."""
     log_line_text = sample_log_lines.insert_line()
     parser = log_parser_class(log_line_text)
     crud_lister = CrudLister()
-    parser.crud_log_line(crud_lister)
+    parser.event_log_line(crud_lister)
     meetup_id = 'tmnbrqyzhbhb'
     log_line = crud_lister.event_cruds[meetup_id].log_lines[0]
     assert isinstance(log_line, InsertEventLogLine)

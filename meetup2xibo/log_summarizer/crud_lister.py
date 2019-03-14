@@ -15,7 +15,7 @@ class CrudLister:
     def add_log_line(self, log_line):
         """Add a log line."""
         event_crud = self.event_cruds[log_line.meetup_id]
-        event_crud.add_log_line(log_line)
+        log_line.add_to_event_crud(event_crud)
 
     def sorted_event_cruds(self):
         """Return a list of event cruds sorted for reporting."""
