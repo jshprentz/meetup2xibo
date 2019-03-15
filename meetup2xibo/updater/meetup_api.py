@@ -7,11 +7,13 @@ import requests
 
 class MeetupEventsRetriever:
 
-    def __init__(self, group_url_name, api_key, cancelled_last_time):
-        """Initialize with a Meetup group URL name, a Meetup API, and the last
-        time allowed for cancelled events."""
+    def __init__(self, group_url_name, api_key, events_wanted, cancelled_last_time):
+        """Initialize with a Meetup group URL name, a Meetup API, the number of
+        events wanted from Meetup, and the last time allowed for cancelled
+        events."""
         self.group_url_name = group_url_name
         self.api_key = api_key
+        self.events_wanted = events_wanted
         self.cancelled_last_time = cancelled_last_time
 
     def retrieve_events_json(self, **kwargs):
@@ -40,6 +42,7 @@ class MeetupEventsRetriever:
         """Return a dictionary of request parameters."""
         return {
             "key": self.api_key,
+            "page": self.events_wanted,
             "scroll": "recent_past"
             }
 

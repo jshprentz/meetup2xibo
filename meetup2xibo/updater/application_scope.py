@@ -103,6 +103,10 @@ class ApplicationScope:
         return self._env_vars["MEETUP_API_KEY"]
 
     @property
+    def meetup_events_wanted(self):
+        return self._env_vars["MEETUP_EVENTS_WANTED"]
+
+    @property
     def meetup_group_url_name(self):
         return self._env_vars["MEETUP_GROUP_URL_NAME"]
 
