@@ -2,12 +2,11 @@
 environment variables needed by the application."""
 
 
+import meetup2xibo
 import logging
 import json
 from collections import namedtuple
 
-
-VERSION = "2.2.1"
 APP_NAME = "meetup2xibo"
 XIBO_PAGE_LENGTH = 50
 
@@ -103,6 +102,10 @@ class ApplicationScope:
         return self._env_vars["MEETUP_API_KEY"]
 
     @property
+    def meetup_events_wanted(self):
+        return self._env_vars["MEETUP_EVENTS_WANTED"]
+
+    @property
     def meetup_group_url_name(self):
         return self._env_vars["MEETUP_GROUP_URL_NAME"]
 
@@ -153,7 +156,7 @@ class ApplicationScope:
 
     @property
     def version(self):
-        return VERSION
+        return meetup2xibo.__version__
 
     @property
     def warnings(self):

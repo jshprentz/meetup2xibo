@@ -1,15 +1,9 @@
 """Access Xibo API to update events."""
 
 
+from .http_response_error import XiboApiError
 from itertools import chain
-from requests.exceptions import HTTPError
-from requests_toolbelt.utils import dump
 import logging
-
-
-class XiboApiError(Exception):
-
-    """Raised when HTTP response status is not ok."""
 
 
 class XiboApi:
@@ -28,7 +22,7 @@ class XiboApi:
     def get_response(self, url, **payload):
         """Request a URL and return the response."""
         response = self.session.get(url, params=payload)
-        self.check_response_status(response)
+        XiboApiError.check_response_status(response)
         return response
 
     def get_json(self, url, **payload):
@@ -56,19 +50,19 @@ class XiboApi:
     def delete(self, url, **payload):
         """Request deletion at a URL and return the response."""
         response = self.session.delete(url, params=payload)
-        self.check_response_status(response)
+        XiboApiError.check_response_status(response)
         return response
 
     def post(self, url, **payload):
         """Request posting at a URL and return the response."""
         response = self.session.post(url, data=payload)
-        self.check_response_status(response)
+        XiboApiError.check_response_status(response)
         return response
 
     def put(self, url, **payload):
         """Request puting at a URL and return the response."""
         response = self.session.put(url, data=payload)
-        self.check_response_status(response)
+        XiboApiError.check_response_status(response)
         return response
 
     def get_about(self):
@@ -116,15 +110,5 @@ class XiboApi:
                 dataset_id, row_id)
         return self.put(url, **columns)
 
-    @staticmethod
-    def check_response_status(response):
-        """Raise an Xibo API exception if the response status is not ok."""
-        try:
-            response.raise_for_status()
-        except HTTPError as err:
-            data = dump.dump_response(response)
-            message = "HTTP status is {:d}, not ok\n{}".format(
-                    response.status_code, data.decode('utf-8'))
-            raise XiboApiError(message) from err
 
 # vim: tabstop=8 expandtab shiftwidth=4 softtabstop=4 autoindent
