@@ -1,5 +1,6 @@
 """Access Meetup API to download events."""
 
+from .http_response_error import MeetupApiError
 from datetime import timedelta
 import requests
 
@@ -20,7 +21,7 @@ class MeetupEventsRetriever:
         params = self.request_params()
         params.update(kwargs)
         response = requests.get(url, params=params)
-        response.raise_for_status()
+        MeetupApiError.check_response_status(response)
         return response.json()
 
     def retrieve_cancelled_events_json(self, **kwargs):
