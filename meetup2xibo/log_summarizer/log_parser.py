@@ -1,7 +1,6 @@
 """Parses logs and collects the interesting information."""
 
 from .event import Event
-#from .special_location import SpecialLocation
 from .log_lines import InsertEventLogLine, DeleteEventLogLine, \
     UpdateEventLogLine, UnknownLocationLogLine, SpecialLocationLogLine
 from parsley import makeGrammar, ParseError
@@ -60,7 +59,8 @@ special_location_log_line = log_line_start('SpecialEventsMonitor'):s
         'No longer needed ' special_location:l
         -> SpecialLocationLogLine(s.timestamp, l)
 
-special_location = 'SpecialLocation(' fields:f ')' -> SpecialLocation(**dict(f))
+special_location = 'SpecialLocation(' fields:f ')'
+        -> SpecialLocation(**dict(f))
 
 other_log_line = rest_of_line
 
