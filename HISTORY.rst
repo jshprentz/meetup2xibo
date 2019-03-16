@@ -9,6 +9,9 @@ History
 
 Next Release
 ------------------
+
+2.2.2 (2019-03-15)
+------------------
 * Add log summarizer configuration parameter for the number of Meetup events to request.
 * Improve reporting of HTTP errors.
 
