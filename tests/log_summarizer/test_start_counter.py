@@ -1,6 +1,5 @@
 """Test counting program starts."""
 
-from ..context import meetup2xibo
 from meetup2xibo.log_summarizer.start_counter import StartCounter
 import pytest
 

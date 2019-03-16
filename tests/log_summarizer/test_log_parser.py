@@ -1,6 +1,5 @@
 """Test log parser productions."""
 
-from ..context import meetup2xibo
 from meetup2xibo.log_summarizer.log_parser import make_log_parser_class, Field, Summary
 from meetup2xibo.log_summarizer.event import Event
 from meetup2xibo.log_summarizer.log_lines import InsertEventLogLine, \

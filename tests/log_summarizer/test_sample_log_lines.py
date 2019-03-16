@@ -1,6 +1,5 @@
 """Test providing sample log lines."""
 
-from .sample_log_lines import SampleLogLines
 import pytest
 
 def test_date_time(sample_log_lines):

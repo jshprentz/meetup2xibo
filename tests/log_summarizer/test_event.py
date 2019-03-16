@@ -1,6 +1,5 @@
 """Test event comparison and reporting."""
 
-from ..context import meetup2xibo
 from meetup2xibo.log_summarizer.event import Event
 import pytest
 from hypothesis import given, assume, example

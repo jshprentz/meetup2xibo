@@ -1,6 +1,5 @@
 """Test log lines."""
 
-from ..context import meetup2xibo
 from meetup2xibo.log_summarizer.log_lines import InsertEventLogLine, UpdateEventLogLine, DeleteEventLogLine
 from meetup2xibo.log_summarizer.event import Event
 import pytest

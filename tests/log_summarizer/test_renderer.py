@@ -1,6 +1,5 @@
 """Test rendering a log file summary."""
 
-from ..context import meetup2xibo
 from meetup2xibo.log_summarizer.renderer import Renderer, make_jinja2_env
 from meetup2xibo.log_summarizer.start_counter import StartCounter
 import pytest
