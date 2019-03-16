@@ -1,7 +1,8 @@
 """Application scope holds command line arguments."""
 
+import meetup2xibo
 
-VERSION = "2.2.1"
+
 APP_NAME = "summarize-m2x-logs"
 
 
@@ -36,6 +37,10 @@ class ApplicationScope:
     def outfile(self):
         """Return the open output file."""
         return self._args.outfile
+
+    @property
+    def version(self):
+        return meetup2xibo.__version__
 
 
 # vim: tabstop=8 expandtab shiftwidth=4 softtabstop=4 autoindent
