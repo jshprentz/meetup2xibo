@@ -2,6 +2,8 @@
 
 from jinja2 import Environment, PackageLoader, select_autoescape
 from email.utils import formatdate
+from email.message import EmailMessage
+from email.headerregistry import Address
 
 
 class Renderer:
@@ -17,6 +19,43 @@ class Renderer:
         """Render the email headers and log file summary as a string."""
         return self.email_header_renderer.render() \
             + self.summary_renderer.render(summary)
+
+
+class EmailRenderer:
+
+    """Renders an email message containing summary HTML content."""
+
+    def __init__(self, email_to, email_subject):
+        """Initialize with an email "To" address and subject."""
+        self.email_to = email_to
+        self.email_subject = email_subject
+
+    def can_render(self):
+        """Return true it an email message can be rendered; false otherwise."""
+        return bool(self.email_to)
+
+    def render(self, summary_html, csv_data):
+        """Render an email reporting summary information and possibly some csv
+        data."""
+        msg = self.make_message()
+        msg.set_content(summary_html, subtype="html")
+        if csv_data:    
+            msg.add_attachment(csv_data, subtype="csv")
+        return str(msg)
+
+    def make_message(self):
+        """Make and return an email addressed to "To" recipients and with the
+        supplied subject."""
+        msg = EmailMessage()
+        msg['Subject'] = self.email_subject
+        msg['To'] = self.address_list()
+        return msg
+
+    def address_list(self):
+        """Return a list of "To" email addresses."""
+        return tuple(
+                Address(addr_spec=address)
+                for address in self.email_to.split())
 
 
 class EmailHeaderRenderer:
