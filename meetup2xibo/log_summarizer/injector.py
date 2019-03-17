@@ -4,7 +4,7 @@ from .log_summarizer import LogSummarizer
 from .log_parser import make_log_parser_class, Summary
 from .start_counter import StartCounter
 from .crud_lister import CrudLister
-from .renderer import Renderer, EmailHeaderRenderer, SummaryRenderer, \
+from .renderer import Renderer, EmailRenderer, SummaryRenderer, \
         make_jinja2_env
 
 
@@ -53,15 +53,13 @@ def inject_log_parser():
 def inject_renderer(application_scope):
     """Inject a renderer."""
     return Renderer(
-        inject_email_header_renderer(application_scope),
+        inject_email_renderer(application_scope),
         inject_summary_renderer())
 
 
-def inject_email_header_renderer(application_scope):
-    """Inject an email header renderer."""
-    return EmailHeaderRenderer(
-        inject_jinja2_env(),
-        "email_headers.txt",
+def inject_email_renderer(application_scope):
+    """Inject an email renderer."""
+    return EmailRenderer(
         application_scope.email_to,
         application_scope.email_subject)
 

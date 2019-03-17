@@ -1,7 +1,6 @@
 """Renders the log summary in HTML."""
 
 from jinja2 import Environment, PackageLoader, select_autoescape
-from email.utils import formatdate
 from email.message import EmailMessage
 from email.headerregistry import Address
 
@@ -10,15 +9,19 @@ class Renderer:
 
     """Renders the combined email headers and log summary."""
 
-    def __init__(self, email_header_renderer, summary_renderer):
-        """Initialize with renderers for email headers and log summaries."""
-        self.email_header_renderer = email_header_renderer
+    def __init__(self, email_renderer, summary_renderer):
+        """Initialize with renderers for email and log summaries."""
+        self.email_renderer = email_renderer
         self.summary_renderer = summary_renderer
 
     def render(self, summary):
-        """Render the email headers and log file summary as a string."""
-        return self.email_header_renderer.render() \
-            + self.summary_renderer.render(summary)
+        """Render an email message containing the log file summary as a
+        string."""
+        html_summary = self.summary_renderer.render(summary)
+        if self.email_renderer.can_render():
+            return self.email_renderer.render(html_summary, None)
+        else:
+            return html_summary
 
 
 class EmailRenderer:
@@ -56,28 +59,6 @@ class EmailRenderer:
         return tuple(
                 Address(addr_spec=address)
                 for address in self.email_to.split())
-
-
-class EmailHeaderRenderer:
-
-    """Renders the email headers."""
-
-    def __init__(self, jinja2_env, template_name, email_to, email_subject):
-        """Initialize with a Jinja2 environment and a template name."""
-        self.jinja2_env = jinja2_env
-        self.template_name = template_name
-        self.email_to = email_to
-        self.email_subject = email_subject
-
-    def render(self):
-        """Render the email headers as a string."""
-        template = self.jinja2_env.get_template(self.template_name)
-        now_formatted = formatdate(localtime=True)
-        return template.render(
-                email_to=self.email_to,
-                email_subject=self.email_subject,
-                email_date=now_formatted
-                )
 
 
 class SummaryRenderer:
