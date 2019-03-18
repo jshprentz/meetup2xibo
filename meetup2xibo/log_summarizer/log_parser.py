@@ -11,7 +11,7 @@ from collections import namedtuple
 LogLineStart = namedtuple("LogLineStart", "timestamp log_level")
 UpdateToLogLine = namedtuple("UpdateToLogLine", "timestamp event")
 Field = namedtuple("Field", "name value")
-Summary = namedtuple("Summary", "counter crud_lister")
+Summary = namedtuple("Summary", "counter crud_lister location_mapper")
 SpecialLocation = namedtuple(
         "SpecialLocation",
         "meetup_id location override comment")
@@ -22,6 +22,8 @@ log_lines :summary = log_line(summary)*
 
 log_line :summary = (start_log_line(summary.counter)
         | event_log_line(summary.crud_lister)
+        | event_location_log_line:l
+                -> summary.location_mapper.add_event_location_log_line(l)
         | other_log_line) '\n'
 
 start_log_line :counter = log_line_start('meetup2xibo'):s

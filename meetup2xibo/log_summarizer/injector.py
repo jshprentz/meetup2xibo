@@ -2,6 +2,7 @@
 
 from .log_summarizer import LogSummarizer
 from .log_parser import make_log_parser_class, Summary
+from .location_mapper import LocationMapper
 from .start_counter import StartCounter
 from .crud_lister import CrudLister
 from .renderer import Renderer, EmailRenderer, SummaryRenderer, \
@@ -21,7 +22,10 @@ def inject_log_summarizer(application_scope):
 
 def inject_summary():
     """Return a summary."""
-    return Summary(inject_start_counter(), inject_crud_lister())
+    return Summary(
+        inject_start_counter(),
+        inject_crud_lister(),
+        inject_location_mapper())
 
 
 def inject_input_stream(application_scope):
@@ -42,6 +46,11 @@ def inject_start_counter():
 def inject_crud_lister():
     """Return an empty event CRUD lister."""
     return CrudLister()
+
+
+def inject_location_mapper():
+    """Return a location mapper."""
+    return LocationMapper()
 
 
 def inject_log_parser():
