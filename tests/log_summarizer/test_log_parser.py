@@ -3,8 +3,8 @@
 from meetup2xibo.log_summarizer.log_parser import make_log_parser_class, Field, Summary
 from meetup2xibo.log_summarizer.event import Event
 from meetup2xibo.log_summarizer.log_lines import InsertEventLogLine, \
-    UpdateEventLogLine, DeleteEventLogLine, UnknownLocationLogLine, \
-    EventLocationLogLine, SpecialLocationLogLine
+    UpdateEventLogLine, DeleteEventLogLine, RetireEventLogLine, \
+    UnknownLocationLogLine, EventLocationLogLine, SpecialLocationLogLine
 from meetup2xibo.log_summarizer.start_counter import StartCounter
 from meetup2xibo.log_summarizer.crud_lister import CrudLister
 from meetup2xibo.log_summarizer.location_mapper import LocationMapper
@@ -175,6 +175,15 @@ def test_delete_log_line(log_parser_class, sample_log_lines):
     assert isinstance(log_line, DeleteEventLogLine)
     assert log_line.timestamp == '2019-03-04 06:00'
     assert log_line.meetup_id == '258645498'
+
+def test_retire_log_line(log_parser_class, sample_log_lines):
+    """Test recognizing a retire log line."""
+    log_line_text = sample_log_lines.retire_line()
+    parser = log_parser_class(log_line_text)
+    log_line = parser.retire_log_line()
+    assert isinstance(log_line, RetireEventLogLine)
+    assert log_line.timestamp == '2019-03-04 06:00'
+    assert log_line.meetup_id == '257907613'
 
 def test_update_log_line(log_parser_class, sample_log_lines):
     """Test recognizing a pair of update log lines."""
