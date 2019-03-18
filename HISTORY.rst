@@ -9,6 +9,7 @@ History
 
 Next Release
 ------------------
+* Summarize location mappings in CSV format.
 
 2.2.2 (2019-03-15)
 ------------------
