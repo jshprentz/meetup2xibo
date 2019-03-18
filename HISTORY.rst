@@ -7,7 +7,10 @@ History
 
 * First release on PyPI.
 
-Next Release
+.. Next Release
+.. ------------------
+
+2.3.1 (2019-03-18)
 ------------------
 * Add Travis CI configuration.
 
