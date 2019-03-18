@@ -136,4 +136,19 @@ class SpecialLocationLogLine(LogLine):
         return self.special_location.meetup_id
 
 
+class EventLocationLogLine(EventLogLine):
+
+    """A log line reporting an event location mapping."""
+
+    def __init__(self, timestamp, location, event):
+        """Initialize with a timestamp, a location, and an event."""
+        super().__init__(timestamp, event, "Event Location")
+        self._location = location
+
+    @property
+    def location(self):
+        """Return the log line's location."""
+        return self._location
+
+
 # vim: tabstop=8 expandtab shiftwidth=4 softtabstop=4 autoindent

@@ -4,7 +4,7 @@ from meetup2xibo.log_summarizer.log_parser import make_log_parser_class, Field, 
 from meetup2xibo.log_summarizer.event import Event
 from meetup2xibo.log_summarizer.log_lines import InsertEventLogLine, \
     UpdateEventLogLine, DeleteEventLogLine, UnknownLocationLogLine, \
-    SpecialLocationLogLine
+    EventLocationLogLine, SpecialLocationLogLine
 from meetup2xibo.log_summarizer.start_counter import StartCounter
 from meetup2xibo.log_summarizer.crud_lister import CrudLister
 from parsley import ParseError
@@ -182,7 +182,7 @@ def test_unknown_location_log_line(log_parser_class, sample_log_lines):
     assert log_line.meetup_id == '259565055'
 
 def test_special_location_log_line(log_parser_class, sample_log_lines):
-    """Test recognizing an special location log line."""
+    """Test recognizing a special location log line."""
     log_line_text = sample_log_lines.special_location_line()
     parser = log_parser_class(log_line_text)
     log_line = parser.special_location_log_line()
@@ -190,6 +190,16 @@ def test_special_location_log_line(log_parser_class, sample_log_lines):
     assert log_line.timestamp == '2019-03-04 06:00'
     assert log_line.meetup_id == '258645498'
     assert log_line.special_location.override is False
+
+def test_event_location_log_line(log_parser_class, sample_log_lines):
+    """Test recognizing an event location log line."""
+    log_line_text = sample_log_lines.event_location_line()
+    parser = log_parser_class(log_line_text)
+    log_line = parser.event_location_log_line()
+    assert isinstance(log_line, EventLocationLogLine)
+    assert log_line.timestamp == '2019-03-04 06:00'
+    assert log_line.meetup_id == '259405866'
+    assert log_line.location == 'Woodshop'
 
 def test_event_log_line(log_parser_class, sample_log_lines):
     """Test recognizing an event log line."""

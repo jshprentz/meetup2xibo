@@ -2,7 +2,8 @@
 
 from .event import Event
 from .log_lines import InsertEventLogLine, DeleteEventLogLine, \
-    UpdateEventLogLine, UnknownLocationLogLine, SpecialLocationLogLine
+    UpdateEventLogLine, UnknownLocationLogLine, EventLocationLogLine, \
+    SpecialLocationLogLine
 from parsley import makeGrammar, ParseError
 from collections import namedtuple
 
@@ -58,6 +59,10 @@ unknown_location_log_line = log_line_start('LocationChooser'):s
 special_location_log_line = log_line_start('SpecialEventsMonitor'):s
         'No longer needed ' special_location:l
         -> SpecialLocationLogLine(s.timestamp, l)
+
+event_location_log_line = log_line_start('EventConverter'):s
+        'Location=' quoted_value:l ' MeetupEvent=Partial' event:e
+        -> EventLocationLogLine(s.timestamp, l, e)
 
 special_location = 'SpecialLocation(' fields:f ')'
         -> SpecialLocation(**dict(f))
@@ -127,6 +132,7 @@ def make_log_parser_class():
             'UnknownLocationLogLine': UnknownLocationLogLine,
             'SpecialLocation': SpecialLocation,
             'SpecialLocationLogLine': SpecialLocationLogLine,
+            'EventLocationLogLine': EventLocationLogLine,
             'LogLineStart': LogLineStart,
             'UpdateToLogLine': UpdateToLogLine,
             }
