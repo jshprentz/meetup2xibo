@@ -39,45 +39,26 @@ def assert_event_status(status, event_start, event_end, recent, current, future)
 def assert_event_retire(event_start, event_end, recent, current, future):
     """Assert retiring an event with start and end times relative to the
     flapping windows."""
-    status = EventFlappingStatus.retire
+    status = EventFlappingStatus.Retire
     assert_event_status(status, event_start, event_end, recent, current, future)
 
 def assert_event_delete(event_start, event_end, recent, current, future):
     """Assert deleting an event with start and end times relative to the
     flapping windows."""
-    status = EventFlappingStatus.delete
+    status = EventFlappingStatus.Delete
     assert_event_status(status, event_start, event_end, recent, current, future)
 
 def assert_event_keep(event_start, event_end, recent, current, future):
     """Assert keeping an event with start and end times relative to the
     flapping windows."""
-    status = EventFlappingStatus.keep
+    status = EventFlappingStatus.Keep
     assert_event_status(status, event_start, event_end, recent, current, future)
-
-def assert_event_ok(event_start, event_end, recent, current, future):
-    """Assert that an event with start and end times falls outside the flapping windows."""
-    anti_flapper = AntiFlapper(recent, current, future)
-    xibo_event = make_xibo_event(event_start, event_end)
-    assert anti_flapper.is_ok(xibo_event)
-
-def assert_event_not_ok(event_start, event_end, recent, current, future):
-    """Assert that an event with start and end times does not fall outside the
-    flapping windows."""
-    anti_flapper = AntiFlapper(recent, current, future)
-    xibo_event = make_xibo_event(event_start, event_end)
-    assert not anti_flapper.is_ok(xibo_event)
 
 @given(iso_dates = iso_date_lists)
 def test_past_event_retire(iso_dates):
     """Test that an event ending before should be retired."""
     event_start, event_end, recent, current, future = tuple(iso_dates)
     assert_event_retire(event_start, event_end, recent, current, future)
-
-@given(iso_dates = iso_date_lists)
-def test_past_event_ok(iso_dates):
-    """Test that an event ending before flapping windows is ok."""
-    event_start, event_end, recent, current, future = tuple(iso_dates)
-    assert_event_ok(event_start, event_end, recent, current, future)
 
 @given(iso_dates = iso_date_lists)
 def test_recent_event_keep(iso_dates):
@@ -87,23 +68,11 @@ def test_recent_event_keep(iso_dates):
     assert_event_keep(event_start, event_end, recent, current, future)
 
 @given(iso_dates = iso_date_lists)
-def test_recent_event_ok(iso_dates):
-    """Test that an event ending during the recent to current flapping windows is not ok."""
-    event_start, recent, event_end, current, future = tuple(iso_dates)
-    assert_event_not_ok(event_start, event_end, recent, current, future)
-
-@given(iso_dates = iso_date_lists)
 def test_current_event_keep(iso_dates):
     """Test that an event within the recent to current flapping windows should
     be kept."""
     recent, event_start, event_end, current, future = tuple(iso_dates)
     assert_event_keep(event_start, event_end, recent, current, future)
-
-@given(iso_dates = iso_date_lists)
-def test_current_event_ok(iso_dates):
-    """Test that an event within the recent to current flapping windows is not ok."""
-    recent, event_start, event_end, current, future = tuple(iso_dates)
-    assert_event_not_ok(event_start, event_end, recent, current, future)
 
 @given(iso_dates = iso_date_lists)
 def test_ongoing_event_keep(iso_dates):
@@ -113,23 +82,11 @@ def test_ongoing_event_keep(iso_dates):
     assert_event_keep(event_start, event_end, recent, current, future)
 
 @given(iso_dates = iso_date_lists)
-def test_ongoing_event_ok(iso_dates):
-    """Test that an event starting within the recent to current flapping windows is not ok."""
-    recent, event_start, current, event_end, future = tuple(iso_dates)
-    assert_event_not_ok(event_start, event_end, recent, current, future)
-
-@given(iso_dates = iso_date_lists)
 def test_surrounding_event_keep(iso_dates):
     """Test that an event surrounding the recent to current flapping windows
     should be kept."""
     event_start, recent, current, event_end, future = tuple(iso_dates)
     assert_event_keep(event_start, event_end, recent, current, future)
-
-@given(iso_dates = iso_date_lists)
-def test_surrounding_event_ok(iso_dates):
-    """Test that an event surrounding the recent to current flapping windows is not ok."""
-    event_start, recent, current, event_end, future = tuple(iso_dates)
-    assert_event_not_ok(event_start, event_end, recent, current, future)
 
 @given(iso_dates = iso_date_lists)
 def test_planned_event_delete(iso_dates):
@@ -138,34 +95,16 @@ def test_planned_event_delete(iso_dates):
     assert_event_delete(event_start, event_end, recent, current, future)
 
 @given(iso_dates = iso_date_lists)
-def test_planned_event_ok(iso_dates):
-    """Test that an event planned between the flapping windows is ok."""
-    recent, current, event_start, event_end, future = tuple(iso_dates)
-    assert_event_ok(event_start, event_end, recent, current, future)
-
-@given(iso_dates = iso_date_lists)
 def test_future_event_keep(iso_dates):
     """Test that a future event ending after the future time should be kept."""
     recent, current, event_start, future, event_end = tuple(iso_dates)
     assert_event_keep(event_start, event_end, recent, current, future)
 
 @given(iso_dates = iso_date_lists)
-def test_future_event_ok(iso_dates):
-    """Test that a future event ending after the future time is not ok."""
-    recent, current, event_start, future, event_end = tuple(iso_dates)
-    assert_event_not_ok(event_start, event_end, recent, current, future)
-
-@given(iso_dates = iso_date_lists)
 def test_far_future_event_keep(iso_dates):
     """Test that a future event starting after the future time should be kept."""
     recent, current, future, event_start, event_end = tuple(iso_dates)
     assert_event_keep(event_start, event_end, recent, current, future)
-
-@given(iso_dates = iso_date_lists)
-def test_far_future_event_ok(iso_dates):
-    """Test that a future event starting after the future time is not ok."""
-    recent, current, future, event_start, event_end = tuple(iso_dates)
-    assert_event_not_ok(event_start, event_end, recent, current, future)
 
 def test_iso_offset_time_future():
     """Test offsetting time into the future."""

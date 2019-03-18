@@ -107,11 +107,15 @@ def test_delete_unknown_events():
         anti_flapper, mock_special_location_monitor)
     delete_ids = {"D01", "D02", "D03"}
     event_updater.delete_unknown_events(delete_ids)
-    calls = [
+    delete_calls = [
+        call(DELETED_PAST_XIBO_EVENT, "Retire"),
+        call(DELETED_FUTURE_XIBO_EVENT, "Delete"),
+    ]
+    monitor_calls = [
         call(DELETED_PAST_XIBO_EVENT),
         call(DELETED_FUTURE_XIBO_EVENT),
     ]
-    mock_xibo_event_crud.delete_xibo_event.assert_has_calls(calls, any_order = True)
-    mock_special_location_monitor.deleted_event.assert_has_calls(calls, any_order = True)
+    mock_xibo_event_crud.delete_xibo_event.assert_has_calls(delete_calls, any_order = True)
+    mock_special_location_monitor.deleted_event.assert_has_calls(monitor_calls, any_order = True)
 
 # vim: tabstop=8 expandtab shiftwidth=4 softtabstop=4 autoindent

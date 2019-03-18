@@ -8,9 +8,9 @@ class EventFlappingStatus(Enum):
 
     """An event's status chosen by the anti-flapper."""
 
-    delete = 1
-    retire = 2
-    keep = 3
+    Delete = 1
+    Retire = 2
+    Keep = 3
 
 
 class AntiFlapper:
@@ -32,24 +32,17 @@ class AntiFlapper:
         self.current_limit = current_limit
         self.future_limit = future_limit
 
-    def is_ok(self, xibo_event):
-        """Test whether a Xibo event falls outside the flapping windows."""
-        is_past = xibo_event.end_time < self.recent_limit
-        is_planned = xibo_event.start_time > self.current_limit
-        is_future = xibo_event.end_time > self.future_limit
-        return (is_past or is_planned) and not is_future
-
     def categorize(self, xibo_event):
         """Categorize an event based on its times and the flapping window.
         Return an event flapping status."""
         if self.is_future(xibo_event):
-            return EventFlappingStatus.keep
+            return EventFlappingStatus.Keep
         elif self.is_past(xibo_event):
-            return EventFlappingStatus.retire
+            return EventFlappingStatus.Retire
         elif self.is_planned(xibo_event):
-            return EventFlappingStatus.delete
+            return EventFlappingStatus.Delete
         else:
-            return EventFlappingStatus.keep
+            return EventFlappingStatus.Keep
                 
     def is_past(self, xibo_event):
         """ Return true if the event ends before the anti-flapping window;
