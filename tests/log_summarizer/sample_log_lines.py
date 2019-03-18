@@ -67,6 +67,21 @@ DELETE_FIELDS = [
     ('end_time', '2019-03-03 16:00:00'),
     ]
 
+RETIRE_TEMPLATE = \
+    "2019-03-04 06:{minutes:02d}:48,266 - INFO - XiboEventCrud - Retired " \
+    "XiboEvent(meetup_id='257907613', name='Barking Mad Planning Meeting', " \
+    "location='Conference Room 3', start_time='2019-03-10 14:00:00', " \
+    "end_time='2019-03-10 16:00:00', xibo_id='59')"
+
+RETIRE_FIELDS = [
+    ('meetup_id', '257907613'),
+    ('name', 'Barking Mad Planning Meeting'),
+    ('location', 'Conference Room 3'),
+    ('start_time', '2019-03-10 14:00:00'),
+    ('end_time', '2019-03-10 16:00:00'),
+    ('xibo_id', '59'),
+    ]
+
 UNKNOWN_LOCATION_TEMPLATE = \
     "2019-03-04 06:{minutes:02d}:11,441 - WARNING - LocationChooser - " \
     "Unknown location for PartialEvent(meetup_id='259565055', name='EMPOWER2MAKE', " \
@@ -150,6 +165,10 @@ class SampleLogLines:
         """Return a delete line."""
         return self.make_line(DELETE_TEMPLATE)
 
+    def retire_line(self):
+        """Return a retire line."""
+        return self.make_line(RETIRE_TEMPLATE)
+
     def unknown_location_line(self):
         """Return an unknown location line."""
         return self.make_line(UNKNOWN_LOCATION_TEMPLATE)
@@ -169,8 +188,13 @@ class SampleLogLines:
 
     @property
     def delete_fields(self):
-        """return fields that should be extracted from an delete log line."""
+        """return fields that should be extracted from a delete log line."""
         return DELETE_FIELDS
+
+    @property
+    def retire_fields(self):
+        """return fields that should be extracted from a retire log line."""
+        return RETIRE_FIELDS
 
     @property
     def update_before_fields(self):
@@ -208,6 +232,12 @@ class SampleLogLines:
         event = Event.from_fields(DELETE_FIELDS)
         date_time = self.date_time()
         return DeleteEventLogLine(date_time, event)
+
+    def make_retire_log_line(self):
+        """Return a retire log line object."""
+        event = Event.from_fields(RETIRE_FIELDS)
+        date_time = self.date_time()
+        return RetireEventLogLine(date_time, event)
 
     def make_unknown_location_log_line(self):
         """Return an unknown location log line object."""

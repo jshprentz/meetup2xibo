@@ -27,11 +27,11 @@ class XiboEventCrud:
             for event_json in xibo_json
             )
 
-    def delete_xibo_event(self, xibo_event):
-        """Delete a Xibo event."""
+    def delete_xibo_event(self, xibo_event, action="Deleted"):
+        """Delete a Xibo event and log the action."""
         self.xibo_api.delete_dataset_data_by_id(
             self.dataset_id, xibo_event.xibo_id)
-        self.logger.info("Deleted %s", xibo_event)
+        self.logger.info("%s %s", action, xibo_event)
 
     def insert_meetup_event(self, meetup_event):
         """Insert a Meetup event into the database."""

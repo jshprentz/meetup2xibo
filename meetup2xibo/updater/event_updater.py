@@ -1,6 +1,7 @@
 """Updates the events in the Xibo database to conform to events from
 Meetup.com."""
 
+from .anti_flapper import EventFlappingStatus
 import logging
 
 
@@ -72,8 +73,9 @@ class EventUpdater:
         """Delete unknown (to Meetup) events given a set of event IDs."""
         for event_id in event_ids:
             xibo_event = self.xibo_events[event_id]
-            if self.anti_flapper.is_ok(xibo_event):
-                self.xibo_event_crud.delete_xibo_event(xibo_event)
+            action = self.anti_flapper.categorize(xibo_event)
+            if action is not EventFlappingStatus.keep:
+                self.xibo_event_crud.delete_xibo_event(xibo_event, action.action)
                 self.special_location_monitor.deleted_event(xibo_event)
 
     @staticmethod
