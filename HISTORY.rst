@@ -7,8 +7,9 @@ History
 
 * First release on PyPI.
 
-.. Next Release
-.. ------------------
+Next Release
+------------------
+* Correct filename travis.yml to .travis.yml.
 
 2.3.1 (2019-03-18)
 ------------------
