@@ -25,8 +25,8 @@ Content-Transfer-Encoding: 7bit
 
 EXPECTED_CSV_PART_HEADER = """Content-Type: text/csv; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+Content-Disposition: attachment; filename="meetup_locations.csv"
 MIME-Version: 1.0
-Content-Disposition: attachment
 
 """
 

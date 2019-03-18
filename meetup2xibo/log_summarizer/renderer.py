@@ -43,7 +43,7 @@ class EmailRenderer:
         msg = self.make_message()
         msg.set_content(summary_html, subtype="html")
         if csv_data:    
-            msg.add_attachment(csv_data, subtype="csv")
+            msg.add_attachment(csv_data, subtype="csv", filename="meetup_locations.csv")
         return str(msg)
 
     def make_message(self):
