@@ -1,6 +1,5 @@
 """Test event log line collection and reporting."""
 
-from ..context import meetup2xibo
 from meetup2xibo.log_summarizer.event_log import EventLog
 import pytest
 

@@ -34,6 +34,10 @@ class ApplicationScope:
         return self._args.infile
 
     @property
+    def mappings(self):
+        return self._args.mappings
+
+    @property
     def outfile(self):
         """Return the open output file."""
         return self._args.outfile

@@ -1,6 +1,5 @@
 """Test the event CRUD log line lister."""
 
-from ..context import meetup2xibo
 from meetup2xibo.log_summarizer.crud_lister import CrudLister
 import pytest
 

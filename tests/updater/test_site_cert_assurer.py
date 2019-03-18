@@ -1,6 +1,5 @@
 """Test assuring that an site SSL certificate will be used."""
 
-from ..context import meetup2xibo
 from meetup2xibo.updater.site_cert_assurer import SiteCertAssurer
 import logging
 

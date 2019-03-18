@@ -2,7 +2,10 @@
 
 from meetup2xibo.log_summarizer.event import Event
 from meetup2xibo.log_summarizer.log_lines import InsertEventLogLine, \
-    UpdateEventLogLine, DeleteEventLogLine, UnknownLocationLogLine
+    UpdateEventLogLine, DeleteEventLogLine, UnknownLocationLogLine, \
+    EventLocationLogLine, SpecialLocationLogLine
+from meetup2xibo.log_summarizer.log_parser import SpecialLocation
+
 
 DATE_TIME_TEMPLATE = "2019-03-04 06:{minutes:02d}:12"
 
@@ -90,6 +93,25 @@ SPECIAL_LOCATION_FIELDS = [
     ('comment', 'Just testing'),
     ]
 
+EVENT_LOCATION_TEMPLATE = \
+    "2019-03-04 06:{minutes:02d}:25,738 - DEBUG - EventConverter - " \
+    "Location='Woodshop' MeetupEvent=PartialEvent(meetup_id='259405866', " \
+    "name='Customized Wooden Beer Caddy', start_time='2019-03-17 10:00:00', " \
+    "end_time='2019-03-17 12:00:00', venue_name='Nova Labs (Woodshop)', " \
+    "find_us='[Woodshop Red area]')"
+
+EVENT_LOCATION = 'Woodshop'
+
+EVENT_LOCATION_FIELDS = [
+    ('meetup_id', '259405866'),
+    ('name', 'Customized Wooden Beer Caddy'),
+    ('start_time', '2019-03-17 10:00:00'),
+    ('end_time', '2019-03-17 12:00:00'),
+    ('venue_name', 'Nova Labs (Woodshop)'),
+    ('find_us', '[Woodshop Red area]'),
+    ]
+
+
 class SampleLogLines:
 
     """Provides time ordered sample log lines."""
@@ -133,8 +155,12 @@ class SampleLogLines:
         return self.make_line(UNKNOWN_LOCATION_TEMPLATE)
 
     def special_location_line(self):
-        """Return an special location line."""
+        """Return a special location line."""
         return self.make_line(SPECIAL_LOCATION_TEMPLATE)
+
+    def event_location_line(self):
+        """Return an event location line."""
+        return self.make_line(EVENT_LOCATION_TEMPLATE)
 
     @property
     def insert_fields(self):
@@ -190,10 +216,17 @@ class SampleLogLines:
         return UnknownLocationLogLine(date_time, event)
 
     def make_special_location_log_line(self):
-        """Return an special location log line object."""
+        """Return a special location log line object."""
         special_location = SpecialLocation(**dict(SPECIAL_LOCATION_FIELDS))
         date_time = self.date_time()
         return SpecialLocationLogLine(date_time, special_location)
+
+    def make_event_location_log_line(self, location=EVENT_LOCATION):
+        """Return an event location log line object, possibly overriding the
+        location."""
+        event = Event.from_fields(EVENT_LOCATION_FIELDS)
+        date_time = self.date_time()
+        return EventLocationLogLine(date_time, location, event)
 
 
 # vim: tabstop=8 expandtab shiftwidth=4 softtabstop=4 autoindent

@@ -1,6 +1,5 @@
 """Tests for Xibo event conversions."""
 
-from ..context import meetup2xibo
 from meetup2xibo.updater.xibo_event import XiboEvent, XiboEventColumnNameManager, XiboEventColumnIdManager
 import json
 

@@ -1,5 +1,5 @@
 Welcome to Meetup to Xibo's documentation!
-======================================
+==========================================
 
 .. toctree::
    :maxdepth: 2
