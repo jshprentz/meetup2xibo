@@ -108,8 +108,8 @@ def test_delete_unknown_events():
     delete_ids = {"D01", "D02", "D03"}
     event_updater.delete_unknown_events(delete_ids)
     delete_calls = [
-        call(DELETED_PAST_XIBO_EVENT, "Retire"),
-        call(DELETED_FUTURE_XIBO_EVENT, "Delete"),
+        call(DELETED_PAST_XIBO_EVENT, "Retired"),
+        call(DELETED_FUTURE_XIBO_EVENT, "Deleted"),
     ]
     monitor_calls = [
         call(DELETED_PAST_XIBO_EVENT),

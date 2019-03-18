@@ -39,19 +39,19 @@ def assert_event_status(status, event_start, event_end, recent, current, future)
 def assert_event_retire(event_start, event_end, recent, current, future):
     """Assert retiring an event with start and end times relative to the
     flapping windows."""
-    status = EventFlappingStatus.Retire
+    status = EventFlappingStatus.retire
     assert_event_status(status, event_start, event_end, recent, current, future)
 
 def assert_event_delete(event_start, event_end, recent, current, future):
     """Assert deleting an event with start and end times relative to the
     flapping windows."""
-    status = EventFlappingStatus.Delete
+    status = EventFlappingStatus.delete
     assert_event_status(status, event_start, event_end, recent, current, future)
 
 def assert_event_keep(event_start, event_end, recent, current, future):
     """Assert keeping an event with start and end times relative to the
     flapping windows."""
-    status = EventFlappingStatus.Keep
+    status = EventFlappingStatus.keep
     assert_event_status(status, event_start, event_end, recent, current, future)
 
 @given(iso_dates = iso_date_lists)

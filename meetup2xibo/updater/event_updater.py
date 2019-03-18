@@ -74,8 +74,8 @@ class EventUpdater:
         for event_id in event_ids:
             xibo_event = self.xibo_events[event_id]
             action = self.anti_flapper.categorize(xibo_event)
-            if action is not EventFlappingStatus.Keep:
-                self.xibo_event_crud.delete_xibo_event(xibo_event, action.name)
+            if action is not EventFlappingStatus.keep:
+                self.xibo_event_crud.delete_xibo_event(xibo_event, action.action)
                 self.special_location_monitor.deleted_event(xibo_event)
 
     @staticmethod

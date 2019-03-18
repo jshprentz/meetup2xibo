@@ -8,9 +8,14 @@ class EventFlappingStatus(Enum):
 
     """An event's status chosen by the anti-flapper."""
 
-    Delete = 1
-    Retire = 2
-    Keep = 3
+    delete = "Deleted"
+    retire = "Retired"
+    keep = "Kept"
+
+    def __init__(self, action):
+        """Initialize with an action (capitalized and past tense for
+        reporting.)"""
+        self.action = action
 
 
 class AntiFlapper:
@@ -36,14 +41,14 @@ class AntiFlapper:
         """Categorize an event based on its times and the flapping window.
         Return an event flapping status."""
         if self.is_future(xibo_event):
-            return EventFlappingStatus.Keep
+            return EventFlappingStatus.keep
         elif self.is_past(xibo_event):
-            return EventFlappingStatus.Retire
+            return EventFlappingStatus.retire
         elif self.is_planned(xibo_event):
-            return EventFlappingStatus.Delete
+            return EventFlappingStatus.delete
         else:
-            return EventFlappingStatus.Keep
-                
+            return EventFlappingStatus.keep
+
     def is_past(self, xibo_event):
         """ Return true if the event ends before the anti-flapping window;
         false otherwise. """
