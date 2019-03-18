@@ -221,11 +221,12 @@ class SampleLogLines:
         date_time = self.date_time()
         return SpecialLocationLogLine(date_time, special_location)
 
-    def make_event_location_log_line(self):
-        """Return an event location log line object."""
+    def make_event_location_log_line(self, location=EVENT_LOCATION):
+        """Return an event location log line object, possibly overriding the
+        location."""
         event = Event.from_fields(EVENT_LOCATION_FIELDS)
         date_time = self.date_time()
-        return EventLocationLogLine(date_time, EVENT_LOCATION, event)
+        return EventLocationLogLine(date_time, location, event)
 
 
 # vim: tabstop=8 expandtab shiftwidth=4 softtabstop=4 autoindent
