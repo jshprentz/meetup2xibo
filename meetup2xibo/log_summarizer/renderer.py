@@ -11,7 +11,8 @@ class Renderer:
 
     """Renders the combined email headers and log summary."""
 
-    def __init__(self, mappings_flag, email_renderer, summary_renderer,
+    def __init__(
+            self, mappings_flag, email_renderer, summary_renderer,
             location_mapping_csv_renderer):
         """Initialize with a mappings flag to request CSV output and with
         renderers for email, log summaries, and location mapping."""
@@ -51,8 +52,11 @@ class EmailRenderer:
         data."""
         msg = self.make_message()
         msg.set_content(summary_html, subtype="html")
-        if csv_data:    
-            msg.add_attachment(csv_data, subtype="csv", filename="meetup_locations.csv")
+        if csv_data:
+            msg.add_attachment(
+                    csv_data,
+                    subtype="csv",
+                    filename="meetup_locations.csv")
         return str(msg)
 
     def make_message(self):

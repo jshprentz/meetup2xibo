@@ -151,7 +151,8 @@ class EventLocationLogLine(EventLogLine):
         return self._location
 
     def key_fields(self):
-        """Return a tuple of key fields to distinguish location mappings of interest."""
+        """Return a tuple of key fields to distinguish location mappings of
+        interest."""
         return (self.location, self.event.venue, self.event.find_us)
 
 # vim: tabstop=8 expandtab shiftwidth=4 softtabstop=4 autoindent

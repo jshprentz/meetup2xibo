@@ -23,7 +23,8 @@ parser.add_argument(
 parser.add_argument(
         '-m', '--mappings',
         action='store_true',
-        help='Summarize location mappings in CSV format. (default: summarize logs in HTML format)')
+        help='Summarize location mappings in CSV format. '
+             '(default: summarize logs in HTML format)')
 
 parser.add_argument(
         '-s', '--subject',
@@ -35,8 +36,9 @@ parser.add_argument(
         '-t', '--to',
         dest='email_to',
         default="",
-        help='Generate an email message to this address or space separated ' \
-                'addressses. Overrides --mappings option. (default: no email message)')
+        help='Generate an email message to this address or space '
+             'separated addressses. Overrides --mappings option. '
+             '(default: no email message)')
 
 
 def parse_args(args=None):
