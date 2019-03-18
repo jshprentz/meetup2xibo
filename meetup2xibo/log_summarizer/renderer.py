@@ -3,6 +3,8 @@
 from jinja2 import Environment, PackageLoader, select_autoescape
 from email.message import EmailMessage
 from email.headerregistry import Address
+from io import StringIO
+import csv
 
 
 class Renderer:
@@ -59,6 +61,47 @@ class EmailRenderer:
         return tuple(
                 Address(addr_spec=address)
                 for address in self.email_to.split())
+
+
+class LocationMappingCsvRenderer:
+
+    """Renders location mappings as comma separated values."""
+
+    def render(self, location_mapper):
+        """Render location mappings as comma separated values, if possible."""
+        if location_mapper.has_mappings():
+            return self.render_csv(location_mapper)
+        else:
+            return ""
+
+    def render_csv(self, location_mapper):
+        """Render location mappings as comma separated values."""
+        with StringIO(newline='') as csv_file:
+            csv_writer = csv.writer(csv_file)
+            self.write_csv_header(csv_writer)
+            self.write_csv_mappings(csv_writer, location_mapper.mapping_list())
+            return csv_file.getvalue()
+
+    @staticmethod
+    def write_csv_header(csv_writer):
+        """Write the CSV header line."""
+        csv_writer.writerow(
+            ["Location", "Venue", "Find Us", "Example Meetup", "Example URL"])
+
+    def write_csv_mappings(self, csv_writer, mapping_list):
+        """Write CSV lines for the location mapping log lines a list."""
+        for log_line in mapping_list:
+            self.write_csv_mapping(csv_writer, log_line)
+
+    def write_csv_mapping(self, csv_writer, log_line):
+        """Write a CSV line for the event location log line."""
+        csv_writer.writerow([
+                log_line.location,
+                log_line.event.venue,
+                log_line.event.find_us,
+                log_line.event.name,
+                log_line.event.url
+                ])
 
 
 class SummaryRenderer:
