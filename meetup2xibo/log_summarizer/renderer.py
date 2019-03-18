@@ -11,19 +11,26 @@ class Renderer:
 
     """Renders the combined email headers and log summary."""
 
-    def __init__(self, email_renderer, summary_renderer):
-        """Initialize with renderers for email and log summaries."""
+    def __init__(self, mappings_flag, email_renderer, summary_renderer,
+            location_mapping_csv_renderer):
+        """Initialize with a mappings flag to request CSV output and with
+        renderers for email, log summaries, and location mapping."""
+        self.mappings_flag = mappings_flag
         self.email_renderer = email_renderer
         self.summary_renderer = summary_renderer
+        self.location_renderer = location_mapping_csv_renderer
 
     def render(self, summary):
         """Render an email message containing the log file summary as a
         string."""
-        html_summary = self.summary_renderer.render(summary)
         if self.email_renderer.can_render():
-            return self.email_renderer.render(html_summary, None)
+            return self.email_renderer.render(
+                self.summary_renderer.render(summary),
+                self.location_renderer.render(summary.location_mapper))
+        elif self.mappings_flag:
+            return self.location_renderer.render(summary.location_mapper)
         else:
-            return html_summary
+            return self.summary_renderer.render(summary)
 
 
 class EmailRenderer:

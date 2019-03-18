@@ -6,7 +6,7 @@ from .location_mapper import LocationMapper
 from .start_counter import StartCounter
 from .crud_lister import CrudLister
 from .renderer import Renderer, EmailRenderer, SummaryRenderer, \
-        make_jinja2_env
+        LocationMappingCsvRenderer, make_jinja2_env
 
 
 def inject_log_summarizer(application_scope):
@@ -62,8 +62,10 @@ def inject_log_parser():
 def inject_renderer(application_scope):
     """Inject a renderer."""
     return Renderer(
+        application_scope.mappings,
         inject_email_renderer(application_scope),
-        inject_summary_renderer())
+        inject_summary_renderer(),
+        inject_location_mapping_csv_renderer())
 
 
 def inject_email_renderer(application_scope):
@@ -83,5 +85,11 @@ def inject_summary_renderer():
 def inject_jinja2_env():
     """Returns a Jinja2 environment for templates in this package."""
     return make_jinja2_env(__package__)
+
+
+def inject_location_mapping_csv_renderer():
+    """Return a location mapping CSV renderer."""
+    return LocationMappingCsvRenderer()
+
 
 # vim: tabstop=8 expandtab shiftwidth=4 softtabstop=4 autoindent

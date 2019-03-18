@@ -21,6 +21,11 @@ parser.add_argument(
         help="Output file path (default: standard output)")
 
 parser.add_argument(
+        '-m', '--mappings',
+        action='store_true',
+        help='Summarize location mappings in CSV format. (default: summarize logs in HTML format)')
+
+parser.add_argument(
         '-s', '--subject',
         dest='email_subject',
         default="Meetup to Xibo log summary",
@@ -31,7 +36,7 @@ parser.add_argument(
         dest='email_to',
         default="",
         help='Generate an email message to this address or space separated ' \
-                'addressses. (default: no email message)')
+                'addressses. Overrides --mappings option. (default: no email message)')
 
 
 def parse_args(args=None):
