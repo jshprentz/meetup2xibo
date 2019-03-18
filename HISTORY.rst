@@ -7,7 +7,10 @@ History
 
 * First release on PyPI.
 
-Next Release
+.. Next Release
+.. ------------------
+
+2.3.0 (2019-03-18)
 ------------------
 * Summarize location mappings in CSV format.
 * Describe past deleted events as "retired."
