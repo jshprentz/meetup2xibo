@@ -1,6 +1,7 @@
 """Test log lines."""
 
-from meetup2xibo.log_summarizer.log_lines import InsertEventLogLine, UpdateEventLogLine, DeleteEventLogLine
+from meetup2xibo.log_summarizer.log_lines import InsertEventLogLine, \
+        UpdateEventLogLine, DeleteEventLogLine, EventLocationLogLine
 from meetup2xibo.log_summarizer.event import Event
 import pytest
 
@@ -12,10 +13,6 @@ SAMPLE_END_TIME = '2019-05-12 17:00:00'
 
 SAMPLE_LOG_TIME = '2019-03-08 09:12:34'
 
-#@pytest.fixture
-#def crud_lister():
-#    """Return an event CRUD log line lister."""
-#    return CrudLister()
 
 def make_event(
         name=SAMPLE_NAME,
@@ -90,6 +87,11 @@ def test_delete_action():
     """Test that a delete log line returns the expected action."""
     log_line = DeleteEventLogLine(SAMPLE_LOG_TIME, None)
     assert log_line.action == "Deleted"
+
+def test_event_location_key_fields(sample_log_lines):
+    """Test that an event location log line returns the expected key fields."""
+    log_line = sample_log_lines.make_event_location_log_line()
+    assert ("Woodshop", "Nova Labs (Woodshop)", "[Woodshop Red area]") == log_line.key_fields()
 
 
 # vim: tabstop=8 expandtab shiftwidth=4 softtabstop=4 autoindent

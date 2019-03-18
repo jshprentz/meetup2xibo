@@ -225,7 +225,7 @@ class SampleLogLines:
         """Return an event location log line object."""
         event = Event.from_fields(EVENT_LOCATION_FIELDS)
         date_time = self.date_time()
-        return EventLocationLogLine(date_time, EVENT_LOCATION, event_location)
+        return EventLocationLogLine(date_time, EVENT_LOCATION, event)
 
 
 # vim: tabstop=8 expandtab shiftwidth=4 softtabstop=4 autoindent
