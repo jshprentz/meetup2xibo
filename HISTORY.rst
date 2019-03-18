@@ -2,13 +2,19 @@
 History
 =======
 
-2.3 (Future)
+2.4 (Future)
 ------------------
 
 * First release on PyPI.
 
-Next Release
+.. Next Release
+.. ------------------
+
+2.3.0 (2019-03-18)
 ------------------
+* Summarize location mappings in CSV format.
+* Describe past deleted events as "retired."
+* Improve email header generation.
 
 2.2.2 (2019-03-15)
 ------------------

@@ -2,10 +2,11 @@
 
 from .log_summarizer import LogSummarizer
 from .log_parser import make_log_parser_class, Summary
+from .location_mapper import LocationMapper
 from .start_counter import StartCounter
 from .crud_lister import CrudLister
-from .renderer import Renderer, EmailHeaderRenderer, SummaryRenderer, \
-        make_jinja2_env
+from .renderer import Renderer, EmailRenderer, SummaryRenderer, \
+        LocationMappingCsvRenderer, make_jinja2_env
 
 
 def inject_log_summarizer(application_scope):
@@ -21,7 +22,10 @@ def inject_log_summarizer(application_scope):
 
 def inject_summary():
     """Return a summary."""
-    return Summary(inject_start_counter(), inject_crud_lister())
+    return Summary(
+        inject_start_counter(),
+        inject_crud_lister(),
+        inject_location_mapper())
 
 
 def inject_input_stream(application_scope):
@@ -44,6 +48,11 @@ def inject_crud_lister():
     return CrudLister()
 
 
+def inject_location_mapper():
+    """Return a location mapper."""
+    return LocationMapper()
+
+
 def inject_log_parser():
     """Return a function that provides a
     log parser for some text."""
@@ -53,15 +62,15 @@ def inject_log_parser():
 def inject_renderer(application_scope):
     """Inject a renderer."""
     return Renderer(
-        inject_email_header_renderer(application_scope),
-        inject_summary_renderer())
+        application_scope.mappings,
+        inject_email_renderer(application_scope),
+        inject_summary_renderer(),
+        inject_location_mapping_csv_renderer())
 
 
-def inject_email_header_renderer(application_scope):
-    """Inject an email header renderer."""
-    return EmailHeaderRenderer(
-        inject_jinja2_env(),
-        "email_headers.txt",
+def inject_email_renderer(application_scope):
+    """Inject an email renderer."""
+    return EmailRenderer(
         application_scope.email_to,
         application_scope.email_subject)
 
@@ -76,5 +85,11 @@ def inject_summary_renderer():
 def inject_jinja2_env():
     """Returns a Jinja2 environment for templates in this package."""
     return make_jinja2_env(__package__)
+
+
+def inject_location_mapping_csv_renderer():
+    """Return a location mapping CSV renderer."""
+    return LocationMappingCsvRenderer()
+
 
 # vim: tabstop=8 expandtab shiftwidth=4 softtabstop=4 autoindent

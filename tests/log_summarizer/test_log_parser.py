@@ -1,29 +1,42 @@
 """Test log parser productions."""
 
-from ..context import meetup2xibo
 from meetup2xibo.log_summarizer.log_parser import make_log_parser_class, Field, Summary
 from meetup2xibo.log_summarizer.event import Event
 from meetup2xibo.log_summarizer.log_lines import InsertEventLogLine, \
-    UpdateEventLogLine, DeleteEventLogLine, UnknownLocationLogLine, \
-    SpecialLocationLogLine
+    UpdateEventLogLine, DeleteEventLogLine, RetireEventLogLine, \
+    UnknownLocationLogLine, EventLocationLogLine, SpecialLocationLogLine
 from meetup2xibo.log_summarizer.start_counter import StartCounter
 from meetup2xibo.log_summarizer.crud_lister import CrudLister
+from meetup2xibo.log_summarizer.location_mapper import LocationMapper
 from parsley import ParseError
 import pytest
 
-#pytestmark = pytest.mark.skip("Parser being reorganized.")
-
-#def parse_error_hash(self):
-#    """Define missing ParseError.__hash__()."""
-#    return hash((self.position, self.formatReason()))
-
-#ParseError.__hash__ = parse_error_hash
 
 @pytest.fixture(scope="module")
 def log_parser_class():
     """Return a log parser class, which creates a parser when called
     with string."""
     return make_log_parser_class()
+
+@pytest.fixture
+def crud_lister():
+    """Return a CRUD lister."""
+    return CrudLister()
+
+@pytest.fixture
+def counter():
+    """Return a start counter."""
+    return StartCounter()
+
+@pytest.fixture
+def location_mapper():
+    """Return a location mapper."""
+    return LocationMapper()
+
+@pytest.fixture
+def summary(counter, crud_lister, location_mapper):
+    """Return a summary tuple."""
+    return Summary(counter, crud_lister, location_mapper)
 
 def test_dash(log_parser_class):
     """Test recognizing the dash separator between log line components."""
@@ -70,9 +83,8 @@ def test_log_line_start(log_parser_class):
     parser = log_parser_class("2019-03-04 16:52:14,131 - INFO - foo - ")
     assert parser.log_line_start("foo") == ("2019-03-04 16:52", "INFO")
 
-def test_start_log_line(log_parser_class, sample_log_lines):
+def test_start_log_line(log_parser_class, sample_log_lines, counter):
     """Test recognizing a start log line."""
-    counter = StartCounter()
     log_line = sample_log_lines.start_line()
     parser = log_parser_class(log_line)
     parser.start_log_line(counter)
@@ -164,6 +176,15 @@ def test_delete_log_line(log_parser_class, sample_log_lines):
     assert log_line.timestamp == '2019-03-04 06:00'
     assert log_line.meetup_id == '258645498'
 
+def test_retire_log_line(log_parser_class, sample_log_lines):
+    """Test recognizing a retire log line."""
+    log_line_text = sample_log_lines.retire_line()
+    parser = log_parser_class(log_line_text)
+    log_line = parser.retire_log_line()
+    assert isinstance(log_line, RetireEventLogLine)
+    assert log_line.timestamp == '2019-03-04 06:00'
+    assert log_line.meetup_id == '257907613'
+
 def test_update_log_line(log_parser_class, sample_log_lines):
     """Test recognizing a pair of update log lines."""
     log_line_text = sample_log_lines.update_line()
@@ -183,7 +204,7 @@ def test_unknown_location_log_line(log_parser_class, sample_log_lines):
     assert log_line.meetup_id == '259565055'
 
 def test_special_location_log_line(log_parser_class, sample_log_lines):
-    """Test recognizing an special location log line."""
+    """Test recognizing a special location log line."""
     log_line_text = sample_log_lines.special_location_line()
     parser = log_parser_class(log_line_text)
     log_line = parser.special_location_log_line()
@@ -192,11 +213,20 @@ def test_special_location_log_line(log_parser_class, sample_log_lines):
     assert log_line.meetup_id == '258645498'
     assert log_line.special_location.override is False
 
-def test_event_log_line(log_parser_class, sample_log_lines):
+def test_event_location_log_line(log_parser_class, sample_log_lines):
+    """Test recognizing an event location log line."""
+    log_line_text = sample_log_lines.event_location_line()
+    parser = log_parser_class(log_line_text)
+    log_line = parser.event_location_log_line()
+    assert isinstance(log_line, EventLocationLogLine)
+    assert log_line.timestamp == '2019-03-04 06:00'
+    assert log_line.meetup_id == '259405866'
+    assert log_line.location == 'Woodshop'
+
+def test_event_log_line(log_parser_class, sample_log_lines, crud_lister):
     """Test recognizing an event log line."""
     log_line_text = sample_log_lines.insert_line()
     parser = log_parser_class(log_line_text)
-    crud_lister = CrudLister()
     parser.event_log_line(crud_lister)
     meetup_id = 'tmnbrqyzhbhb'
     log_line = crud_lister.event_cruds[meetup_id].log_lines[0]
@@ -204,13 +234,10 @@ def test_event_log_line(log_parser_class, sample_log_lines):
     assert log_line.timestamp == '2019-03-04 06:00'
     assert log_line.meetup_id == meetup_id
 
-def test_log_line_insert(log_parser_class, sample_log_lines):
+def test_log_line_insert(log_parser_class, sample_log_lines, crud_lister, counter, summary):
     """Test recognizing a log line that is an insert line."""
     log_line_text = sample_log_lines.insert_line() + "\n"
     parser = log_parser_class(log_line_text)
-    crud_lister = CrudLister()
-    counter = StartCounter()
-    summary = Summary(counter, crud_lister)
     parser.log_line(summary)
     meetup_id = 'tmnbrqyzhbhb'
     log_line = crud_lister.event_cruds[meetup_id].log_lines[0]
@@ -219,38 +246,43 @@ def test_log_line_insert(log_parser_class, sample_log_lines):
     assert log_line.meetup_id == 'tmnbrqyzhbhb'
     assert counter.counts() == []
 
-def test_log_line_start(log_parser_class, sample_log_lines):
+def test_log_line_start(log_parser_class, sample_log_lines, crud_lister,
+        counter, location_mapper, summary):
     """Test recognizing a log line that is a start line."""
     log_line_text = sample_log_lines.start_line() + "\n"
     parser = log_parser_class(log_line_text)
-    crud_lister = CrudLister()
-    counter = StartCounter()
-    summary = Summary(counter, crud_lister)
     parser.log_line(summary)
     assert counter.counts() == [("meetup2xibo 2.0.1", 1)]
     assert crud_lister.event_cruds == {}
+    assert not location_mapper.has_mappings()
 
-def test_log_line_other(log_parser_class, sample_log_lines):
+def test_log_line_event_location(log_parser_class, sample_log_lines,
+        crud_lister, counter, location_mapper, summary):
+    """Test recognizing a log line that is an event location mapping."""
+    log_line_text = sample_log_lines.event_location_line() + "\n"
+    parser = log_parser_class(log_line_text)
+    parser.log_line(summary)
+    assert counter.counts() == []
+    assert crud_lister.event_cruds == {}
+    assert location_mapper.mapping_list()[0].location == "Woodshop"
+
+def test_log_line_other(log_parser_class, sample_log_lines, crud_lister, counter, summary):
     """Test recognizing a log line that is an unrecognized line."""
     log_line_text = "Something else\n"
     parser = log_parser_class(log_line_text)
-    crud_lister = CrudLister()
-    counter = StartCounter()
-    summary = Summary(counter, crud_lister)
     parser.log_line(summary)
     assert counter.counts() == []
     assert crud_lister.event_cruds == {}
 
-def test_log_lines(log_parser_class, sample_log_lines):
+def test_log_lines(log_parser_class, sample_log_lines, crud_lister, counter,
+        location_mapper, summary):
     """Test recognizing a log lines."""
     log_line_text = "\n".join([
             sample_log_lines.start_line(),
             sample_log_lines.insert_line(),
+            sample_log_lines.event_location_line(),
             "Something else\n"])
     parser = log_parser_class(log_line_text)
-    crud_lister = CrudLister()
-    counter = StartCounter()
-    summary = Summary(counter, crud_lister)
     parser.log_lines(summary)
     meetup_id = 'tmnbrqyzhbhb'
     log_line = crud_lister.event_cruds[meetup_id].log_lines[0]
@@ -258,8 +290,10 @@ def test_log_lines(log_parser_class, sample_log_lines):
     assert log_line.timestamp == '2019-03-04 06:01'
     assert log_line.meetup_id == meetup_id
     assert counter.counts() == [("meetup2xibo 2.0.1", 1)]
+    assert location_mapper.mapping_list()[0].location == "Woodshop"
 
-def test_log_lines_with_special_location(log_parser_class, sample_log_lines):
+def test_log_lines_with_special_location(log_parser_class, sample_log_lines,
+        crud_lister, summary):
     """Test recognizing a log lines with a special location."""
     delete_line_text = sample_log_lines.delete_line()
     special_location_line_text =sample_log_lines.special_location_line()
@@ -268,9 +302,6 @@ def test_log_lines_with_special_location(log_parser_class, sample_log_lines):
             special_location_line_text,
             "Something else\n"])
     parser = log_parser_class(log_line_text)
-    crud_lister = CrudLister()
-    counter = StartCounter()
-    summary = Summary(counter, crud_lister)
     parser.log_lines(summary)
     meetup_id = '258645498'
     event_crud = crud_lister.event_cruds[meetup_id]

@@ -1,6 +1,21 @@
 """Avoids flapping Xibo events."""
 
 from datetime import timedelta
+from enum import Enum
+
+
+class EventFlappingStatus(Enum):
+
+    """An event's status chosen by the anti-flapper."""
+
+    delete = "Deleted"
+    retire = "Retired"
+    keep = "Kept"
+
+    def __init__(self, action):
+        """Initialize with an action (capitalized and past tense for
+        reporting.)"""
+        self.action = action
 
 
 class AntiFlapper:
@@ -22,12 +37,32 @@ class AntiFlapper:
         self.current_limit = current_limit
         self.future_limit = future_limit
 
-    def is_ok(self, xibo_event):
-        """Test whether a Xibo event falls outside the flapping windows."""
-        is_past = xibo_event.end_time < self.recent_limit
-        is_planned = xibo_event.start_time > self.current_limit
-        is_future = xibo_event.end_time > self.future_limit
-        return (is_past or is_planned) and not is_future
+    def categorize(self, xibo_event):
+        """Categorize an event based on its times and the flapping window.
+        Return an event flapping status."""
+        if self.is_future(xibo_event):
+            return EventFlappingStatus.keep
+        elif self.is_past(xibo_event):
+            return EventFlappingStatus.retire
+        elif self.is_planned(xibo_event):
+            return EventFlappingStatus.delete
+        else:
+            return EventFlappingStatus.keep
+
+    def is_past(self, xibo_event):
+        """ Return true if the event ends before the anti-flapping window;
+        false otherwise. """
+        return xibo_event.end_time < self.recent_limit
+
+    def is_planned(self, xibo_event):
+        """ Return true if the event is planned between the two flapping
+        windows; false otherwise. """
+        return xibo_event.start_time > self.current_limit
+
+    def is_future(self, xibo_event):
+        """ Return true if the event ends after the future limit; false
+        otherwise. """
+        return xibo_event.end_time > self.future_limit
 
 
 def iso_offset_time(now, future_seconds):

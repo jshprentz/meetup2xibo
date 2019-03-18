@@ -1,7 +1,8 @@
 """Test log lines."""
 
-from ..context import meetup2xibo
-from meetup2xibo.log_summarizer.log_lines import InsertEventLogLine, UpdateEventLogLine, DeleteEventLogLine
+from meetup2xibo.log_summarizer.log_lines import InsertEventLogLine, \
+        UpdateEventLogLine, DeleteEventLogLine, RetireEventLogLine, \
+        EventLocationLogLine
 from meetup2xibo.log_summarizer.event import Event
 import pytest
 
@@ -13,10 +14,6 @@ SAMPLE_END_TIME = '2019-05-12 17:00:00'
 
 SAMPLE_LOG_TIME = '2019-03-08 09:12:34'
 
-#@pytest.fixture
-#def crud_lister():
-#    """Return an event CRUD log line lister."""
-#    return CrudLister()
 
 def make_event(
         name=SAMPLE_NAME,
@@ -40,6 +37,11 @@ def test_meetup_id_in_insert_event_log_line(event):
 def test_meetup_id_in_delete_event_log_line(event):
     """Test getting the Meetup ID from an delete event log line."""
     log_line = DeleteEventLogLine(SAMPLE_LOG_TIME, event)
+    assert log_line.meetup_id == SAMPLE_MEETUP_ID
+
+def test_meetup_id_in_retire_event_log_line(event):
+    """Test getting the Meetup ID from an retire event log line."""
+    log_line = RetireEventLogLine(SAMPLE_LOG_TIME, event)
     assert log_line.meetup_id == SAMPLE_MEETUP_ID
 
 def test_meetup_id_in_update_event_log_line(event):
@@ -76,6 +78,11 @@ def test_final_event_in_delete_event_log_line(event):
     log_line = DeleteEventLogLine(SAMPLE_LOG_TIME, event)
     assert log_line.final_event == event
 
+def test_final_event_in_retire_event_log_line(event):
+    """Test getting the final event from an retire event log line."""
+    log_line = RetireEventLogLine(SAMPLE_LOG_TIME, event)
+    assert log_line.final_event == event
+
 def test_insert_action():   
     """Test that an insert log line returns the expected action."""
     log_line = InsertEventLogLine(SAMPLE_LOG_TIME, None)
@@ -91,6 +98,16 @@ def test_delete_action():
     """Test that a delete log line returns the expected action."""
     log_line = DeleteEventLogLine(SAMPLE_LOG_TIME, None)
     assert log_line.action == "Deleted"
+
+def test_retire_action():   
+    """Test that a retire log line returns the expected action."""
+    log_line = RetireEventLogLine(SAMPLE_LOG_TIME, None)
+    assert log_line.action == "Retired"
+
+def test_event_location_key_fields(sample_log_lines):
+    """Test that an event location log line returns the expected key fields."""
+    log_line = sample_log_lines.make_event_location_log_line()
+    assert ("Woodshop", "Nova Labs (Woodshop)", "[Woodshop Red area]") == log_line.key_fields()
 
 
 # vim: tabstop=8 expandtab shiftwidth=4 softtabstop=4 autoindent

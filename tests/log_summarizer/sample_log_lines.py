@@ -2,7 +2,10 @@
 
 from meetup2xibo.log_summarizer.event import Event
 from meetup2xibo.log_summarizer.log_lines import InsertEventLogLine, \
-    UpdateEventLogLine, DeleteEventLogLine, UnknownLocationLogLine
+    UpdateEventLogLine, DeleteEventLogLine, UnknownLocationLogLine, \
+    EventLocationLogLine, SpecialLocationLogLine
+from meetup2xibo.log_summarizer.log_parser import SpecialLocation
+
 
 DATE_TIME_TEMPLATE = "2019-03-04 06:{minutes:02d}:12"
 
@@ -64,6 +67,21 @@ DELETE_FIELDS = [
     ('end_time', '2019-03-03 16:00:00'),
     ]
 
+RETIRE_TEMPLATE = \
+    "2019-03-04 06:{minutes:02d}:48,266 - INFO - XiboEventCrud - Retired " \
+    "XiboEvent(meetup_id='257907613', name='Barking Mad Planning Meeting', " \
+    "location='Conference Room 3', start_time='2019-03-10 14:00:00', " \
+    "end_time='2019-03-10 16:00:00', xibo_id='59')"
+
+RETIRE_FIELDS = [
+    ('meetup_id', '257907613'),
+    ('name', 'Barking Mad Planning Meeting'),
+    ('location', 'Conference Room 3'),
+    ('start_time', '2019-03-10 14:00:00'),
+    ('end_time', '2019-03-10 16:00:00'),
+    ('xibo_id', '59'),
+    ]
+
 UNKNOWN_LOCATION_TEMPLATE = \
     "2019-03-04 06:{minutes:02d}:11,441 - WARNING - LocationChooser - " \
     "Unknown location for PartialEvent(meetup_id='259565055', name='EMPOWER2MAKE', " \
@@ -89,6 +107,25 @@ SPECIAL_LOCATION_FIELDS = [
     ('override', False),
     ('comment', 'Just testing'),
     ]
+
+EVENT_LOCATION_TEMPLATE = \
+    "2019-03-04 06:{minutes:02d}:25,738 - DEBUG - EventConverter - " \
+    "Location='Woodshop' MeetupEvent=PartialEvent(meetup_id='259405866', " \
+    "name='Customized Wooden Beer Caddy', start_time='2019-03-17 10:00:00', " \
+    "end_time='2019-03-17 12:00:00', venue_name='Nova Labs (Woodshop)', " \
+    "find_us='[Woodshop Red area]')"
+
+EVENT_LOCATION = 'Woodshop'
+
+EVENT_LOCATION_FIELDS = [
+    ('meetup_id', '259405866'),
+    ('name', 'Customized Wooden Beer Caddy'),
+    ('start_time', '2019-03-17 10:00:00'),
+    ('end_time', '2019-03-17 12:00:00'),
+    ('venue_name', 'Nova Labs (Woodshop)'),
+    ('find_us', '[Woodshop Red area]'),
+    ]
+
 
 class SampleLogLines:
 
@@ -128,13 +165,21 @@ class SampleLogLines:
         """Return a delete line."""
         return self.make_line(DELETE_TEMPLATE)
 
+    def retire_line(self):
+        """Return a retire line."""
+        return self.make_line(RETIRE_TEMPLATE)
+
     def unknown_location_line(self):
         """Return an unknown location line."""
         return self.make_line(UNKNOWN_LOCATION_TEMPLATE)
 
     def special_location_line(self):
-        """Return an special location line."""
+        """Return a special location line."""
         return self.make_line(SPECIAL_LOCATION_TEMPLATE)
+
+    def event_location_line(self):
+        """Return an event location line."""
+        return self.make_line(EVENT_LOCATION_TEMPLATE)
 
     @property
     def insert_fields(self):
@@ -143,8 +188,13 @@ class SampleLogLines:
 
     @property
     def delete_fields(self):
-        """return fields that should be extracted from an delete log line."""
+        """return fields that should be extracted from a delete log line."""
         return DELETE_FIELDS
+
+    @property
+    def retire_fields(self):
+        """return fields that should be extracted from a retire log line."""
+        return RETIRE_FIELDS
 
     @property
     def update_before_fields(self):
@@ -183,6 +233,12 @@ class SampleLogLines:
         date_time = self.date_time()
         return DeleteEventLogLine(date_time, event)
 
+    def make_retire_log_line(self):
+        """Return a retire log line object."""
+        event = Event.from_fields(RETIRE_FIELDS)
+        date_time = self.date_time()
+        return RetireEventLogLine(date_time, event)
+
     def make_unknown_location_log_line(self):
         """Return an unknown location log line object."""
         event = Event.from_fields(UNKNOWN_LOCATION_FIELDS)
@@ -190,10 +246,17 @@ class SampleLogLines:
         return UnknownLocationLogLine(date_time, event)
 
     def make_special_location_log_line(self):
-        """Return an special location log line object."""
+        """Return a special location log line object."""
         special_location = SpecialLocation(**dict(SPECIAL_LOCATION_FIELDS))
         date_time = self.date_time()
         return SpecialLocationLogLine(date_time, special_location)
+
+    def make_event_location_log_line(self, location=EVENT_LOCATION):
+        """Return an event location log line object, possibly overriding the
+        location."""
+        event = Event.from_fields(EVENT_LOCATION_FIELDS)
+        date_time = self.date_time()
+        return EventLocationLogLine(date_time, location, event)
 
 
 # vim: tabstop=8 expandtab shiftwidth=4 softtabstop=4 autoindent

@@ -103,6 +103,15 @@ class DeleteEventLogLine(EventLogLine):
         super().__init__(timestamp, event, "Deleted")
 
 
+class RetireEventLogLine(EventLogLine):
+
+    """A log line reporting a retired event."""
+
+    def __init__(self, timestamp, event):
+        """Initialize with a timestamp and an event."""
+        super().__init__(timestamp, event, "Retired")
+
+
 class UnknownLocationLogLine(EventLogLine):
 
     """A log line reporting an unknown locaation."""
@@ -135,5 +144,24 @@ class SpecialLocationLogLine(LogLine):
         """Return the Meetup ID of this log line's speical location."""
         return self.special_location.meetup_id
 
+
+class EventLocationLogLine(EventLogLine):
+
+    """A log line reporting an event location mapping."""
+
+    def __init__(self, timestamp, location, event):
+        """Initialize with a timestamp, a location, and an event."""
+        super().__init__(timestamp, event, "Event Location")
+        self._location = location
+
+    @property
+    def location(self):
+        """Return the log line's location."""
+        return self._location
+
+    def key_fields(self):
+        """Return a tuple of key fields to distinguish location mappings of
+        interest."""
+        return (self.location, self.event.venue, self.event.find_us)
 
 # vim: tabstop=8 expandtab shiftwidth=4 softtabstop=4 autoindent

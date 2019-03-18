@@ -47,13 +47,12 @@ setup(
     name='meetup2xibo',
     packages=find_packages(include=['meetup2xibo']),
     scripts=[
-	'bin/location-log2csv',
 	'bin/yesterday',
 	],
     setup_requires=setup_requirements,
     test_suite='tests',
     tests_require=test_requirements,
     url='https://github.com/jshprentz/meetup2xibo',
-    version='2.2.2',
+    version='2.3.0',
     zip_safe=False,
 )

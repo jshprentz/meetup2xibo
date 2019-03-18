@@ -1,9 +1,9 @@
 """Parses logs and collects the interesting information."""
 
 from .event import Event
-#from .special_location import SpecialLocation
 from .log_lines import InsertEventLogLine, DeleteEventLogLine, \
-    UpdateEventLogLine, UnknownLocationLogLine, SpecialLocationLogLine
+    UpdateEventLogLine, UnknownLocationLogLine, EventLocationLogLine, \
+    SpecialLocationLogLine, RetireEventLogLine
 from parsley import makeGrammar, ParseError
 from collections import namedtuple
 
@@ -11,7 +11,7 @@ from collections import namedtuple
 LogLineStart = namedtuple("LogLineStart", "timestamp log_level")
 UpdateToLogLine = namedtuple("UpdateToLogLine", "timestamp event")
 Field = namedtuple("Field", "name value")
-Summary = namedtuple("Summary", "counter crud_lister")
+Summary = namedtuple("Summary", "counter crud_lister location_mapper")
 SpecialLocation = namedtuple(
         "SpecialLocation",
         "meetup_id location override comment")
@@ -22,6 +22,8 @@ log_lines :summary = log_line(summary)*
 
 log_line :summary = (start_log_line(summary.counter)
         | event_log_line(summary.crud_lister)
+        | event_location_log_line:l
+                -> summary.location_mapper.add_event_location_log_line(l)
         | other_log_line) '\n'
 
 start_log_line :counter = log_line_start('meetup2xibo'):s
@@ -30,6 +32,7 @@ start_log_line :counter = log_line_start('meetup2xibo'):s
 
 event_log_line :crud_lister = (insert_log_line
         | delete_log_line
+        | retire_log_line
         | update_log_line
         | unknown_location_log_line
         | special_location_log_line):log_line
@@ -40,6 +43,9 @@ insert_log_line = log_line_start('XiboEventCrud'):s 'Inserted ' event:e
 
 delete_log_line = log_line_start('XiboEventCrud'):s 'Deleted Xibo' event:e
         -> DeleteEventLogLine(s.timestamp, e)
+
+retire_log_line = log_line_start('XiboEventCrud'):s 'Retired Xibo' event:e
+        -> RetireEventLogLine(s.timestamp, e)
 
 update_log_line = update_from_log_line:f '\n' update_to_log_line:t
         -> UpdateEventLogLine(t.timestamp, f, t.event)
@@ -60,7 +66,12 @@ special_location_log_line = log_line_start('SpecialEventsMonitor'):s
         'No longer needed ' special_location:l
         -> SpecialLocationLogLine(s.timestamp, l)
 
-special_location = 'SpecialLocation(' fields:f ')' -> SpecialLocation(**dict(f))
+event_location_log_line = log_line_start('EventConverter'):s
+        'Location=' quoted_value:l ' MeetupEvent=Partial' event:e
+        -> EventLocationLogLine(s.timestamp, l, e)
+
+special_location = 'SpecialLocation(' fields:f ')'
+        -> SpecialLocation(**dict(f))
 
 other_log_line = rest_of_line
 
@@ -123,10 +134,12 @@ def make_log_parser_class():
             'Event': Event,
             'InsertEventLogLine': InsertEventLogLine,
             'DeleteEventLogLine': DeleteEventLogLine,
+            'RetireEventLogLine': RetireEventLogLine,
             'UpdateEventLogLine': UpdateEventLogLine,
             'UnknownLocationLogLine': UnknownLocationLogLine,
             'SpecialLocation': SpecialLocation,
             'SpecialLocationLogLine': SpecialLocationLogLine,
+            'EventLocationLogLine': EventLocationLogLine,
             'LogLineStart': LogLineStart,
             'UpdateToLogLine': UpdateToLogLine,
             }

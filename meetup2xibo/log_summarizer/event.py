@@ -10,7 +10,7 @@ class Event:
 
     def __init__(
             self, name, start_time, end_time, meetup_id,
-            location="Default Location", venue="", find_us="",
+            location="Default Location", venue_name="", find_us="",
             **other_fields):
         """Initialize with field values of concern."""
         self._name = name
@@ -18,7 +18,7 @@ class Event:
         self._end_time = end_time
         self._meetup_id = meetup_id
         self._location = location
-        self._venue = venue
+        self._venue_name = venue_name
         self._find_us = find_us
 
     @classmethod
@@ -39,14 +39,14 @@ class Event:
                 and self._start_time == other._start_time \
                 and self._end_time == other._end_time \
                 and self._meetup_id == other._meetup_id \
-                and self._venue == other._venue \
+                and self._venue_name == other._venue_name \
                 and self._find_us == other._find_us
 
     def __hash__(self):
         """Hash the contents of this event."""
         return hash((
                 self._name, self._location, self._start_time, self._end_time,
-                self._meetup_id, self._venue, self._find_us))
+                self._meetup_id, self._venue_name, self._find_us))
 
     def report_sort_key(self):
         """Return a sort key for sorting into reporting order."""
@@ -78,7 +78,7 @@ class Event:
 
     @property
     def venue(self):
-        return self._venue
+        return self._venue_name
 
     @property
     def find_us(self):
