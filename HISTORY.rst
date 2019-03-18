@@ -10,6 +10,10 @@ History
 .. Next Release
 .. ------------------
 
+2.3.1 (2019-03-18)
+------------------
+* Add Travis CI configuration.
+
 2.3.0 (2019-03-18)
 ------------------
 * Summarize location mappings in CSV format.
