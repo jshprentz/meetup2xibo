@@ -84,6 +84,46 @@ def test_equals_different_meetup_ids():
     event2 = make_event(meetup_id="zvbxrpl")
     assert event1 != event2
 
+def test_differences_different_names():
+    """Test listing differences for events with different names."""
+    event1 = make_event()
+    event2 = make_event(name="foo")
+    assert [('name', 'Arduino User Group', 'foo')] == event1.differences(event2)
+
+def test_differences_different_locations():
+    """Test listing differences for events with different locations."""
+    event1 = make_event()
+    event2 = make_event(location="foo")
+    assert [('location', 'Conference Room 3', 'foo')] == event1.differences(event2)
+
+def test_differences_different_start_times():
+    """Test listing differences for events with different start_times."""
+    event1 = make_event()
+    event2 = make_event(start_time="2019-05-12 10:00:00")
+    assert [('start time', '2019-05-12 15:00:00', '2019-05-12 10:00:00')] == event1.differences(event2)
+
+def test_differences_different_end_times():
+    """Test listing differences for events with different end_times."""
+    event1 = make_event()
+    event2 = make_event(end_time="2019-05-12 19:00:00")
+    assert [('end time', '2019-05-12 17:00:00', '2019-05-12 19:00:00')] == event1.differences(event2)
+
+def test_differences_different_meetup_ids():
+    """Test listing differences for events with different meetup IDs."""
+    event1 = make_event()
+    event2 = make_event(meetup_id="zvbxrpl")
+    assert [('meetup id', 'qlpqsqyzhbqb', 'zvbxrpl')] == event1.differences(event2)
+
+def test_differences_multiple():
+    """Test listing differences for events with multiple changes."""
+    event1 = make_event()
+    event2 = make_event(location="foo", start_time="2019-05-12 10:00:00")
+    expected_differences = [
+            ('location', 'Conference Room 3', 'foo'),
+            ('start time', '2019-05-12 15:00:00', '2019-05-12 10:00:00')
+            ]
+    assert expected_differences == event1.differences(event2)
+
 def test_equals_non_event():
     """Test comparing an event with a non-event."""
     event = make_event()
