@@ -112,7 +112,7 @@ def test_differences_different_meetup_ids():
     """Test listing differences for events with different meetup IDs."""
     event1 = make_event()
     event2 = make_event(meetup_id="zvbxrpl")
-    assert [('meetup id', 'qlpqsqyzhbqb', 'zvbxrpl')] == event1.differences(event2)
+    assert [('Meetup ID', 'qlpqsqyzhbqb', 'zvbxrpl')] == event1.differences(event2)
 
 def test_differences_multiple():
     """Test listing differences for events with multiple changes."""

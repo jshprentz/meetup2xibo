@@ -107,7 +107,7 @@ class Event:
                     "end time", self._end_time, other._end_time))
         if self._meetup_id != other._meetup_id:
             differences.append((
-                    "meetup id", self._meetup_id, other._meetup_id))
+                    "Meetup ID", self._meetup_id, other._meetup_id))
         return differences
 
 # vim: tabstop=8 expandtab shiftwidth=4 softtabstop=4 autoindent
