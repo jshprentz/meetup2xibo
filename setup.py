@@ -17,7 +17,9 @@ requirements = [
 
 setup_requirements = ['pytest-runner', ]
 
-test_requirements = ['pytest', 'pytest-mock', 'hypothesis', 'tox', 'flake8']
+test_requirements = [
+        'pytest', 'pytest-mock', 'hypothesis', 'tox', 'flake8',
+        'freezegun']
 
 setup(
     author="Joel Shprentz",
