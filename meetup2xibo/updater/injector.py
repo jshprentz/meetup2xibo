@@ -13,6 +13,7 @@ from .xibo_api_url_builder import XiboApiUrlBuilder
 from .site_cert_assurer import SiteCertAssurer
 from .oauth2_session_starter import Oauth2SessionStarter
 from .special_location_monitor import SpecialLocationMonitor
+from .time_converter import DateTimeCreator
 from .xibo_api import XiboApi
 from .xibo_dataset_id_finder import XiboDatasetIdFinder
 from .xibo_event import XiboEvent, XiboEventColumnNameManager, \
@@ -22,6 +23,7 @@ from .anti_flapper import AntiFlapper, iso_offset_time
 from ahocorasick import Automaton
 from requests_toolbelt import user_agent
 from datetime import datetime
+from pytz import timezone
 import certifi
 
 
@@ -272,34 +274,39 @@ def inject_special_location_monitor(application_scope):
     return SpecialLocationMonitor(application_scope.special_locations_dict)
 
 
+def inject_tzinfo():
+    """Return timezone info configured by an application scope."""
+    return timezone(application_scope.timezone)
+
+
+def inject_date_time_creator(application_scope):
+    """Return a date/time creator configured by an application scope."""
+    return DateTimeCreator(inject_tzinfo())
+
+
 def inject_recent_limit(application_scope):
     """Return the recent flapping limit configured by an application scope."""
-    return iso_offset_time(
-            inject_now(), -application_scope.delete_after_end_seconds)
+    return inject_date_time_creator(application_scope).xibo_offset_time(
+            -application_scope.delete_after_end_seconds)
 
 
 def inject_current_limit(application_scope):
     """Return the current flapping limit configured by an application scope."""
-    return iso_offset_time(
-            inject_now(), application_scope.delete_before_start_seconds)
+    return inject_date_time_creator(application_scope).xibo_offset_time(
+            application_scope.delete_before_start_seconds)
 
 
 def inject_future_limit(application_scope):
     """Return the future flapping limit configured by an application scope."""
-    return iso_offset_time(
-            inject_now(), application_scope.delete_until_future_seconds)
+    return inject_date_time_creator(application_scope).xibo_offset_time(
+            application_scope.delete_until_future_seconds)
 
 
 def inject_cancelled_last_time(application_scope):
     """Return the last time allowed for cancelled Meetup events configured by
     an application scope."""
-    return meetup_iso_offset_time(
-            inject_now(), application_scope.ignore_cancelled_after_seconds)
-
-
-def inject_now():
-    """Return the current local date and time."""
-    return datetime.today()
+    return inject_date_time_creator(application_scope).meetup_offset_time(
+            application_scope.ignore_cancelled_after_seconds)
 
 
 def inject_meetup_2_xibo(application_scope):
@@ -312,5 +319,6 @@ def inject_meetup_2_xibo(application_scope):
         inject_oauth2_session_starter(application_scope),
         inject_enter_xibo_session_scope(application_scope),
         )
+
 
 # vim: tabstop=8 expandtab shiftwidth=4 softtabstop=4 autoindent
