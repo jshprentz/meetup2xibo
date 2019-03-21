@@ -7,7 +7,10 @@ History
 
 * First release on PyPI.
 
-Next Release
+.. Next Release
+.. ------------------
+
+2.4.0 (2019-03-21)
 ------------------
 * Report event updates with human-friendly field names (e.g., start time instead of start_time).
 * Add TIMEZONE environment property.

@@ -55,6 +55,6 @@ setup(
     test_suite='tests',
     tests_require=test_requirements,
     url='https://github.com/jshprentz/meetup2xibo',
-    version='2.3.2',
+    version='2.4.0',
     zip_safe=False,
 )
