@@ -1,6 +1,5 @@
 """Avoids flapping Xibo events."""
 
-from datetime import timedelta
 from enum import Enum
 
 

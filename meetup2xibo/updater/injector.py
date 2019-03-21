@@ -22,7 +22,6 @@ from .xibo_event_crud import XiboEventCrud
 from .anti_flapper import AntiFlapper
 from ahocorasick import Automaton
 from requests_toolbelt import user_agent
-from datetime import datetime
 from pytz import timezone
 import certifi
 

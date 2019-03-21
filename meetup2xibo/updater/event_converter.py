@@ -3,7 +3,6 @@
 import re
 import logging
 from collections import namedtuple
-from datetime import datetime
 
 
 THREE_HOURS_MSEC = 3 * 60 * 60 * 1000
@@ -43,7 +42,8 @@ class EventConverter:
         name = self.edit_name(event_json["name"])
         start_time = self.date_time_creator.xibo_time(event_json["time"])
         duration = event_json.get("duration", DEFAULT_DURATION)
-        end_time = self.date_time_creator.xibo_time(event_json["time"] + duration)
+        end_time = self.date_time_creator.xibo_time(
+                event_json["time"] + duration)
         venue = event_json.get("venue", {"name": ""})
         venue_name = venue["name"]
         find_us = event_json.get("how_to_find_us", "")

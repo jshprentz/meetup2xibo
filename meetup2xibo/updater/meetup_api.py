@@ -1,7 +1,6 @@
 """Access Meetup API to download events."""
 
 from .http_response_error import MeetupApiError
-from datetime import timedelta
 import requests
 
 
