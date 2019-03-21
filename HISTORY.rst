@@ -2,7 +2,7 @@
 History
 =======
 
-2.4 (Future)
+2.5 (Future)
 ------------------
 
 * First release on PyPI.
