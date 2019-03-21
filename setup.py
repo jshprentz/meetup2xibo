@@ -13,11 +13,13 @@ with open('HISTORY.rst') as history_file:
 
 requirements = [
         'requests', 'requests-toolbelt', 'oauthlib', 'jinja2',
-        'requests_oauthlib', 'pyahocorasick', 'parsley']
+        'requests_oauthlib', 'pyahocorasick', 'parsley', 'pytz']
 
 setup_requirements = ['pytest-runner', ]
 
-test_requirements = ['pytest', 'pytest-mock', 'hypothesis', 'tox', 'flake8']
+test_requirements = [
+        'pytest', 'pytest-mock', 'hypothesis', 'tox', 'flake8',
+        'freezegun']
 
 setup(
     author="Joel Shprentz",

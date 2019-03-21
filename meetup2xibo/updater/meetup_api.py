@@ -1,7 +1,6 @@
 """Access Meetup API to download events."""
 
 from .http_response_error import MeetupApiError
-from datetime import timedelta
 import requests
 
 
@@ -47,12 +46,5 @@ class MeetupEventsRetriever:
             "scroll": "recent_past"
             }
 
-
-def meetup_iso_offset_time(now, future_seconds):
-    """Given a date/time, now, and an offset into the future in seconds,
-    computer and return the resulting date/time formatted in ISO
-    YYYY-MM-DDThh:mm:ss.000 format, as required by the Meetup API."""
-    offset = timedelta(seconds=future_seconds)
-    return (now + offset).strftime('%Y-%m-%dT%H:%M:%S.000')
 
 # vim: tabstop=8 expandtab shiftwidth=4 softtabstop=4 autoindent

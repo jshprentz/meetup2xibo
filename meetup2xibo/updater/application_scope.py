@@ -151,6 +151,10 @@ class ApplicationScope:
         return self._env_vars["START_TIME_COLUMN_NAME"]
 
     @property
+    def timezone(self):
+        return self._env_vars["TIMEZONE"]
+
+    @property
     def verbose(self):
         return self._args.verbose
 

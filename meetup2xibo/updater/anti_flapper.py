@@ -1,6 +1,5 @@
 """Avoids flapping Xibo events."""
 
-from datetime import timedelta
 from enum import Enum
 
 
@@ -64,12 +63,5 @@ class AntiFlapper:
         otherwise. """
         return xibo_event.end_time > self.future_limit
 
-
-def iso_offset_time(now, future_seconds):
-    """Given a date/time, now, and an offset into the future
-    in seconds, computer and return the resulting date/time
-    formatted in ISO YYYY-MM-DD hh:mm:ss format."""
-    offset = timedelta(seconds=future_seconds)
-    return (now + offset).strftime('%Y-%m-%d %H:%M:%S')
 
 # vim: tabstop=8 expandtab shiftwidth=4 softtabstop=4 autoindent

@@ -1,8 +1,7 @@
 """Test the anti-flapper's judgements about event times."""
 
 from meetup2xibo.updater.xibo_event import XiboEvent
-from meetup2xibo.updater.anti_flapper import AntiFlapper, EventFlappingStatus, \
-    iso_offset_time
+from meetup2xibo.updater.anti_flapper import AntiFlapper, EventFlappingStatus
 from hypothesis import given, assume, example
 import hypothesis.strategies as st
 from datetime import datetime
@@ -105,16 +104,6 @@ def test_far_future_event_keep(iso_dates):
     """Test that a future event starting after the future time should be kept."""
     recent, current, future, event_start, event_end = tuple(iso_dates)
     assert_event_keep(event_start, event_end, recent, current, future)
-
-def test_iso_offset_time_future():
-    """Test offsetting time into the future."""
-    now = datetime(2019, 2, 28, 23, 0, 0)
-    assert iso_offset_time(now, 4500) == "2019-03-01 00:15:00"
-
-def test_iso_offset_time_past():
-    """Test offsetting time into the past."""
-    now = datetime(2019, 2, 28, 23, 0, 0)
-    assert iso_offset_time(now, -4500) == "2019-02-28 21:45:00"
 
 
 # vim: tabstop=8 expandtab shiftwidth=4 softtabstop=4 autoindent
