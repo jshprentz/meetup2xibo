@@ -19,9 +19,10 @@ class EventConverter:
 
     logger = logging.getLogger("EventConverter")
 
-    def __init__(self, location_chooser):
-        """Initialize with a location chooser."""
+    def __init__(self, location_chooser, date_time_creator):
+        """Initialize with a location chooser and a date/time creator."""
         self.location_chooser = location_chooser
+        self.date_time_creator = date_time_creator
 
     def convert(self, event_json):
         """Convert Meetup event JSON to an event tuple."""
@@ -40,9 +41,9 @@ class EventConverter:
         """Convert Meetup event JSON to a partial event tuple."""
         meetup_id = event_json["id"]
         name = self.edit_name(event_json["name"])
-        start_time = self.iso_time(event_json["time"])
+        start_time = self.date_time_creator.xibo_time(event_json["time"])
         duration = event_json.get("duration", DEFAULT_DURATION)
-        end_time = self.iso_time(event_json["time"] + duration)
+        end_time = self.date_time_creator.xibo_time(event_json["time"] + duration)
         venue = event_json.get("venue", {"name": ""})
         venue_name = venue["name"]
         find_us = event_json.get("how_to_find_us", "")
@@ -58,13 +59,6 @@ class EventConverter:
             location,
             partial_event.start_time,
             partial_event.end_time)
-
-    @staticmethod
-    def iso_time(epoch_ms):
-        """Format a time represented as milliseconds since the Unix epoch
-        in ISO YYYY-MM-DD hh:mm:ss format."""
-        a_date_time = datetime.fromtimestamp(epoch_ms/1000)
-        return a_date_time.strftime('%Y-%m-%d %H:%M:%S')
 
     @staticmethod
     def edit_name(raw_name):
