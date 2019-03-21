@@ -1,6 +1,6 @@
 """Tests for Meetup API"""
 
-from meetup2xibo.updater.meetup_api import MeetupEventsRetriever, meetup_iso_offset_time
+from meetup2xibo.updater.meetup_api import MeetupEventsRetriever
 from datetime import datetime
 import os
 import json
@@ -44,11 +44,5 @@ def test_cancelled_event_response(module_file_path, meetup_event_retriever):
     response_json = meetup_event_retriever.retrieve_cancelled_events_json()
     save_json(response_json, module_file_path)
 
-def test_meetup_iso_offset_time():
-    """Test formatting a future time."""
-    now = datetime(2019, 3, 13, 15, 45, 22)
-    future_seconds = 3601
-    iso_time = meetup_iso_offset_time(now, future_seconds)
-    assert iso_time == "2019-03-13T16:45:23.000"
 
 # vim: tabstop=8 expandtab shiftwidth=4 softtabstop=4 autoindent

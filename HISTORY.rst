@@ -7,8 +7,11 @@ History
 
 * First release on PyPI.
 
-.. Next Release
-.. ------------------
+Next Release
+------------------
+* Report event updates with human-friendly field names (e.g., start time instead of start_time).
+* Add TIMEZONE environment property.
+* Make Meetup to Xibo event conversions timezone aware.
 
 2.3.2 (2019-03-18)
 ------------------

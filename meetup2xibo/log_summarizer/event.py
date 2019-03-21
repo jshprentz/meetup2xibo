@@ -101,13 +101,13 @@ class Event:
                     "location", self._location, other._location))
         if self._start_time != other._start_time:
             differences.append((
-                    "start_time", self._start_time, other._start_time))
+                    "start time", self._start_time, other._start_time))
         if self._end_time != other._end_time:
             differences.append((
-                    "end_time", self._end_time, other._end_time))
+                    "end time", self._end_time, other._end_time))
         if self._meetup_id != other._meetup_id:
             differences.append((
-                    "meetup_id", self._meetup_id, other._meetup_id))
+                    "Meetup ID", self._meetup_id, other._meetup_id))
         return differences
 
 # vim: tabstop=8 expandtab shiftwidth=4 softtabstop=4 autoindent

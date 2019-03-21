@@ -2,6 +2,8 @@
 
 from meetup2xibo.updater.event_converter import EventConverter, Event, PartialEvent
 from meetup2xibo.updater.location_chooser import LocationChooser
+from meetup2xibo.updater.time_converter import DateTimeCreator
+from pytz import timezone
 from hypothesis import given, assume, example
 from hypothesis.strategies import integers, text
 import string
@@ -149,20 +151,15 @@ def location_chooser(location_builder):
     return LocationChooser(location_builder, {}, "Orange Bay")
 
 @pytest.fixture
-def event_converter(location_chooser):
+def datetime_creator():
+    """Return a date/time creator configured for the New York timezone."""
+    new_york_timezone = timezone('America/New_York')
+    return DateTimeCreator(new_york_timezone)
+
+@pytest.fixture
+def event_converter(location_chooser, datetime_creator):
     """Return an event converter with the usual location chooser."""
-    return EventConverter(location_chooser)
-
-@given(sec_since_epoch = integers(0, END_OF_EPOCH_SEC))
-def test_iso_time_converts_back(sec_since_epoch):
-    """Test that the ISO time for some seconds since the Unix
-    epoch converts as expected."""
-    expected_iso_time = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(sec_since_epoch))
-    converter = EventConverter(None)
-    msec_since_epoch = sec_since_epoch * 1000
-    iso_time = converter.iso_time(msec_since_epoch)
-    assert expected_iso_time == iso_time
-
+    return EventConverter(location_chooser, datetime_creator)
 
 @given(event_name = text())
 @example(event_name = "AAA: Advanced Anxiety Association")
@@ -170,7 +167,7 @@ def test_edit_name_without_prefix(event_name):
     """Test that an unprefixed name edits to the event name."""
     trimmed_event_name = event_name.strip()
     assume(trimmed_event_name)
-    converter = EventConverter(None)
+    converter = EventConverter(None, None)
     edited_name = converter.edit_name(event_name)
     assert edited_name == trimmed_event_name
 
@@ -179,7 +176,7 @@ def test_edit_name_with_prefix(prefix, event_name):
     """Test that a prefixed name edits to the event name."""
     trimmed_event_name = event_name.strip()
     assume(trimmed_event_name)
-    converter = EventConverter(None)
+    converter = EventConverter(None, None)
     raw_name = "{}: {}".format(prefix, event_name)
     edited_name = converter.edit_name(raw_name)
     assert edited_name == trimmed_event_name
@@ -194,10 +191,5 @@ def test_convert_cancelled(event_converter):
     """Test converting a cancelled event from Meetup JSON into an event tuple."""
     event = event_converter.convert_cancelled(JSON_EVENT_WITH_VENUE)
     assert CANCELLED_EVENT_WITH_VENUE == event
-
-def test_timezone():
-    """Test that the timezone is set to an expected value."""
-    local_time = time.localtime()
-    assert local_time.tm_zone in EXPECTED_TIMEZONES
 
 # vim: tabstop=8 expandtab shiftwidth=4 softtabstop=4 autoindent
