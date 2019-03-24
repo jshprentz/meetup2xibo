@@ -7,8 +7,9 @@ History
 
 * First release on PyPI.
 
-.. Next Release
-.. ------------------
+Next Release
+------------------
+* Ignore "3D" accounting code in event names.
 
 2.4.0 (2019-03-21)
 ------------------
