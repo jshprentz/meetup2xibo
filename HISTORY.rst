@@ -10,6 +10,7 @@ History
 Next Release
 ------------------
 * Ignore "3D" accounting code in event names.
+* Summarize past and current changes in separate lists.
 
 2.4.0 (2019-03-21)
 ------------------
