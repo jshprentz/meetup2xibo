@@ -45,7 +45,7 @@ class EventLog:
     def has_current_event(self):
         """Return true if the log contains a current event."""
         return self._current_event_flag
-        
+
     def report_sort_key(self):
         """Return a key for sorting into report order."""
         if self._sort_key is None:
