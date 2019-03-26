@@ -11,6 +11,7 @@ class EventLog:
         self._unknown_locations = set()
         self._final_event = None
         self._sort_key = None
+        self._current_event_flag = False
 
     @property
     def log_lines(self):
@@ -37,6 +38,14 @@ class EventLog:
             self._unknown_locations.add(log_line.event)
             self.add_event_log_line(log_line)
 
+    def note_current_event(self):
+        """Note that there is a current event in the log."""
+        self._current_event_flag = True
+
+    def has_current_event(self):
+        """Return true if the log contains a current event."""
+        return self._current_event_flag
+        
     def report_sort_key(self):
         """Return a key for sorting into report order."""
         if self._sort_key is None:

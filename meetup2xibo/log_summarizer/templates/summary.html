@@ -76,19 +76,35 @@ table.blueTable thead th:first-child {
 {% else %}
     <p>None</p>
 {% endif %}
-{% if cruds %}
-    <h2>Changes to Xibo Event Listings</h2>
+
+{% if current_event_logs %}
+    <h2>Changes to Xibo Current and Future Event Listings</h2>
         <dl>
-{% for event_crud in cruds %}
-            <dt>{{ report.linked_event_display(event_crud.final_event) }}</dt>
+{% for event_log in current_event_logs %}
+            <dt>{{ report.linked_event_display(event_log.final_event) }}</dt>
             <dd><dl>
-{% for log_line in event_crud.log_lines %}
-                {{ report.log_line_display(log_line, event_crud.final_event) }}
+{% for log_line in event_log.log_lines %}
+                {{ report.log_line_display(log_line, event_log.final_event) }}
 {% endfor %}
             </dl></dd>
 {% endfor %}
         </dl>
 {% endif %}
+
+{% if past_event_logs %}
+    <h2>Changes to Xibo Past Event Listings</h2>
+        <dl>
+{% for event_log in past_event_logs %}
+            <dt>{{ report.linked_event_display(event_log.final_event) }}</dt>
+            <dd><dl>
+{% for log_line in event_log.log_lines %}
+                {{ report.log_line_display(log_line, event_log.final_event) }}
+{% endfor %}
+            </dl></dd>
+{% endfor %}
+        </dl>
+{% endif %}
+
 </body>
 </html>
 {# vim: set tabstop=8 expandtab shiftwidth=4 softtabstop=4 autoindent: #}

@@ -20,9 +20,9 @@ class LogLine:
         """Return the action description, such as "Inserted"."""
         return self._action
 
-    def add_to_event_crud(self, event_crud):
-        """Add this log line to an event CRUD tracker."""
-        event_crud.add_log_line(self)
+    def add_to_event_log(self, event_log):
+        """Add this log line to an event log tracker."""
+        event_log.add_log_line(self)
 
 
 class EventLogLine(LogLine):
@@ -49,12 +49,22 @@ class EventLogLine(LogLine):
         """Return the final event from the log line."""
         return self.event
 
-    def add_to_event_crud(self, event_crud):
-        """Add this log line to an event CRUD tracker."""
-        event_crud.add_event_log_line(self)
+    def add_to_event_log(self, event_log):
+        """Add this log line to an event log tracker."""
+        event_log.add_event_log_line(self)
 
 
-class InsertEventLogLine(EventLogLine):
+class CurrentEventLogLine(EventLogLine):
+
+    """A log line reporting an event activity."""
+
+    def add_to_event_log(self, event_log):
+        """Add this log line to an event log tracker."""
+        super().add_to_event_log(event_log)
+        event_log.note_current_event()
+
+
+class InsertEventLogLine(CurrentEventLogLine):
 
     """A log line reporting an inserted event."""
 
@@ -63,7 +73,7 @@ class InsertEventLogLine(EventLogLine):
         super().__init__(timestamp, event, "Inserted")
 
 
-class UpdateEventLogLine(EventLogLine):
+class UpdateEventLogLine(CurrentEventLogLine):
 
     """A log line reporting an updated event."""
 
@@ -94,7 +104,7 @@ class UpdateEventLogLine(EventLogLine):
         return self.before_event.differences(self.after_event)
 
 
-class DeleteEventLogLine(EventLogLine):
+class DeleteEventLogLine(CurrentEventLogLine):
 
     """A log line reporting a deleted event."""
 
@@ -120,9 +130,10 @@ class UnknownLocationLogLine(EventLogLine):
         """Initialize with a timestamp and an event."""
         super().__init__(timestamp, event, "Unknown Location")
 
-    def add_to_event_crud(self, event_crud):
-        """Add this log line to an event CRUD tracker."""
-        event_crud.add_unknown_location_log_line(self)
+    def add_to_event_log(self, event_log):
+        """Add this log line to an event log tracker."""
+        event_log.add_unknown_location_log_line(self)
+        event_log.note_current_event()
 
 
 class SpecialLocationLogLine(LogLine):
