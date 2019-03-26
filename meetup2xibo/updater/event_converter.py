@@ -63,7 +63,7 @@ class EventConverter:
     @staticmethod
     def edit_name(raw_name):
         """Extract a condensed name, omitting the accounting code."""
-        match = re.search(r'^\s*[A-Z][A-Z]:\s*(\S.*)$', raw_name, re.DOTALL)
+        match = re.search(r'^\s*[A-Z3][A-Z]:\s*(\S.*)$', raw_name, re.DOTALL)
         if match:
             name = match.group(1)
         else:

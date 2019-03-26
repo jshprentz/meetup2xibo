@@ -229,7 +229,7 @@ def test_event_log_line(log_parser_class, sample_log_lines, crud_lister):
     parser = log_parser_class(log_line_text)
     parser.event_log_line(crud_lister)
     meetup_id = 'tmnbrqyzhbhb'
-    log_line = crud_lister.event_cruds[meetup_id].log_lines[0]
+    log_line = crud_lister.event_logs[meetup_id].log_lines[0]
     assert isinstance(log_line, InsertEventLogLine)
     assert log_line.timestamp == '2019-03-04 06:00'
     assert log_line.meetup_id == meetup_id
@@ -240,7 +240,7 @@ def test_log_line_insert(log_parser_class, sample_log_lines, crud_lister, counte
     parser = log_parser_class(log_line_text)
     parser.log_line(summary)
     meetup_id = 'tmnbrqyzhbhb'
-    log_line = crud_lister.event_cruds[meetup_id].log_lines[0]
+    log_line = crud_lister.event_logs[meetup_id].log_lines[0]
     assert isinstance(log_line, InsertEventLogLine)
     assert log_line.timestamp == '2019-03-04 06:00'
     assert log_line.meetup_id == 'tmnbrqyzhbhb'
@@ -253,7 +253,7 @@ def test_log_line_start(log_parser_class, sample_log_lines, crud_lister,
     parser = log_parser_class(log_line_text)
     parser.log_line(summary)
     assert counter.counts() == [("meetup2xibo 2.0.1", 1)]
-    assert crud_lister.event_cruds == {}
+    assert crud_lister.event_logs == {}
     assert not location_mapper.has_mappings()
 
 def test_log_line_event_location(log_parser_class, sample_log_lines,
@@ -263,7 +263,7 @@ def test_log_line_event_location(log_parser_class, sample_log_lines,
     parser = log_parser_class(log_line_text)
     parser.log_line(summary)
     assert counter.counts() == []
-    assert crud_lister.event_cruds == {}
+    assert crud_lister.event_logs == {}
     assert location_mapper.mapping_list()[0].location == "Woodshop"
 
 def test_log_line_other(log_parser_class, sample_log_lines, crud_lister, counter, summary):
@@ -272,7 +272,7 @@ def test_log_line_other(log_parser_class, sample_log_lines, crud_lister, counter
     parser = log_parser_class(log_line_text)
     parser.log_line(summary)
     assert counter.counts() == []
-    assert crud_lister.event_cruds == {}
+    assert crud_lister.event_logs == {}
 
 def test_log_lines(log_parser_class, sample_log_lines, crud_lister, counter,
         location_mapper, summary):
@@ -285,7 +285,7 @@ def test_log_lines(log_parser_class, sample_log_lines, crud_lister, counter,
     parser = log_parser_class(log_line_text)
     parser.log_lines(summary)
     meetup_id = 'tmnbrqyzhbhb'
-    log_line = crud_lister.event_cruds[meetup_id].log_lines[0]
+    log_line = crud_lister.event_logs[meetup_id].log_lines[0]
     assert isinstance(log_line, InsertEventLogLine)
     assert log_line.timestamp == '2019-03-04 06:01'
     assert log_line.meetup_id == meetup_id
@@ -304,7 +304,7 @@ def test_log_lines_with_special_location(log_parser_class, sample_log_lines,
     parser = log_parser_class(log_line_text)
     parser.log_lines(summary)
     meetup_id = '258645498'
-    event_crud = crud_lister.event_cruds[meetup_id]
+    event_crud = crud_lister.event_logs[meetup_id]
     log_line_0 = event_crud.log_lines[0]
     assert isinstance(log_line_0, DeleteEventLogLine)
     assert log_line_0.timestamp == '2019-03-04 06:00'

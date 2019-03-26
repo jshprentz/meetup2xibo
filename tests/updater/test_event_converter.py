@@ -172,6 +172,7 @@ def test_edit_name_without_prefix(event_name):
     assert edited_name == trimmed_event_name
 
 @given(prefix = event_prefixes, event_name = event_names)
+@example(prefix="3D", event_name="3D Scanner Sign Off")
 def test_edit_name_with_prefix(prefix, event_name):
     """Test that a prefixed name edits to the event name."""
     trimmed_event_name = event_name.strip()

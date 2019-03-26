@@ -10,6 +10,11 @@ History
 .. Next Release
 .. ------------------
 
+2.4.1 (2019-03-26)
+------------------
+* Ignore "3D" accounting code in event names.
+* Summarize past and current changes in separate lists.
+
 2.4.0 (2019-03-21)
 ------------------
 * Report event updates with human-friendly field names (e.g., start time instead of start_time).

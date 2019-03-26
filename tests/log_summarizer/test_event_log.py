@@ -37,7 +37,14 @@ def test_final_event(event_log, sample_log_lines):
     event_log.add_event_log_line(update_log_line)
     assert event_log.final_event == update_log_line.after_event
 
+def test_has_current_event_false(event_log):
+    """Test that an initialized event log has no current event."""
+    assert not event_log.has_current_event()
 
+def test_has_current_event_true(event_log):
+    """Test that an event log has a current event after one is noted."""
+    event_log.note_current_event()
+    assert event_log.has_current_event()
 
 
 

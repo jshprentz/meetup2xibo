@@ -126,10 +126,12 @@ class SummaryRenderer:
 
     def render(self, summary):
         """Render the log file summary as a string."""
+        crud_lister = summary.crud_lister
         template = self.jinja2_env.get_template(self.template_name)
         return template.render(
                 counters=summary.counter.counts(),
-                cruds=summary.crud_lister.sorted_event_cruds()
+                current_event_logs=crud_lister.sorted_current_event_logs(),
+                past_event_logs=crud_lister.sorted_past_event_logs()
                 )
 
 

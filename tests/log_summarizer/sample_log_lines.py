@@ -3,7 +3,7 @@
 from meetup2xibo.log_summarizer.event import Event
 from meetup2xibo.log_summarizer.log_lines import InsertEventLogLine, \
     UpdateEventLogLine, DeleteEventLogLine, UnknownLocationLogLine, \
-    EventLocationLogLine, SpecialLocationLogLine
+    EventLocationLogLine, SpecialLocationLogLine, RetireEventLogLine
 from meetup2xibo.log_summarizer.log_parser import SpecialLocation
 
 
