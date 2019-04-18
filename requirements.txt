@@ -5,3 +5,4 @@ pyahocorasick
 pytz
 requests
 requests_oauthlib
+requests-toolbelt
