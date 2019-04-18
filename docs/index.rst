@@ -1,15 +1,17 @@
-Welcome to Meetup to Xibo's documentation!
-==========================================
+Meetup to Xibo
+==============
+
+.. include:: ../README.rst
+   :start-after: Start description
+   :end-before: End description
 
 .. toctree::
    :maxdepth: 2
-   :caption: Contents:
 
    readme
    installation
    usage
    man/index
-   modules
    contributing
    authors
    history
@@ -18,5 +20,4 @@ Welcome to Meetup to Xibo's documentation!
 Indices and tables
 ==================
 * :ref:`genindex`
-* :ref:`modindex`
 * :ref:`search`
