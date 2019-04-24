@@ -56,13 +56,17 @@ Development Tools
 These tools help build, document, test, and validate **Meetup2xibo**.
 
 * `bumpversion`_ updates version numbers in source code.
+* `Cookiecutter`_ and the `audreyr/cookiecutter-pypackage`_ project template
+  provided the Python package structure.
 * `coverage`_ measures code coverage during tests.
 * `flake8`_ checks code style.
 * `Sphinx`_ renders documentation in HTML, PDF, and other formats.
 * `tox`_ automates testing with multiple Python versions.
 * `twine`_ publishes Python packages to `PyPi`_.
 
+.. _`audreyr/cookiecutter-pypackage`: https://github.com/audreyr/cookiecutter-pypackage
 .. _`bumpversion`: https://github.com/peritus/bumpversion#bumpversion
+.. _`Cookiecutter`: https://github.com/audreyr/cookiecutter
 .. _`coverage`: https://github.com/nedbat/coveragepy#coveragepy
 .. _`flake8`: https://gitlab.com/pycqa/flake8
 .. _`PyPi`: https://pypi.org/

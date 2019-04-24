@@ -59,10 +59,4 @@ Credits
 
 **Meetup2xibo** was developed by Joel Shprentz (`@jshprentz`_).
 
-
-
-The Python package was organized with `Cookiecutter`_ and the `audreyr/cookiecutter-pypackage`_ project template.
-
 .. _`@jshprentz`: https://github.com/jshprentz
-.. _`audreyr/cookiecutter-pypackage`: https://github.com/audreyr/cookiecutter-pypackage
-.. _`Cookiecutter`: https://github.com/audreyr/cookiecutter
