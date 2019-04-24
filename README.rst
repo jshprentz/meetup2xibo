@@ -1,9 +1,9 @@
 .. Use only basic Restructured Text in this file so PyPi and GitHub can display it.
 .. No Sphinx extensions here.
 
-==============
-Meetup to Xibo
-==============
+===========
+Meetup2Xibo
+===========
 
 
 .. image:: https://img.shields.io/travis/jshprentz/meetup2xibo.svg
@@ -36,6 +36,9 @@ Meetup2xibo keeps those agendas up-to-date as events are added, cancelled, or up
 
 .. End description
 
+Resources
+---------
+
 * Documentation: https://meetup2xibo.readthedocs.io.
 * GitHub: https://github.com/jshprentz/meetup2xibo
 * Free software: MIT license
@@ -44,15 +47,21 @@ Meetup2xibo keeps those agendas up-to-date as events are added, cancelled, or up
 Features
 --------
 
+**Meetup2xibo** ...
+
 * Retrieves events from the Meetup.com API.
 * Inserts, updates, and deletes events via the Xibo CMS API.
-* Logs changes to Xibo events.
 * Extracts event locations from Meetup.com venue name and find-us fields.
 * Maps abbreviated and misspelled event locations to preferred forms.
 * Allows per-event overrides of location mapping rules.
+* Converts Meetup.com event start and end times into local date/times formatted for Xibo.
+* Logs changes to Xibo events.
 * Logs location mappings.
-* Converts Meetup.com event start and end times into ISO 8601 local date/times for Xibo.
-* Summarizes logs in a daily email message.
+
+Supporting programs ...
+
+* Summarize logs in a daily email message.
+* Report yesterday's date for use in shell scripts.
 
 Credits
 -------
