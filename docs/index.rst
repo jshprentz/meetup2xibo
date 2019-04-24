@@ -5,19 +5,35 @@ Meetup to Xibo
    :start-after: Start description
    :end-before: End description
 
+Introduction
+------------
+
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 1
 
    readme
-   installation
-   usage
-   man/index
-   contributing
    authors
+   contributing
    history
 
+Getting Started
+---------------
+
+.. toctree::
+   :maxdepth: 1
+
+   installation
+   usage
+
+Manual Pages
+------------
+
+.. toctree::
+   :maxdepth: 1
+
+   man/*
 
 Indices and tables
-==================
+------------------
 * :ref:`genindex`
 * :ref:`search`
