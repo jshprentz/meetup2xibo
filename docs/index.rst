@@ -13,6 +13,7 @@ Introduction
 
    readme
    background
+   goals
    authors
    contributing
    history
