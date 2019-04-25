@@ -12,6 +12,7 @@ Introduction
    :maxdepth: 1
 
    readme
+   background
    authors
    contributing
    history

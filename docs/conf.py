@@ -78,6 +78,11 @@ pygments_style = 'sphinx'
 # If true, `todo` and `todoList` produce output, else they produce nothing.
 todo_include_todos = False
 
+# Numbering options
+numfig = True
+numfig_format = {
+    'figure': 'Figure %s.'
+    }
 
 # -- Options for HTML output -------------------------------------------
 
