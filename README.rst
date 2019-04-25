@@ -5,6 +5,7 @@
 Meetup2Xibo
 ===========
 
+.. Start badges
 
 .. image:: https://img.shields.io/travis/jshprentz/meetup2xibo.svg
         :target: https://travis-ci.org/jshprentz/meetup2xibo
