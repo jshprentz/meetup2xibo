@@ -55,7 +55,8 @@ Features
 * Extracts event locations from Meetup.com venue name and find-us fields.
 * Maps abbreviated and misspelled event locations to preferred forms.
 * Allows per-event overrides of location mapping rules.
-* Converts Meetup.com event times into local date/times formatted for Xibo.
+* Compute event end times from Meetup.com start times and durations.
+* Format event start and end times for Xibo.
 * Logs changes to Xibo events.
 * Logs location mappings.
 
