@@ -46,7 +46,8 @@ Nova Labs has created dozens of sign layouts including a daily agenda
 and photos of past activities.
 
 .. figure:: images/screenshots/xibo-agenda.png
-   :alt: Screenshot of a Nova Labs daily agenda displayed by Xibo
+   :alt: Screenshot of a Xibo displayed Nova Labs daily agenda,
+         which lists event titles, locations, and start times
    :name: xibo_agenda_screenshot
 
    Xibo displays a daily agenda of Nova Labs events.
