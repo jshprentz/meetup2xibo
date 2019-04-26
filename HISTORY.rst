@@ -7,8 +7,10 @@ History
 
 * First release on PyPI.
 
-.. Next Release
-.. ------------------
+Next Release
+------------------
+* Correct conversion of cancelled events.
+* Add man pages to documentation.
 
 2.4.1 (2019-03-26)
 ------------------
