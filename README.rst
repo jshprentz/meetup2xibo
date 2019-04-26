@@ -3,9 +3,6 @@ Meetup to Xibo
 ==============
 
 
-.. image:: https://img.shields.io/pypi/v/meetup2xibo.svg
-        :target: https://pypi.python.org/pypi/meetup2xibo
-
 .. image:: https://img.shields.io/travis/jshprentz/meetup2xibo.svg
         :target: https://travis-ci.org/jshprentz/meetup2xibo
 

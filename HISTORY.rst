@@ -10,6 +10,11 @@ History
 .. Next Release
 .. ------------------
 
+2.4.2 (2019-04-25)
+------------------
+* Correct conversion of cancelled events.
+* Add man pages to documentation.
+
 2.4.1 (2019-03-26)
 ------------------
 * Ignore "3D" accounting code in event names.
