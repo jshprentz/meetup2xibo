@@ -39,8 +39,13 @@ def test_request_params():
             }
     assert retriever.request_params() == expected_params
 
-def test_cancelled_event_response(module_file_path, meetup_event_retriever):
-    """Save response from an cancelled event request to Meetup."""
+def test_events_response(module_file_path, meetup_event_retriever):
+    """Save response from an events request to Meetup."""
+    response_json = meetup_event_retriever.retrieve_events_json()
+    save_json(response_json, module_file_path)
+
+def test_cancelled_events_response(module_file_path, meetup_event_retriever):
+    """Save response from a cancelled events request to Meetup."""
     response_json = meetup_event_retriever.retrieve_cancelled_events_json()
     save_json(response_json, module_file_path)
 
