@@ -9,11 +9,10 @@ Introduction
 ------------
 
 .. toctree::
-   :maxdepth: 1
+   :maxdepth: 2
 
    readme
    background
-   goals
    authors
    contributing
    history
@@ -22,9 +21,10 @@ Getting Started
 ---------------
 
 .. toctree::
-   :maxdepth: 1
+   :maxdepth: 2
 
    installation
+   xibo-setup
    usage
 
 Manual Pages
