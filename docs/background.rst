@@ -78,7 +78,10 @@ JSON data.
    :alt: Screenshot of raw JSON event data displayed by a web browser: too much information
    :name: meetup-event-json-raw-screenshot
 
-   A small part of the JSON event data from Meetup.com displayed by a web browser.
+   A small part of the JSON event data from Meetup.com.
+   Left: Raw JSON data from Meetup.com.
+   Right: Pretty printed JSON data showing fields and values.
+   
 
 The Xibo administrator then ran a 70-line Python script to extract and convert
 pertinent information from the JSON file.
