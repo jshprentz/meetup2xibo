@@ -131,21 +131,23 @@ Lessons Learned
 
 Nova Labs members were pleased with the Xibo displays of event agendas.
 
-Members were disappointed that the agendas often were out-of-date compared with
-Meetup.com.
+Members were disappointed that the displayed agendas often were out-of-date
+compared with Meetup.com.
 The twice-weekly manual process could not keep up with the dozen or more
-Meetup.com changes entered by event administraors.
-A common situation occurred when an event was assigned to a different room
-shortly before the start time; Meetup.com would show the new room assignment,
-but the Xibo agenda would show the old location.
+Meetup.com changes entered by event administrators.
+For example, when an event was assigned to a different room shortly before the
+start time, Meetup.com would show the new room assignment, but the Xibo would
+still display the old location.
 
 Xibo administrators had to precisely follow the manual process.
 Occasional mistakes led to outdated events getting loaded into Xibo.
 
-Xibo administrators had to repeatedly correct some faulty data from Meetup.com.
-Some events included variations on room names (and occasionally no event
-location at all).
-The Python script grew to accomodate frequently needed event edits.
+Xibo administrators had to repeatedly correct some faulty data entered into
+Meetup.com.
+Some events included variations on room names.
+Occasionally there was no event location at all.
+The Python script grew to accomodate frequently needed event edits and provide
+default values.
 
 Eventually the timeliness concerns and the tediousness of the manual process
 motivated the development of an automated solution, meetup2xibo.
