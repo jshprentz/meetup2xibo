@@ -114,7 +114,7 @@ before uploading the file.
 
 The Xibo admininstrator completed the process by reviewing the event data in
 the Xibo dataset.
-:numref:`Figure %s <dataset-review>`) shows how Xibo displays event data for
+:numref:`Figure %s <dataset-review>` shows how Xibo displays event data for
 review.
 Xibo computes rightmost three field (start time, days till start, and minutes
 past end).
@@ -137,10 +137,10 @@ Nova Labs members were pleased with the Xibo displays of event agendas.
 Members were disappointed that the displayed agendas often were out-of-date
 compared with Meetup.com.
 The twice-weekly manual process could not keep up with the dozen or more
-Meetup.com changes entered by event administrators.
+Meetup.com changes entered by event administrators each day.
 For example, when an event was assigned to a different room shortly before the
-start time, Meetup.com would show the new room assignment, but the Xibo would
-still display the old location.
+start time, Meetup.com would show the new room assignment, but the Xibo still
+displayed the old location.
 
 Xibo administrators had to precisely follow the manual process.
 Occasional mistakes led to outdated events getting loaded into Xibo.
@@ -148,7 +148,7 @@ Occasional mistakes led to outdated events getting loaded into Xibo.
 Xibo administrators had to repeatedly correct some faulty data entered into
 Meetup.com.
 Some events included variations on room names.
-Occasionally there was no event location at all.
+Occasionally an event showed no location at all.
 The Python script grew to accomodate frequently needed event edits and provide
 default values.
 
