@@ -64,7 +64,7 @@ Options
 
 .. option:: -t <EMAIL_TO>, --to <EMAIL_TO>
 
-   Generate an email message to this address or space
+   Generate an email message to this address or to space
    separated addressses. Overrides --mappings option.
    (default: no email message)
 
