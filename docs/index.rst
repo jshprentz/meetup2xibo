@@ -13,6 +13,7 @@ Introduction
 
    readme
    background
+   faq
    authors
    contributing
    history
