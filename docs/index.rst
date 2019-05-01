@@ -18,12 +18,13 @@ Introduction
    contributing
    history
 
-Getting Started
----------------
+User Manual
+-----------
 
 .. toctree::
    :maxdepth: 2
 
+   prerequisites
    installation
    xibo-setup
    usage
