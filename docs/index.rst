@@ -26,7 +26,7 @@ User Manual
 
    prerequisites
    installation
-   xibo-setup
+   xibo-dataset-setup
    usage
 
 Manual Pages
