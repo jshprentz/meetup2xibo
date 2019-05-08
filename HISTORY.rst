@@ -15,7 +15,10 @@ Future
 Recent
 ~~~~~~
 
-Next Release
+.. Next Release
+.. ------------------
+
+2.4.3 (2019-05-08)
 ------------------
 * Add documentation.
 
