@@ -1,7 +1,11 @@
-==============
-Meetup to Xibo
-==============
+.. Use only basic Restructured Text in this file so PyPi and GitHub can display it.
+.. No Sphinx extensions here.
 
+===========
+Meetup2Xibo
+===========
+
+.. Start badges
 
 .. image:: https://img.shields.io/travis/jshprentz/meetup2xibo.svg
         :target: https://travis-ci.org/jshprentz/meetup2xibo
@@ -10,25 +14,60 @@ Meetup to Xibo
         :target: https://meetup2xibo.readthedocs.io/en/latest/?badge=latest
         :alt: Documentation Status
 
+.. Start description
 
+**Meetup2xibo** is a command line program that retrieves event descriptions
+from Meetup.com and loads them into a Xibo digital signage dataset.
+Xibo can display events in sign layouts such as agendas, calendars, room
+activity signs, and maps.
 
+Meetup2xibo was developed for `Nova Labs`_, a makerspace in Reston, Virginia.
+The busy Nova Labs calendar has up to a dozen Meetup.com events per day.
+Xibo displays event agendas for today and tommorrow on several large
+wall-mounted monitors.
+Meetup2xibo keeps those agendas up-to-date as events are added, cancelled, or updated.
 
-Load Meetup events into a Xibo digital signage CMS.
+.. _`Nova Labs`: https://www.nova-labs.org/
 
+.. PyPi requires an absolute image URL.
+.. image:: https://raw.githubusercontent.com/jshprentz/meetup2xibo/development/docs/images/screenshots/calendar-to-agenda.png
+	:alt: Diagram of meetup2xibo's function showing events from a
+		screenshot of a Meetup.com calendar transformed
+		into events displayed by Xibo in a daily agenda.
 
-* Free software: MIT license
+.. End description
+
+Resources
+---------
+
 * Documentation: https://meetup2xibo.readthedocs.io.
+* GitHub: https://github.com/jshprentz/meetup2xibo
+* Free software: MIT license
 
 
 Features
 --------
 
-* TODO
+**Meetup2xibo** ...
+
+* Retrieves events from the Meetup.com API.
+* Inserts, updates, and deletes events via the Xibo CMS API.
+* Extracts event locations from Meetup.com venue name and find-us fields.
+* Maps abbreviated and misspelled event locations to preferred forms.
+* Allows per-event overrides of location mapping rules.
+* Compute event end times from Meetup.com start times and durations.
+* Format event start and end times for Xibo.
+* Logs changes to Xibo events.
+* Logs location mappings.
+
+Supporting programs ...
+
+* Summarize logs in a daily email message.
+* Report yesterday's date for use in shell scripts.
 
 Credits
 -------
 
-This package was created with Cookiecutter_ and the `audreyr/cookiecutter-pypackage`_ project template.
+**Meetup2xibo** was developed by Joel Shprentz (`@jshprentz`_).
 
-.. _Cookiecutter: https://github.com/audreyr/cookiecutter
-.. _`audreyr/cookiecutter-pypackage`: https://github.com/audreyr/cookiecutter-pypackage
+.. _`@jshprentz`: https://github.com/jshprentz

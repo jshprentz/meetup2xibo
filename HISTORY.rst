@@ -2,13 +2,25 @@
 History
 =======
 
-2.5 (Future)
-------------------
+~~~~~~
+Future
+~~~~~~
+
+2.5
+---
 
 * First release on PyPI.
 
+~~~~~~
+Recent
+~~~~~~
+
 .. Next Release
 .. ------------------
+
+2.4.3 (2019-05-08)
+------------------
+* Add documentation.
 
 2.4.2 (2019-04-25)
 ------------------
@@ -42,7 +54,7 @@ History
 
 2.2.2 (2019-03-15)
 ------------------
-* Add log summarizer configuration parameter for the number of Meetup events to request.
+* Add configuration parameter for the number of Meetup events to request.
 * Improve reporting of HTTP errors.
 
 2.2.1 (2019-03-14)
@@ -73,6 +85,10 @@ History
 * Add Python package support.
 * Reformat to conform to PEP-8.
 * Test with multiple Python versions (3.5 and 3.6).
+
+~~~~~~~
+Ancient
+~~~~~~~
 
 1.0.1 (2017-12-12)
 ------------------
