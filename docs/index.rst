@@ -5,11 +5,9 @@ Meetup to Xibo
    :start-after: Start description
    :end-before: End description
 
-Introduction
-------------
-
 .. toctree::
    :maxdepth: 2
+   :caption: Introduction
 
    readme
    background
@@ -18,11 +16,9 @@ Introduction
    contributing
    history
 
-User Manual
------------
-
 .. toctree::
    :maxdepth: 2
+   :caption: User Manual
 
    user-manual/overview
    user-manual/prerequisites
@@ -30,11 +26,9 @@ User Manual
    user-manual/xibo-dataset-setup
    user-manual/usage
 
-Manual Pages
-------------
-
 .. toctree::
    :maxdepth: 1
+   :caption: Manual Pages
    :glob:
 
    man/*
