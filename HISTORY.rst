@@ -18,6 +18,7 @@ Recent
 Next Release
 ------------------
 * Ignore "3D" accounting code in event names.
+* Add documentation.
 
 2.4.0 (2019-03-21)
 ------------------
