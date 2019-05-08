@@ -24,6 +24,7 @@ User Manual
 .. toctree::
    :maxdepth: 2
 
+   user-manual/overview
    user-manual/prerequisites
    user-manual/installation
    user-manual/xibo-dataset-setup
