@@ -47,7 +47,7 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = u'Meetup to Xibo'
+project = u'Meetup2xibo'
 copyright = u"2019 Joel Shprentz"
 author = u"Joel Shprentz"
 
@@ -78,6 +78,11 @@ pygments_style = 'sphinx'
 # If true, `todo` and `todoList` produce output, else they produce nothing.
 todo_include_todos = False
 
+# Numbering options
+numfig = True
+numfig_format = {
+    'figure': 'Figure %s.'
+    }
 
 # -- Options for HTML output -------------------------------------------
 
@@ -129,7 +134,7 @@ latex_elements = {
 # [howto, manual, or own class]).
 latex_documents = [
     (master_doc, 'meetup2xibo.tex',
-     u'Meetup to Xibo Documentation',
+     u'Meetup2xibo Documentation',
      u'Joel Shprentz', 'manual'),
 ]
 
@@ -140,7 +145,7 @@ latex_documents = [
 # (source start file, name, description, authors, manual section).
 man_pages = [
     (master_doc, 'meetup2xibo',
-     u'Meetup to Xibo Documentation',
+     u'Meetup2xibo Documentation',
      [author], 1)
 ]
 
@@ -152,7 +157,7 @@ man_pages = [
 #  dir menu entry, description, category)
 texinfo_documents = [
     (master_doc, 'meetup2xibo',
-     u'Meetup to Xibo Documentation',
+     u'Meetup2xibo Documentation',
      author,
      'meetup2xibo',
      'Load Meetup events into a Xibo digital signage CMS.',
