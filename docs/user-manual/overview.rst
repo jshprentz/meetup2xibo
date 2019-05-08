@@ -1,19 +1,17 @@
-====================
-Meetup2Xibo Overview
-====================
+========
+Overview
+========
 
 .. figure:: /images/diagrams/meetup2xibo-event-data-flow.png
    :alt: Diagram showing the event data flow from Meetup.com to Xibo
    :name: meetup2xibo-event-data-flow
 
-   Meetup2xibo retrieves event data from Meetup.com.
-   Meetup2xibo edits the Meetup.com event data.
-   Meetup2xibo inserts, updates, and deletes event data stored in a Xibo CMS
-   dataset.
-   Ticker widgets in Xibo layouts retrieve and display the event data stored in
+   Meetup2xibo retrieves event data from Meetup.com, transforms the data, and
+   updates the event data stored in a Xibo dataset.
+   Ticker widgets in Xibo layouts display the event data retrieved from
    the Xibo dataset.
 
-:program:`Meetup2Xibo` is a command line program that retrieves event
+:program:`Meetup2xibo` is a command line program that retrieves event
 descriptions from Meetup.com and loads them into a Xibo digital signage
 dataset.
 Xibo layouts can contain ticker widgets that filter, sort, and display event
@@ -24,13 +22,13 @@ Meetup.com to Xibo layouts.
 Installation
 ------------
 
-Meetup2Xibo can be installed with standard Python package tools.
+Meetup2xibo can be installed with standard Python package tools.
 See :doc:`installation`.
 
 Configuration
 -------------
 
-Meetup2Xibo gets its configuration from environment variables.
+Meetup2xibo gets its configuration from environment variables.
 The configuration includes:
 
 - Meetup.com API credentials
@@ -47,7 +45,7 @@ customization.
 Logging
 -------
 
-Meetup2Xibo can log its activity to a named file, standard output, or both.
+Meetup2xibo can log its activity to a named file, standard output, or both.
 :ref:`Command line options <meetup2xibo-options>` control the message levels to
 log and where to send the logs.
 
@@ -61,7 +59,7 @@ Cron Jobs
 The Linux cron daemon (or the Windows Task Scheduler) can run 
 Cron runs meetup2xibo every 10 minutes so the Xibo layouts show the latest
 event changes, particularly last minute room changes.
-Cron runs summarize-m2x-logs early every morning to mail a summary of the
+Cron runs summarize-m2x-logs early every morning to email a summary of the
 previous days logs.
 
 
