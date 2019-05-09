@@ -2,18 +2,18 @@
 History
 =======
 
-~~~~~~
-Future
-~~~~~~
+~~~~~~~~~~~~~~
+Future History
+~~~~~~~~~~~~~~
 
 2.5
 ---
 
 * First release on PyPI.
 
-~~~~~~
-Recent
-~~~~~~
+~~~~~~~~~~~~~~
+Recent History
+~~~~~~~~~~~~~~
 
 .. Next Release
 .. ------------------
@@ -86,9 +86,9 @@ Recent
 * Reformat to conform to PEP-8.
 * Test with multiple Python versions (3.5 and 3.6).
 
-~~~~~~~
-Ancient
-~~~~~~~
+~~~~~~~~~~~~~~~
+Ancient History
+~~~~~~~~~~~~~~~
 
 1.0.1 (2017-12-12)
 ------------------
