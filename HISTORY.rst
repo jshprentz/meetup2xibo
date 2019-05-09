@@ -15,8 +15,9 @@ Future History
 Recent History
 ~~~~~~~~~~~~~~
 
-.. Next Release
-.. ------------------
+Next Release
+------------------
+* Test with Python 3.7 also.
 
 2.4.3 (2019-05-08)
 ------------------
