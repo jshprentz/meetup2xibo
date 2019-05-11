@@ -81,7 +81,8 @@ todo_include_todos = False
 # Numbering options
 numfig = True
 numfig_format = {
-    'figure': 'Figure %s.'
+    'figure': 'Figure %s.',
+    'table': 'Table %s.'
     }
 
 # -- Options for HTML output -------------------------------------------
