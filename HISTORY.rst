@@ -10,6 +10,9 @@ Future History
 ---
 
 * First release on PyPI.
+* Support Meetup.com OAuth2.
+* Detect and report room conflicts.
+* Improve reporting of Meetup.com server errors.
 
 ~~~~~~~~~~~~~~
 Recent History
