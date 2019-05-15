@@ -31,6 +31,7 @@ Meetup2xibo keeps those agendas up-to-date as events are added, cancelled, or up
 
 .. PyPi requires an absolute image URL.
 .. image:: https://raw.githubusercontent.com/jshprentz/meetup2xibo/development/docs/images/screenshots/calendar-to-agenda.png
+	:align: center
 	:alt: Diagram of meetup2xibo's function showing events from a
 		screenshot of a Meetup.com calendar transformed
 		into events displayed by Xibo in a daily agenda.

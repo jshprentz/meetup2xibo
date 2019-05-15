@@ -36,6 +36,7 @@ for one week of Nova Labs events.
 .. figure:: images/screenshots/meetup-calendar.png
    :alt: Screenshot of a Meetup.com calendar of events at Nova Labs
    :name: meetup_calendar_screenshot
+   :align: center
 
    An example of a Meetup.com calendar of events at Nova Labs.
 
@@ -58,6 +59,7 @@ and photos of past activities.
    :alt: Screenshot of a Xibo displayed Nova Labs daily agenda,
          which lists event titles, locations, and start times
    :name: xibo_agenda_screenshot
+   :align: center
 
    Xibo displays a daily agenda of Nova Labs events.
 
@@ -77,6 +79,7 @@ JSON data.
 .. figure:: images/screenshots/meetup-event-json-raw.png
    :alt: Screenshot of raw JSON event data displayed by a web browser: too much information
    :name: meetup-event-json-raw-screenshot
+   :align: center
 
    A small part of the JSON event data from Meetup.com.
    Left: Raw JSON data from Meetup.com.
@@ -96,6 +99,7 @@ converted data.
    :alt: Screenshot of converted event data in spreadsheet format with columns
          for start time, end time, Meetup ID, event name, and location
    :name: event-csv
+   :align: center
 
    The first several lines of event data converted to CSV format and viewed as
    a spreadsheet in Microsoft Excel.
@@ -109,6 +113,7 @@ before uploading the file.
 .. figure:: images/screenshots/import-csv.png
    :alt: Screenshot of Xibo's "CSV Import" dialog box
    :name: import-csv
+   :align: center
 
    The Xibo "CSV Import" dialog box ready to upload a file.
 
@@ -125,6 +130,7 @@ The administrator can click on any row to edit the data.
          event name, location, ISO start time, ISO end time, start time,
 	 days till start, and minutes past end
    :name: dataset-review
+   :align: center
 
    The Xibo dataset review screen lets administrators reivew and edit
    event data.
