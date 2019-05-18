@@ -23,6 +23,7 @@ Meetup to Xibo
    user-manual/overview
    user-manual/prerequisites
    user-manual/xibo-dataset-setup
+   user-manual/xibo-user-setup
    user-manual/installation
    user-manual/configuration
    user-manual/usage
