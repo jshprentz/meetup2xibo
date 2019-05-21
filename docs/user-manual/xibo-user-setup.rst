@@ -24,7 +24,7 @@ Click the :guilabel:`Add User` button above the users list as shown in
 :numref:`Figure %s <add-user>`.
 
 .. figure:: /images/screenshots/add-user.png
-   :alt: Screenshot Xibo's user list
+   :alt: Screenshot showing Xibo's user list
    :name: add-user
    :align: center
 
@@ -156,7 +156,7 @@ shown in :numref:`Figure %s <edit-application>`.
    Select :guilabel:`Edit` (2) from the menu to open the :guilabel:`Edit
    Application` dialog box.
 
-The `Xibo CMS API credentials configuration <Xibo CMS API Credentials>`_
+The :ref:`Xibo CMS API credentials configuration <xibo-cms-api-credentials>`
 requires the client ID and secret shown in the :guilabel:`Edit Application`
 dialog box.
 Authorize the client credentials as shown in
