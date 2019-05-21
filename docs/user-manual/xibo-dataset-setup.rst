@@ -6,37 +6,127 @@ Xibo stores event data in a dataset.
 Meetup2Xibo manages five data value columns in that dataset.
 Xibo administrators may add additional formula columns to aid filtering,
 sorting and formating data for layouts.
-Step-by-step instructions below demonstrate how to setup the event dataset.
+
+Create an Events Dataset
+------------------------
+
+Meetup2xibo saves, updates, and deletes event data stored in a Xibo dataset.
+Click the :guilabel:`Add DataSet` button above the datasets list as shown in 
+:numref:`Figure %s <add-dataset>`.
+
+.. figure:: /images/screenshots/add-user.png
+   :alt: Screenshot showing Xibo's datasets list
+   :name: add-dataset
+   :align: center
+
+   Click :guilabel:`Datasets` (1) in the Xibo CMS menu to display the datasets
+   list.
+   Click the :guilabel:`Add Dataset` button (2) to open the :guilabel:`Add
+   Dataset` dialog box.
+
+Enter the new dataset's name, description, and code as shown in
+:numref:`Figure %s <add-dataset-dialog>`.
+Choose any meaningful dataset name.
+The description is optional, but helpful.
+Choose any meaningful single-word code to identify the dataset for Xibo API
+clients.
+The meetup2xibo configuration must contain this code as described in
+:ref:`xibo-dataset-config`.
+
+
+.. figure:: /images/screenshots/add-dataset-dialog.png
+   :alt: Screenshot showing the Xibo Add Dataset dialog box
+   :name: add-dataset-dialog
+   :align: center
+
+   Type the dataset name (1), description (2), and code (3).
+   Click :guilabel:`Save` (4) to add the new dataset.
 
 Dataset Columns
 ---------------
 
 Meetup2xibo expects the dataset to contain five string value columns.
-:numref:`Table %s <event-table-columns>` shows the recommended column headings.
+:numref:`Table %s <event-table-columns>` shows the column headings used at Nova
+Labs.
+Xibo administrators may choose any column headings and order.
+
+.. tabularcolumns:: |L|L|C|C|
 
 .. _event-table-columns:
 
 .. table:: Event Table Value Columns
-   :widths: auto
    :align: center
 
-   +----------------+---------------------+
-   | Heading        | Example Value       |
-   +================+=====================+
-   | Name           | 3D Printing 101     |
-   +----------------+---------------------+
-   | Location       | Conference Room 3   |
-   +----------------+---------------------+
-   | Meetup ID      | fkcslpyzhbrb        |
-   +----------------+---------------------+
-   | ISO Start Time | 2019-05-13 18:00:00 |
-   +----------------+---------------------+
-   | ISO End Time   | 2019-05-13 19:30:00 |
-   +----------------+---------------------+
+   +----------------+---------------------+---------------+
+   |                |                     | Recommended   |
+   |                |                     +--------+------+
+   | Heading        | Example Value       | Filter | Sort |
+   +================+=====================+========+======+
+   | Name           | 3D Printing 101     | ✔      |      |
+   +----------------+---------------------+--------+------+
+   | Location       | Conference Room 3   | ✔      |      |
+   +----------------+---------------------+--------+------+
+   | Meetup ID      | fkcslpyzhbrb        | ✔      |      |
+   +----------------+---------------------+--------+------+
+   | ISO Start Time | 2019-05-13 18:00:00 |        | ✔    |
+   +----------------+---------------------+--------+------+
+   | ISO End Time   | 2019-05-13 19:30:00 |        |      |
+   +----------------+---------------------+--------+------+
 
-All columns have the *String* data type and the *Value* column type.
-The List Content should be left blank.
-Xibo administrators may choose any column headings and order.
+Xibo automatically adds one column to new datasets.
+Select :guilabel:`Edit` from the event dataset's popup menu as shown in
+:numref:`Figure %s <edit-column>`.
+
+.. figure:: /images/screenshots/edit-column.png
+   :alt: Screenshot showing the event dataset column list with the popup menu
+      open
+   :name: edit-column
+   :align: center
+
+   In the Xibo-supplied first row, click the down arrow (1) to open the
+   popup menu.
+   Select :guilabel:`Edit` (2) from the menu to open the :guilabel:`Edit
+   Column` dialog box.
+   Click :guilabel:`Add Column` (3) to add each additional dataset column.
+
+Correct the column heading as shown in
+:numref:`Figure %s <edit-column-dialog>`.
+All value columns have the *String* data type and the *Value* column type.
+The list content should be left blank.
+The default column order will suffice.
+
+Xibo administrators may choose which columns to filter and sort.
+Filtering searches for events containing desired values.
+For example, a Xibo administrator can filter events to show only those with a
+name containing "Electronics 101."
+Sorting changes the order of events listed when viewing data.
+For example, a Xibo administrator can sort events by starting time.
+Nova Labs filters and sorts the columns shown in
+:numref:`Table %s <event-table-columns>`.
+
+.. figure:: /images/screenshots/edit-column-dialog.png
+   :alt: Screenshot showing the Edit Column dialog box.
+   :name: edit-column-dialog
+   :align: center
+
+   Edit the heading (1) to "Name" or the heading chosen for the first column.
+   Optionally check the boxes for :guilabel:`Filter?` (2) and/or
+   :guilabel:`Sort?` (3).
+   Click the :guilabel:`Save` button (4) to save the changes.
+
+Click :guilabel:`Add Column` (:numref:`Figure %s <edit-column>`) to add
+each of the remaining columns to the dataset.
+The :guilabel:`Add Column` form is similar to the :guilabel:`Edit Column` form
+shown in :numref:`Figure %s <edit-column-dialog>`.
+When complete, the event dataset columns should appear in a list similar to 
+:numref:`Figure %s <value-columns>`.
+
+.. figure:: /images/screenshots/value-columns.png
+   :alt: Screenshot showing the list of value columns for the event dataset
+   :name: value-columns
+   :align: center
+
+   The event dataset columns after the five value columns have been created.
 
 Formula Columns
 ---------------
@@ -79,6 +169,22 @@ The example values were calculated at 6:06 PM for the example event in
 All columns have the *String* data type and the *Formula* column type.
 The List Content should be left blank.
 Xibo administrators may choose any column headings and order.
+
+Click :guilabel:`Add Column` (:numref:`Figure %s <edit-column>`) to add
+each of the formula columns to the dataset.
+The :guilabel:`Add Column` form is shown in
+:numref:`Figure %s <add-formula-column-dialog>`.
+
+.. figure:: /images/screenshots/add-formula-column-dialog.png
+   :alt: Screenshot showing the Add Column dialog box.
+   :name: add-formula-column-dialog
+   :align: center
+
+   Edit the heading (1) to formula column heading.
+   Select :guilabel:`Formula` (2) from the :guilabel:`Column Type` menu.
+   Enter the formula into the :guilabel:`Formula` text field (3).
+   Click the :guilabel:`Save` button (4) to save the changes.
+
 
 CSS Class Formulas
 ^^^^^^^^^^^^^^^^^^
