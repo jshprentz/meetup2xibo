@@ -10,7 +10,7 @@ The configuration includes:
 
 - Meetup.com :abbr:`API(application programming interface)` credentials
 - Xibo :abbr:`CMS(Content Management System)` API credentials
-- Xibo dataset column names
+- Xibo dataset code and column names
 - Xibo web server certificate
 - Location corrections
 - Date/time thresholds for event insertion, deletion, and cancellation
@@ -71,6 +71,8 @@ Rather than rely on the Meetup.com default, environment variable
 :envvar:`MEETUP_EVENTS_WANTED` specifies the number of upcoming events wanted
 from Meetup.com.
 
+.. _`xibo-cms-api-credentials`:
+
 Xibo CMS API Credentials
 ------------------------
 
@@ -85,19 +87,58 @@ The standard SSL/HTTPS port is number 443.
 
 The Xibo CMS authenticates client applications with OAuth2.
 The client application, meetup2xibo, needs a client ID and a client secret.
+When a Xibo administrator adds or edits an application, Xibo reveals the client
+ID and client secret as described in :ref:`authorize-the-application` and shown
+in :numref:`Figure %s <edit-application-general>`.
 The environment variables :envvar:`XIBO_CLIENT_ID` and
-:envvar:`XIBO_CLIENT_SECRET` provide the necessary credentials.
+:envvar:`XIBO_CLIENT_SECRET` provide the necessary credentials to meetup2xibo.
 
-Xibo Dataset Column Names
--------------------------
+.. _`xibo-dataset-config`:
 
-environment variable :envvar:`EVENT_DATASET_CODE`
-environment variable :envvar:`MEETUP_ID_COLUMN_NAME`
-environment variable :envvar:`NAME_COLUMN_NAME`
-environment variable :envvar:`LOCATION_COLUMN_NAME`
-environment variable :envvar:`START_TIME_COLUMN_NAME`
-environment variable :envvar:`END_TIME_COLUMN_NAME`
-environment variable :envvar:`XIBO_ID_COLUMN_NAME`
+Xibo Dataset Code and Column Names
+----------------------------------
+
+The Xibo administrator creates an events dataset through the Xibo CMS web
+interface as described in :ref:`create-an-events-dataset`.
+The administrator chooses a code to identify the dataset for Xibo
+API clients as shown in :numref:`Figure %s <add-dataset-dialog>`.
+Configure the code in environment variable :envvar:`EVENT_DATASET_CODE`.
+
+The Xibo administrator creates dataset columns and assigns column headings as
+described in :ref:`dataset_columns`.
+Those column headings must be configured in environment variables for
+meetup2xibo.
+:numref:`Table %s <column_env_vars>` lists the environment variables and their
+corresponding column headings at Nova Labs.
+Use the column headings chosen in :ref:`dataset_columns`.
+Environment variable :envvar:`XIBO_ID_COLUMN_NAME` must have the value *id,*
+the heading assigned internally by the Xibo CMS.
+
+.. tabularcolumns:: |L|L|
+
+.. _column_env_vars:
+
+.. table:: Environment Variables for Dataset Columns
+   :align: center
+
+   +----------------------------------+----------------+
+   | Environment Variable             | Column Heading |
+   +==================================+================+
+   | :envvar:`MEETUP_ID_COLUMN_NAME`  | Meetup ID      |
+   +----------------------------------+----------------+
+   | :envvar:`NAME_COLUMN_NAME`       | Name           |
+   +----------------------------------+----------------+
+   | :envvar:`LOCATION_COLUMN_NAME`   | Location       |
+   +----------------------------------+----------------+
+   | :envvar:`START_TIME_COLUMN_NAME` | ISO Start Time |
+   +----------------------------------+----------------+
+   | :envvar:`END_TIME_COLUMN_NAME`   | ISO End Time   |
+   +----------------------------------+----------------+
+   | :envvar:`XIBO_ID_COLUMN_NAME`    | id             |
+   +----------------------------------+----------------+
+
+
+
 environment variable :envvar:`TIMEZONE`
 
 Location Corrections
