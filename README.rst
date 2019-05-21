@@ -58,6 +58,7 @@ Features
 * Allows per-event overrides of location mapping rules.
 * Compute event end times from Meetup.com start times and durations.
 * Format event start and end times for Xibo.
+* Removes accounting codes from event names.
 * Logs changes to Xibo events.
 * Logs location mappings.
 
