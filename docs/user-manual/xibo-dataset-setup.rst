@@ -7,6 +7,8 @@ Meetup2Xibo manages five data value columns in that dataset.
 Xibo administrators may add additional formula columns to aid filtering,
 sorting and formating data for layouts.
 
+.. _`create-an-events-dataset`:
+
 Create an Events Dataset
 ------------------------
 
@@ -42,19 +44,21 @@ The meetup2xibo configuration must contain this code as described in
    Type the dataset name (1), description (2), and code (3).
    Click :guilabel:`Save` (4) to add the new dataset.
 
+.. _`dataset_columns`:
+
 Dataset Columns
 ---------------
 
 Meetup2xibo expects the dataset to contain five string value columns.
-:numref:`Table %s <event-table-columns>` shows the column headings used at Nova
+:numref:`Table %s <event-dataset-columns>` shows the column headings used at Nova
 Labs.
 Xibo administrators may choose any column headings and order.
 
 .. tabularcolumns:: |L|L|C|C|
 
-.. _event-table-columns:
+.. _event-dataset-columns:
 
-.. table:: Event Table Value Columns
+.. table:: Events Dataset Value Columns
    :align: center
 
    +----------------+---------------------+---------------+
@@ -74,11 +78,11 @@ Xibo administrators may choose any column headings and order.
    +----------------+---------------------+--------+------+
 
 Xibo automatically adds one column to new datasets.
-Select :guilabel:`Edit` from the event dataset's popup menu as shown in
+Select :guilabel:`Edit` from the events dataset's popup menu as shown in
 :numref:`Figure %s <edit-column>`.
 
 .. figure:: /images/screenshots/edit-column.png
-   :alt: Screenshot showing the event dataset column list with the popup menu
+   :alt: Screenshot showing the events dataset column list with the popup menu
       open
    :name: edit-column
    :align: center
@@ -102,7 +106,7 @@ name containing "Electronics 101."
 Sorting changes the order of events listed when viewing data.
 For example, a Xibo administrator can sort events by starting time.
 Nova Labs filters and sorts the columns shown in
-:numref:`Table %s <event-table-columns>`.
+:numref:`Table %s <event-dataset-columns>`.
 
 .. figure:: /images/screenshots/edit-column-dialog.png
    :alt: Screenshot showing the Edit Column dialog box.
@@ -118,29 +122,29 @@ Click :guilabel:`Add Column` (:numref:`Figure %s <edit-column>`) to add
 each of the remaining columns to the dataset.
 The :guilabel:`Add Column` form is similar to the :guilabel:`Edit Column` form
 shown in :numref:`Figure %s <edit-column-dialog>`.
-When complete, the event dataset columns should appear in a list similar to 
+When complete, the events dataset columns should appear in a list similar to 
 :numref:`Figure %s <value-columns>`.
 
 .. figure:: /images/screenshots/value-columns.png
-   :alt: Screenshot showing the list of value columns for the event dataset
+   :alt: Screenshot showing the list of value columns for the events dataset
    :name: value-columns
    :align: center
 
-   The event dataset columns after the five value columns have been created.
+   The events dataset columns after the five value columns have been created.
 
 Formula Columns
 ---------------
 
 Xibo administrators may add formula columns for filtering, data formatting, or
 CSS styling.
-:numref:`Table %s <event-table-formulas>` shows examples of formula columns
+:numref:`Table %s <event-dataset-formulas>` shows examples of formula columns
 used at Nova Labs.
 The example values were calculated at 6:06 PM for the example event in 
-:numref:`Table %s <event-table-columns>`.
+:numref:`Table %s <event-dataset-columns>`.
 
-.. _event-table-formulas:
+.. _event-dataset-formulas:
 
-.. table:: Event Table Formulas
+.. table:: Events Dataset Formulas
    :widths: auto
    :align: center
 
