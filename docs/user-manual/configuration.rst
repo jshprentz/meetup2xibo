@@ -47,7 +47,7 @@ Environment variable :envvar:`MEETUP_API_KEY` provides the API key.
 Meetup2xibo requests events for a specific Meetup.com group.
 The Meetup.com API use a computer-friendly group :abbr:`URL(Uniform Resource
 Locator)` name instead of the actual group name.
-Locate the group URL name in a web browser address line as shown in
+Locate the group URL name in a web browser address line, as shown in
 :numref:`Figure %s <meetup-url-name>`.
 Environment variable :envvar:`MEETUP_GROUP_URL_NAME` provides the URL group
 name.
@@ -101,7 +101,7 @@ Xibo Dataset Code and Column Names
 The Xibo administrator creates an events dataset through the Xibo CMS web
 interface as described in :ref:`create-an-events-dataset`.
 The administrator chooses a code to identify the dataset for Xibo
-API clients as shown in :numref:`Figure %s <add-dataset-dialog>`.
+API clients, as shown in :numref:`Figure %s <add-dataset-dialog>`.
 Configure the code in environment variable :envvar:`EVENT_DATASET_CODE`.
 
 The Xibo administrator creates dataset columns and assigns column headings as
@@ -137,16 +137,46 @@ the heading assigned internally by the Xibo CMS.
    | :envvar:`XIBO_ID_COLUMN_NAME`    | id             |
    +----------------------------------+----------------+
 
-
-
-environment variable :envvar:`TIMEZONE`
-
 Location Corrections
 --------------------
+
+Timezone
+--------
+
+Meetup2xibo converts event start and end times from :abbr:`UTC (Coordinated
+Universal Time)`, the internal format of Meetup.com, to the timezone configured
+in the Xibo CMS.
+:numref:`Figure %s <regional-settings>` shows how to review or change the Xibo
+timezone.
+
+.. figure:: /images/screenshots/regional-settings.png
+   :alt: Screenshot of the Xibo regional settings 
+   :name: regional-settings
+   :align: center
+
+   Click :guilabel:`Settings` (1) in the Xibo CMS menu to display some of
+   Xibo's settings.
+   Click the :guilabel:`Regional` tab (2) to display settins that vary by
+   region.
+   Review or change the timezone (3) using the dropdown menu.
+   Click the :guilabel:`Save` button (4) to save changes, if necessary.
+
+The timezone specified by environment variable :envvar:`TIMEZONE` must
+correspond to the setting in Xibo, but the format is slightly different [*]_.
+Wikipedia provides a convenient `List of tz database time zones`_.
+For example, Nova Labs, near Washington, DC, set the Xibo timezone to
+"(GMT-04:00) America, New York" in August 2017, a daylight savings time month..
+The corresponding tz database name is "America/New_York".
+
+.. [*] Meetup2xibo follows the `naming rules for the tz database
+   <tz-database-naming-rules>`_.
 
 Date/time Thresholds
 --------------------
 
 
+
 .. _`Getting an API Key`: https://secure.meetup.com/meetup_api/key/
+.. _`List of tz database time zones`: https://en.wikipedia.org/wiki/List_of_tz_database_time_zones
+.. _`tz-database-naming-rules`: https://en.wikipedia.org/wiki/Tz_database#Names_of_time_zones
 .. _`The Twelve-Factor App`: https://12factor.net/config
