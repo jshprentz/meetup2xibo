@@ -13,7 +13,7 @@ Create an Events Dataset
 ------------------------
 
 Meetup2xibo saves, updates, and deletes event data stored in a Xibo dataset.
-Click the :guilabel:`Add DataSet` button above the datasets list as shown in 
+Click the :guilabel:`Add DataSet` button above the datasets list, as shown in
 :numref:`Figure %s <add-dataset>`.
 
 .. figure:: /images/screenshots/add-user.png
@@ -26,7 +26,7 @@ Click the :guilabel:`Add DataSet` button above the datasets list as shown in
    Click the :guilabel:`Add Dataset` button (2) to open the :guilabel:`Add
    Dataset` dialog box.
 
-Enter the new dataset's name, description, and code as shown in
+Enter the new dataset's name, description, and code, as shown in
 :numref:`Figure %s <add-dataset-dialog>`.
 Choose any meaningful dataset name.
 The description is optional, but helpful.
@@ -78,7 +78,7 @@ Xibo administrators may choose any column headings and order.
    +----------------+---------------------+--------+------+
 
 Xibo automatically adds one column to new datasets.
-Select :guilabel:`Edit` from the events dataset's popup menu as shown in
+Select :guilabel:`Edit` from the events dataset's popup menu, as shown in
 :numref:`Figure %s <edit-column>`.
 
 .. figure:: /images/screenshots/edit-column.png
@@ -93,7 +93,7 @@ Select :guilabel:`Edit` from the events dataset's popup menu as shown in
    Column` dialog box.
    Click :guilabel:`Add Column` (3) to add each additional dataset column.
 
-Correct the column heading as shown in
+Correct the column heading, as shown in
 :numref:`Figure %s <edit-column-dialog>`.
 All value columns have the *String* data type and the *Value* column type.
 The list content should be left blank.

@@ -20,7 +20,7 @@ Add a User for Meetup2xibo
 
 A distinct meetup2xibo client user will provide secure, limited access to the
 Xibo API.
-Click the :guilabel:`Add User` button above the users list as shown in 
+Click the :guilabel:`Add User` button above the users list, as shown in 
 :numref:`Figure %s <add-user>`.
 
 .. figure:: /images/screenshots/add-user.png
@@ -32,7 +32,7 @@ Click the :guilabel:`Add User` button above the users list as shown in
    Click the :guilabel:`Add User` button (2) to open the :guilabel:`Add User`
    dialog box.
 
-Enter the new user's user name and password as shown in
+Enter the new user's user name and password, as shown in
 :numref:`Figure %s <add-user-dialog>`.
 Choose any meaningful user name.
 The password will never be used, so choose a long, random sequence of
@@ -64,7 +64,7 @@ shown in :numref:`Figure %s <user-page-security>`.
    Select :guilabel:`Page Security` (2) from the menu to open the access
    control list dialog box.
 
-Update the :abbr:`ACL (Access Control List)` for the meetup2xibo user as shown
+Update the :abbr:`ACL (Access Control List)` for the meetup2xibo user, as shown
 in :numref:`Figure %s <acl-for-event-editor-client>`
 
 .. figure:: /images/screenshots/acl-for-event-editor-client.png
@@ -80,7 +80,7 @@ Grant Dataset Permissions
 -------------------------
 
 The meetup2xibo user requires permission to view and edit event data.
-Select :guilabel:`Permissions` from the event dataset's popup menu as shown in
+Select :guilabel:`Permissions` from the event dataset's popup menu, as shown in
 :numref:`Figure %s <dataset-permissions>`.
 
 .. figure:: /images/screenshots/dataset-permissions.png
@@ -95,7 +95,7 @@ Select :guilabel:`Permissions` from the event dataset's popup menu as shown in
    Select :guilabel:`Permissions` (3) from the menu to open the permissions
    dialog box.
 
-Authorize the meetup2xibo user to view and edit the dataset as shown in
+Authorize the meetup2xibo user to view and edit the dataset, as shown in
 :numref:`Figure %s <dataset-permissions-dialog>`.
 
 .. figure:: /images/screenshots/dataset-permissions-dialog.png
@@ -124,7 +124,7 @@ shown in :numref:`Figure %s <add-application>`.
    Click the :guilabel:`Add Application` button (2) to open the :guilabel:`Add
    User` dialog box.
 
-Enter the new application's name as shown in
+Enter the new application's name, as shown in
 :numref:`Figure %s <add-application-dialog>`.
 Choose any meaningful application name.
 
@@ -159,7 +159,7 @@ shown in :numref:`Figure %s <edit-application>`.
 The :ref:`Xibo CMS API credentials configuration <xibo-cms-api-credentials>`
 requires the client ID and secret shown in the :guilabel:`Edit Application`
 dialog box.
-Authorize the client credentials as shown in
+Authorize the client credentials, as shown in
 :numref:`Figure %s <edit-application-general>`.
 
 .. figure:: /images/screenshots/edit-application-general.png
@@ -174,7 +174,7 @@ Authorize the client credentials as shown in
    Do not save yet.
 
 The meetup2xibo application require access to the entire Xibo scope.
-Grant access and associate the application with the meetup2xibo user as shown
+Grant access and associate the application with the meetup2xibo user, as shown
 in :numref:`Figure %s <edit-application-permissions>`.
 
 .. figure:: /images/screenshots/edit-application-permissions.png
