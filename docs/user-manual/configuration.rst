@@ -140,6 +140,195 @@ the heading assigned internally by the Xibo CMS.
 Location Corrections
 --------------------
 
+Meetup.com provides many details about meeting venues: name, street address,
+city, state, country, latitude, longitude, and more.
+Meetup.com also provides a "how to find us" data field.
+Most Nova Labs events take place inside Nova Labs, so the agenda displays only
+the name of the classroom, conference room, or workshop.
+The Meetup.com venue name and how-to-find-us fields usually contain the room
+assignment(s), among other information.
+
+Meetup2xibo scans the venue name and "how to find us" fields, searching for
+known rooms and workshops.
+The room assignments are collected in the order found.
+Meetup2xibo corrects room spelling variations and renders the list as an
+English phrase such as "Room 1, Room 2, and Room 3."
+The resulting phrase is stored in the Xibo events dataset location field.
+
+For example, a woodworking class has the venue name "\*Nova Labs (Conference Rm
+2)" and the how-to-find-us "[woodshop]".
+Meetup.com sets the location in Xibo to "Conference Room 2 and Woodshop".
+
+Location Phrases
+~~~~~~~~~~~~~~~~
+
+When scanning the venue name and "how to find us" fields, Meetup2xibo searches
+for phrases provided in a curated list of phrases and preferred location names.
+For example, :numref:`Table %s <example_phrases_and_locations>` shows the
+phrases that match the preferred location name "Conference Room 1."
+
+.. tabularcolumns:: |L|L|
+
+.. _example_phrases_and_locations:
+
+.. table:: Example Phrases and Locations
+   :align: center
+
+   +-------------------+-------------------+
+   | Phrase            | Location          |
+   +===================+===================+
+   | Conf Rm 1         | Conference Room 1 |
+   +-------------------+-------------------+
+   | Conference rm 1   | Conference Room 1 |
+   +-------------------+-------------------+
+   | Conference room 1 | Conference Room 1 |
+   +-------------------+-------------------+
+
+The list of phrases and corresponding locations is configured in environment
+variable :envvar:`LOCATION_PHRASES` as a
+:abbr:`JSON (JavaScript Object Notation)` list of objects, as shown in
+:numref:`Listing %s <location-phrases-config-example>`.
+
+.. code-block:: bash
+   :caption: Location Phrases JSON Configuration Example
+   :name: location-phrases-config-example
+
+   export LOCATION_PHRASES='[
+       {"phrase": "Conf Rm 1",         "location": "Conference Room 1"},
+       {"phrase": "Conference rm 1",   "location": "Conference Room 1"},
+       {"phrase": "Conference room 1", "location": "Conference Room 1"},
+   ]'
+
+Meetup2xibo ignores spacing and upper/lower case distinctions when searching
+for phrases.
+There is no need, for example, to list both "Conf Rm 1" and "Conf rm 1".
+
+Meetup2xibo matches the longest possible phrases first, regardless of their
+order in the configuration file.
+For example, phrase "Room 123" would be matched ahead of phrases "Room 1" and
+"Room 12".
+
+If none of the phrases configured in environment variable
+:envvar:`LOCATION_PHRASES` match, Meetup2Xibo tries matching the phrases in
+environment variable :envvar:`MORE_LOCATION_PHRASES`.
+The format is the same as shown in
+:numref:`Listing %s <location-phrases-config-example>`.
+At Nova Labs, :envvar:`LOCATION_PHRASES` lists specific rooms within Nova Labs.
+:envvar:`MORE_LOCATION_PHRASES` lists more general event locations including
+Nova Labs; nearby event locations, such as George Mason University; and
+:abbr:`TBD (To Be Determined)`.
+
+Default Location
+~~~~~~~~~~~~~~~~
+
+If none of the location phrases match, Meetup2xibo uses the location specified
+by environment variable :envvar:`DEFAULT_LOCATION`.
+Meetup2xibo logs a warning message whenever the default location is needed.
+
+Special Locations
+~~~~~~~~~~~~~~~~~
+
+Some Meetup.com events have missing, uncommon, or incorrect locations.
+Environment variable :envvar:`SPECIAL_LOCATIONS` contains a list of JSON
+objects that control the matching process for specific events.
+:numref:`Listing %s <special-locations-config-example>` shows examples of
+special locations.
+
+.. code-block:: bash
+   :caption: Special Locations JSON Configuration Example
+   :name: special-locations-config-example
+   :linenos:
+
+   export SPECIAL_LOCATIONS='
+   [
+       {
+           "meetup_id": "259083135",
+           "location": "",
+           "override": false,
+           "comment": "Electronics 101: no room yet"
+       },
+       {
+           "meetup_id": "gqpyzfbhb",
+           "location": "Classroom A",
+           "override": false,
+           "comment": "Location in event name"
+       },
+       {
+           "meetup_id": "269568127",
+           "location": "Baltimore Museum of Industry",
+           "override": false,
+           "comment": "Field trip"
+       },
+       {
+           "meetup_id": "259565142",
+           "location": "Parking Lot and Conference Room 2",
+           "override": true,
+           "comment": "Picnic"
+       }
+   ]'
+
+Within each special location object, the :mailheader:`meetup_id` contains the
+event ID from Meetup.com.
+The :mailheader:`location` contains the event location for Xibo.
+The :mailheader:`location` may be an empty string if the meetup2xibo default
+location is acceptable.
+The :mailheader:`override` flag must have a ``true`` or ``false`` value as
+explained below.
+The :mailheader:`comment` helps administrators remember why the special
+location was created; it may be an empty string.
+Missing location warnings are suppressed for events with special location
+objects.
+
+After the location matching process, meetup2xibo applies these rules to the
+computed location:
+
+-   For events with no special location object, prefer any computed location
+    over the default.
+
+-   For events with a special location object and no computed location, prefer
+    any special location over the default.
+
+-   For events with both a special location object and a computed location, if
+    the :mailheader:`override` flag is ``true``, prefer any special location
+    over the computed location over the default. Otherwise, if the
+    :mailheader:`override` flag is ``false``, prefer the computed location over
+    any special location over the default.
+
+The following examples demonstrate the use of special locations:
+
+No Meetup.com venue name or how-to-find-us
+   Meetup2xibo will use the default location and log a warning.
+   When the administrator adds the special location object shown in
+   :numref:`Listing %s <special-locations-config-example>` lines 3--8,
+   meetup2xibo will continue to use the default location without logging a
+   warning.
+   If the event host later adds a venue name or how-to-find-us in Meetup.com,
+   meetup2xibo will use known locations found there instead of the default
+   location.
+
+Known location only in Meetup.com event name or description
+   Meetup2xibo will use the default location and log a warning.
+   When the administrator adds the special location object shown in
+   :numref:`Listing %s <special-locations-config-example>` lines 9--14,
+   meetup2xibo will use the special location instead of the default location.
+   If the event host later adds a venue name or how-to-find-us in Meetup.com,
+   meetup2xibo will use known locations found there instead of the special
+   location or the default location.
+
+Unknown locations from Meetup.com
+   Meetup2xibo will use the default location and log a warning.
+   When the administrator adds the special location object shown in
+   :numref:`Listing %s <special-locations-config-example>` lines 15--20,
+   meetup2xibo will use the special location instead of the default location.
+
+Known and unknown locations from Meetup.com
+   Meetup2xibo will use the known locations found in the venue name or
+   how-to-find-us, "Conference Room 2" in this example.
+   When the administrator adds the special location object shown in
+   :numref:`Listing %s <special-locations-config-example>` lines 21--26,
+   meetup2xibo will use the special location, overriding the known location(s).
+
+
 Timezone
 --------
 
@@ -174,7 +363,30 @@ The corresponding tz database name is "America/New_York".
 Date/time Thresholds
 --------------------
 
+The Meetup.com API sometimes fails to list current and very recent events while
+Xibo still should display them.
+Events in the Xibo dataset and missing from Meetup.com should not be deleted
+unless they start some number of hours in the future, configured by environment
+variable :envvar:`DELETE_BEFORE_START_HOURS`.
 
+Some Xibo displays, such as daily agendas and weekly calendars, should continue
+to display events after their conclusion.
+Past events should not be delegted from the Xibo dataset until some number of
+hours after they end, as configured by environment variable
+:envvar:`DELETE_AFTER_END_HOURS`.
+
+The Meetup.com API lists some fixed number (hundreds) of future events.
+As new near-term events are added to the Meetup.com calendar, some previously
+reported far future events are bumped from the listing.
+To avoid flapping, meetup2xibo does not delete events from the Xibo dataset
+more than some number of days in the future, as configured by environment
+variable :envvar:`DELETE_UNTIL_FUTURE_DAYS`.
+
+When Meetup.com events are cancelled far in the future, guests have ample time
+to receive notifications and alter thier plans.
+Meetup2xibo ignores cancelled events after some number of days in the future,
+configured by environment variable :envvar:`IGNORE_CANCELLED_AFTER_DAYS`,
+treating them as deleted.
 
 .. _`Getting an API Key`: https://secure.meetup.com/meetup_api/key/
 .. _`List of tz database time zones`: https://en.wikipedia.org/wiki/List_of_tz_database_time_zones
