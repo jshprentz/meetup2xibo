@@ -351,14 +351,13 @@ timezone.
    Click the :guilabel:`Save` button (4) to save changes, if necessary.
 
 The timezone specified by environment variable :envvar:`TIMEZONE` must
-correspond to the setting in Xibo, but the format is slightly different [*]_.
+correspond to the setting in Xibo, but the format is slightly different.
+Meetup2xibo follows the `naming rules for the tz database
+<tz-database-naming-rules>`_.
 Wikipedia provides a convenient `List of tz database time zones`_.
 For example, Nova Labs, near Washington, DC, set the Xibo timezone to
 "(GMT-04:00) America, New York" in August 2017, a daylight savings time month..
 The corresponding tz database name is "America/New_York".
-
-.. [*] Meetup2xibo follows the `naming rules for the tz database
-   <tz-database-naming-rules>`_.
 
 Date/time Thresholds
 --------------------
