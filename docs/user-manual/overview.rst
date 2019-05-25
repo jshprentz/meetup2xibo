@@ -20,6 +20,22 @@ data.
 :numref:`Figure %s <meetup2xibo-event-data-flow>` shows event data flow from
 Meetup.com to Xibo layouts.
 
+Preparation
+-----------
+
+Meetup2xibo run on any computer running Linux or a similar operating system.
+An administrator will need some basic computer skills to install and configure
+meetup2xibo.
+See :doc:`prerequisites` for a description of the computing and skills
+requirements.
+
+Meetup2xibo stores event data in a Xibo dataset.
+See :doc:`xibo-dataset-setup` for instructions about creating the dataset.
+
+Meetup2xibo accesses the Xibo API as a distinct authorized user.
+See :doc:`xibo-user-setup` for instructions about adding and authorizing this
+user.
+
 Installation
 ------------
 
@@ -40,8 +56,9 @@ The configuration includes:
 
 The :ref:`meetup2xibo man page <meetup2xibo-environment>` defines the
 configuration environment variables.
-An annotated example configuration script provides a starting point for
-customization.
+:doc:`configuration` explains the environment variables in more detail.
+An annotated example configuration script, :github-raw:`/data/meetup2xibo.env`,
+provides a starting point for customization.
 
 Logging
 -------
