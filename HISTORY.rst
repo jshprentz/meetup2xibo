@@ -20,6 +20,7 @@ Recent History
 
 Next Release
 ------------------
+* Expand documentation.
 * Test with Python 3.7 also.
 
 2.4.3 (2019-05-08)
