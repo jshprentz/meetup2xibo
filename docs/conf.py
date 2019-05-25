@@ -82,7 +82,8 @@ todo_include_todos = False
 numfig = True
 numfig_format = {
     'figure': 'Figure %s.',
-    'table': 'Table %s.'
+    'table': 'Table %s.',
+    'code-block': 'Listing %s.'
     }
 
 # External Links
