@@ -2,21 +2,29 @@
 History
 =======
 
-~~~~~~
-Future
-~~~~~~
+~~~~~~~~~~~~~~
+Future History
+~~~~~~~~~~~~~~
 
 2.5
 ---
 
 * First release on PyPI.
+* Support Meetup.com OAuth2.
+* Detect and report room conflicts.
+* Improve reporting of Meetup.com server errors.
 
-~~~~~~
-Recent
-~~~~~~
+~~~~~~~~~~~~~~
+Recent History
+~~~~~~~~~~~~~~
 
 .. Next Release
 .. ------------------
+
+2.4.4 (2019-05-25)
+------------------
+* Expand documentation.
+* Test with Python 3.7 also.
 
 2.4.3 (2019-05-08)
 ------------------
@@ -86,9 +94,9 @@ Recent
 * Reformat to conform to PEP-8.
 * Test with multiple Python versions (3.5 and 3.6).
 
-~~~~~~~
-Ancient
-~~~~~~~
+~~~~~~~~~~~~~~~
+Ancient History
+~~~~~~~~~~~~~~~
 
 1.0.1 (2017-12-12)
 ------------------

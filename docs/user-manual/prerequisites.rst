@@ -8,7 +8,7 @@ Computing Environment
 - Linux or maybe Windows
 - Internet
 - Network to Xibo CMS via HTTPS
-- Python 3.5 or 3.6
+- Python 3.5, 3.6, or 3.7
 - Python virtual environment recommended
 
 Meetup2xibo was developed, tested, and run on computers with Ubuntu, a Linux
@@ -28,7 +28,7 @@ The Xibo CMS must be configured for secure HTTPS access as described by
 
 Meetup2xibo was coded with the Python programming language.
 Python must be installed to run meetup2xibo.
-Meetup2xibo has been tested successfully with Python 3.5 and 3.6.
+Meetup2xibo has been tested successfully with Python 3.5, 3.6, and 3.7
 
 Meetup2xibo is distributed as a Python package.
 It has dependencies on several other Python packages.

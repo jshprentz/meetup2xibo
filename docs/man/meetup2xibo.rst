@@ -12,13 +12,10 @@ Description
 :program:`meetup2xibo` downloads events from Meetup.com and updates the
 corresponding events stored in a Xibo CMS dateset.
 
-As recommended in `The Twelve-Factor App`_,
 :program:`meetup2xibo` reads its configuration from
 :ref:`environment variables <meetup2xibo-environment>`.
 The :ref:`command line options <meetup2xibo-options>` control only
 the message levels to log and where to send the logs.
-
-.. _The Twelve-Factor App: https://12factor.net/config
 
 .. _meetup2xibo-options:
 

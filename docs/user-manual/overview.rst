@@ -5,6 +5,7 @@ Overview
 .. figure:: /images/diagrams/meetup2xibo-event-data-flow.png
    :alt: Diagram showing the event data flow from Meetup.com to Xibo
    :name: meetup2xibo-event-data-flow
+   :align: center
 
    Meetup2xibo retrieves event data from Meetup.com, transforms the data, and
    updates the event data stored in a Xibo dataset.
