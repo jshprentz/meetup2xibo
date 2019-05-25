@@ -18,7 +18,10 @@ Future History
 Recent History
 ~~~~~~~~~~~~~~
 
-Next Release
+.. Next Release
+.. ------------------
+
+2.4.4 (2019-05-25)
 ------------------
 * Expand documentation.
 * Test with Python 3.7 also.
