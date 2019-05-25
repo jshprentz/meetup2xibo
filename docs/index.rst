@@ -27,6 +27,7 @@ Meetup to Xibo
    user-manual/installation
    user-manual/configuration
    user-manual/usage
+   user-manual/cron-jobs
 
 .. toctree::
    :maxdepth: 1
