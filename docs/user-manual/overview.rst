@@ -79,5 +79,5 @@ Cron runs meetup2xibo every 10 minutes so the Xibo layouts show the latest
 event changes, particularly last minute room changes.
 Cron runs summarize-m2x-logs early every morning to email a summary of the
 previous days logs.
-
+See :doc:`cron-jobs` for instructions about setting up the cron jobs.
 
