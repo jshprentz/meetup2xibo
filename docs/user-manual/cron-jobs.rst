@@ -31,7 +31,7 @@ programs were installed:
 
 .. code-block:: console
 
-   (meetup2xibo) joels@signdriver:~$ which meetup2xibo
+   $ which meetup2xibo
    /home/joels/.virtualenvs/meetup2xibo/bin/meetup2xibo
 
 Add this line to the crontab to extend the system path with the path to the
