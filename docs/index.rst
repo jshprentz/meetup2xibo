@@ -26,7 +26,6 @@ Meetup to Xibo
    user-manual/xibo-user-setup
    user-manual/installation
    user-manual/configuration
-   user-manual/usage
    user-manual/cron-jobs
 
 .. toctree::
