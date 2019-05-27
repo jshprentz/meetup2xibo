@@ -18,7 +18,10 @@ Future History
 Recent History
 ~~~~~~~~~~~~~~
 
-Next Release
+.. Next Release
+.. ------------------
+
+2.4.5 (2019-05-26)
 ------------------
 * Complete user manual.
 
