@@ -11,10 +11,6 @@ Meetup to Xibo
 
    readme
    background
-   faq
-   authors
-   contributing
-   history
 
 .. toctree::
    :maxdepth: 2
@@ -35,6 +31,15 @@ Meetup to Xibo
    :glob:
 
    man/*
+
+.. toctree::
+   :maxdepth: 2
+   :caption: Project
+
+   faq
+   authors
+   contributing
+   history
 
 Indices and tables
 ------------------
