@@ -137,6 +137,27 @@ the heading assigned internally by the Xibo CMS.
    | :envvar:`XIBO_ID_COLUMN_NAME`    | id             |
    +----------------------------------+----------------+
 
+Xibo Web Server Certificate
+---------------------------
+
+An :abbr:`SSL (Secure Sockets Layer)` certificate secures Xibo's web servers.
+A certificate may be purchased from a certificate authority, a web hosting
+company, or another provider.
+`Let's Encrypt`_ provides free certificates through its automated web site.
+
+Meetup2xibo's implementation language, Python, recognizes SSL certificates
+issued by major certificate authorities, including Let's Encrypt..
+Meetup2xibo needs no configuration to support these SSL certificates.
+
+Some Xibo installations must rely on self-signed SSL certificates to provide
+secure access.
+Digital Ocean has a helpful guide for setting this up:
+`How To Create a Self-Signed SSL Certificate for Apache in Ubuntu 16.04`_.
+
+When a self-signed certificate protects Xibo's web server, meetup2xibo needs
+the path to the certificate's public key configured by environment variable
+:envvar:`SITE_CA_PATH`.
+
 Location Corrections
 --------------------
 
@@ -351,14 +372,13 @@ timezone.
    Click the :guilabel:`Save` button (4) to save changes, if necessary.
 
 The timezone specified by environment variable :envvar:`TIMEZONE` must
-correspond to the setting in Xibo, but the format is slightly different [*]_.
+correspond to the setting in Xibo, but the format is slightly different.
+Meetup2xibo follows the `naming rules for the tz database
+<tz-database-naming-rules>`_.
 Wikipedia provides a convenient `List of tz database time zones`_.
 For example, Nova Labs, near Washington, DC, set the Xibo timezone to
 "(GMT-04:00) America, New York" in August 2017, a daylight savings time month..
 The corresponding tz database name is "America/New_York".
-
-.. [*] Meetup2xibo follows the `naming rules for the tz database
-   <tz-database-naming-rules>`_.
 
 Date/time Thresholds
 --------------------
@@ -389,6 +409,8 @@ configured by environment variable :envvar:`IGNORE_CANCELLED_AFTER_DAYS`,
 treating them as deleted.
 
 .. _`Getting an API Key`: https://secure.meetup.com/meetup_api/key/
+.. _`How To Create a Self-Signed SSL Certificate for Apache in Ubuntu 16.04`: https://www.digitalocean.com/community/tutorials/how-to-create-a-self-signed-ssl-certificate-for-apache-in-ubuntu-16-04
+.. _`Let's Encrypt`: https://letsencrypt.org/
 .. _`List of tz database time zones`: https://en.wikipedia.org/wiki/List_of_tz_database_time_zones
 .. _`tz-database-naming-rules`: https://en.wikipedia.org/wiki/Tz_database#Names_of_time_zones
 .. _`The Twelve-Factor App`: https://12factor.net/config
