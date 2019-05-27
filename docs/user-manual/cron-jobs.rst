@@ -65,6 +65,8 @@ night before midnight::
 
    48 23 * * * cd ~/meetup2xibo && . ./run.config && meetup2xibo -w -m
 
+.. _`summarizer-cron-job`:
+
 Summarize-m2x-logs Cron Job
 ---------------------------
 
