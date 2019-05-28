@@ -17,7 +17,10 @@ Future History
 Recent History
 ~~~~~~~~~~~~~~
 
-Next Release
+.. Next Release
+.. ------------------
+
+2.4.6 (2019-05-27)
 ------------------
 * First release on PyPI.
 * Document location conversion spreadsheet
