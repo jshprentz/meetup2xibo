@@ -8,9 +8,6 @@ from setuptools import setup, find_packages
 with open('README.rst') as readme_file:
     readme = readme_file.read()
 
-with open('HISTORY.rst') as history_file:
-    history = history_file.read()
-
 requirements = [
         'requests', 'requests-toolbelt', 'oauthlib', 'jinja2',
         'requests_oauthlib', 'pyahocorasick', 'parsley', 'pytz']
@@ -43,7 +40,7 @@ setup(
     },
     install_requires=requirements,
     license="MIT license",
-    long_description=readme + '\n\n' + history,
+    long_description=readme,
     include_package_data=True,
     keywords='meetup2xibo',
     name='meetup2xibo',
