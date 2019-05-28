@@ -17,8 +17,9 @@ Future History
 Recent History
 ~~~~~~~~~~~~~~
 
-.. Next Release
-.. ------------------
+Next Release
+------------------
+* Add missing modules to distribution manifest.
 
 2.4.6 (2019-05-27)
 ------------------
