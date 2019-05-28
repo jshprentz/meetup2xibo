@@ -20,6 +20,10 @@ Recent History
 .. Next Release
 .. ------------------
 
+2.4.7 (2019-05-27)
+------------------
+* Add missing modules to distribution manifest.
+
 2.4.6 (2019-05-27)
 ------------------
 * First release on PyPI.
