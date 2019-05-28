@@ -22,7 +22,7 @@ setup(
     author="Joel Shprentz",
     author_email='jshprentz@his.com',
     classifiers=[
-        'Development Status :: 4 - Beta',
+        'Development Status :: 5 - Production/Stable',
         'Intended Audience :: System Administrators',
         'License :: OSI Approved :: MIT License',
         'Natural Language :: English',
