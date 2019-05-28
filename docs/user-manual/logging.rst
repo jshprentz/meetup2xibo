@@ -74,4 +74,23 @@ HTML-formatted results via email.
 
    The daily summary email message count meetup2xibo runs and list Xibo event changes.
 
+An email message attachment contains a CSV formatted file listing the
+conversions from Meetup.com venue name and how-to-find-us fields to Xibo
+locations.
+An administrator can review the CSV file in Microsoft Excel or another
+spreadsheet program.
+The administrator can resolve location conversion anomalies by editing the
+Meetup.com event or by adding a new location phrase or special location to the
+meetup2xibo configuration.
+:numref:`Figure %s <location-spreadsheet>` shows an example of the location conversion
+spreadsheet.
+
+.. figure:: /images/screenshots/location-spreadsheet.png
+   :alt: Screenshot of location conversions in spreadsheet format with columns
+         for location, venue, find us, example meetup, and example URL
+   :name: location-spreadsheet
+   :align: center
+
+   The first several lines of location conversions list in CSV format and
+   viewed as a spreadsheet in Microsoft Excel.
 

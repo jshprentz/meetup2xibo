@@ -9,7 +9,6 @@ Future History
 2.5
 ---
 
-* First release on PyPI.
 * Support Meetup.com OAuth2.
 * Detect and report room conflicts.
 * Improve reporting of Meetup.com server errors.
@@ -20,6 +19,11 @@ Recent History
 
 .. Next Release
 .. ------------------
+
+2.4.6 (2019-05-27)
+------------------
+* First release on PyPI.
+* Document location conversion spreadsheet
 
 2.4.5 (2019-05-26)
 ------------------
