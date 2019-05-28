@@ -17,8 +17,9 @@ Future History
 Recent History
 ~~~~~~~~~~~~~~
 
-.. Next Release
-.. ------------------
+Next Release
+------------------
+* Add Python 3.7 tests to Travis CI.
 
 2.4.7 (2019-05-27)
 ------------------
