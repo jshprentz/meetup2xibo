@@ -11,7 +11,6 @@ Future History
 
 * Support Meetup.com OAuth2.
 * Detect and report room conflicts.
-* Improve reporting of Meetup.com server errors.
 
 ~~~~~~~~~~~~~~
 Recent History
@@ -19,6 +18,7 @@ Recent History
 
 Next Release
 ------------------
+* Improve reporting of Meetup.com server errors.
 * Add Python 3.7 tests to Travis CI.
 
 2.4.7 (2019-05-27)
