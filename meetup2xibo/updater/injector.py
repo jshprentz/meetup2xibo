@@ -2,6 +2,7 @@
 
 from .logging_context import LoggingContext
 from .logging_setup_manager import LoggingSetupManager
+from .http_response_error import HttpResponseError
 from .meetup2xibo import Meetup2Xibo, XiboSessionProcessor, \
         XiboEventCrudProcessor
 from .meetup_api import MeetupEventsRetriever
@@ -33,7 +34,7 @@ def inject_logging_context(application_scope):
         app_name=application_scope.app_name,
         description=application_scope.version,
         logging_setup_manager=inject_setup_manager(application_scope),
-        no_trace_exceptions=())
+        no_trace_exceptions=(HttpResponseError,))
 
 
 def inject_setup_manager(application_scope):
