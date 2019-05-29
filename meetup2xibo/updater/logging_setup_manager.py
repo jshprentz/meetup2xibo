@@ -11,7 +11,8 @@ FORMATTER = logging.Formatter(
 
 class LoggingSetupManager:
 
-    """Logging setup manager configures logging based on flags and other options."""
+    """Logging setup manager configures logging based on flags and other
+    options."""
 
     def __init__(
             self, log_level=logging.INFO, filename=None,

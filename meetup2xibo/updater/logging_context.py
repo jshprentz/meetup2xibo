@@ -10,7 +10,8 @@ class LoggingContext:
     """Logging context configures logging and reports exit exceptions."""
 
     def __init__(
-            self, app_name, description, logging_setup_manager, no_trace_exceptions):
+            self, app_name, description, logging_setup_manager,
+            no_trace_exceptions):
         """Initialize with an application name, a description (such as a
         version number), a logging setup manager, and a tuple of exception
         classes that need no traceback."""
@@ -22,7 +23,8 @@ class LoggingContext:
     def log_start_end(self, verb):
         """Log the start or end of an application given a verb (Start or
         End)."""
-        self._named_logger.info("%s %s %s", verb, self.app_name, self.description)
+        self._named_logger.info("%s %s %s", verb, self.app_name,
+                                self.description)
 
     def log_exception(self, exc_type, exc_value):
         """Log all but system exit exceptions. Skip traceback for common
