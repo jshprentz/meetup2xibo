@@ -49,7 +49,7 @@ times are slightly offset ahead of event start times.
 
 The following crontab line schedules ordinary meetup2xibo runs every 10 minutes::
 
-   3,13,23,33,43,53 * * * * cd ~/meetup2xibo && . ./run.config && meetup2xibo -w
+   3,13,23,33,43,53 * * * * cd ~/meetup2xibo && . ./meetup2xibo.env && meetup2xibo -w
 
 The :option:`-w <meetup2xibo -w>` option directs warnings to standard error; cron will send them
 via email to the cron user.
@@ -63,7 +63,7 @@ This run is scheduled to avoid the every-10-minute runs.
 The following crontab line schedules a meetup2xibo location mapping run every
 night before midnight::
 
-   48 23 * * * cd ~/meetup2xibo && . ./run.config && meetup2xibo -w -m
+   48 23 * * * cd ~/meetup2xibo && . ./meetup2xibo.env && meetup2xibo -w -m
 
 .. _`summarizer-cron-job`:
 
