@@ -1,6 +1,7 @@
 """Test generating the Xibo API."""
 
 from .logging_context import LoggingContext
+from .logging_setup_manager import LoggingSetupManager
 from .meetup2xibo import Meetup2Xibo, XiboSessionProcessor, \
         XiboEventCrudProcessor
 from .meetup_api import MeetupEventsRetriever
@@ -30,7 +31,14 @@ def inject_logging_context(application_scope):
     """Return a logging context configured by an application scope."""
     return LoggingContext(
         app_name=application_scope.app_name,
-        version=application_scope.version,
+        description=application_scope.version,
+        logging_setup_manager=inject_setup_manager(application_scope),
+        no_trace_exceptions=())
+
+
+def inject_setup_manager(application_scope):
+    """Return a logging setup manager configured by an application scope."""
+    return LoggingSetupManager(
         log_level=application_scope.log_level,
         filename=application_scope.logfile,
         verbose=application_scope.verbose,
