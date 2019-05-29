@@ -20,6 +20,7 @@ Next Release
 ------------------
 * Improve reporting of Meetup.com server errors.
 * Add Python 3.7 tests to Travis CI.
+* Change development status from beta to production.
 
 2.4.7 (2019-05-27)
 ------------------
