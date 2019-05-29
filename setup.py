@@ -45,6 +45,10 @@ setup(
     keywords='meetup2xibo',
     name='meetup2xibo',
     packages=find_packages(include=['meetup2xibo']),
+    project_urls={
+        'Documentation': 'https://meetup2xibo.readthedocs.io/',
+        'Source Code': 'https://github.com/jshprentz/meetup2xibo'
+    },
     scripts=[
 	'bin/yesterday',
 	],
