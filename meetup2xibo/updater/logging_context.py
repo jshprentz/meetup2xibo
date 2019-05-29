@@ -24,6 +24,16 @@ class LoggingContext:
         End)."""
         self._named_logger.info("%s %s %s", verb, self.app_name, self.description)
 
+    def log_exception(self, exc_type, exc_value):
+        """Log all but system exit exceptions. Skip traceback for common
+        exceptions."""
+        if not exc_type or exc_type == SystemExit:
+            return
+        if isinstance(exc_value, self.no_trace_exceptions):
+            self._named_logger.error("%s - %s", exc_type.__name__, exc_value)
+        else:
+            self._named_logger.exception("Unexpected exception")
+
     def __enter__(self):
         """Enter a 'with' context and return a named logger."""
         self.logging_setup_manager.setup()
@@ -34,8 +44,7 @@ class LoggingContext:
     def __exit__(self, exc_type, exc_value, traceback):
         """Exit a 'with' context, logging any exception and shutting down
         logging."""
-        if exc_type and exc_type != SystemExit:
-            self._named_logger.exception("Unexpected exception")
+        self.log_exception(exc_type, exc_value)
         self.log_start_end("End")
         logging.shutdown()
         return True
