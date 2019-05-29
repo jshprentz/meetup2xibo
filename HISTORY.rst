@@ -16,7 +16,10 @@ Future History
 Recent History
 ~~~~~~~~~~~~~~
 
-Next Release
+.. Next Release
+.. ------------------
+
+2.4.8 (2019-05-29)
 ------------------
 * Improve reporting of Meetup.com server errors.
 * Add Python 3.7 tests to Travis CI.
