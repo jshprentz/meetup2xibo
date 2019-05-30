@@ -16,7 +16,10 @@ Future History
 Recent History
 ~~~~~~~~~~~~~~
 
-Next Release
+.. Next Release
+.. ------------------
+
+2.4.9 (2019-05-30)
 ------------------
 * Improve reporting of Xibo dataset discovery errors.
 
