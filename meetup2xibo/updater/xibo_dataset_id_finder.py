@@ -31,7 +31,7 @@ class XiboDatasetIdFinder:
         if datasets:
             return self.multiple_dataset_problem(dataset_code, datasets)
         else:
-            return 'No datasets had code "{}"'.format(dataset_code)
+            return 'No Xibo datasets had code "{}"'.format(dataset_code)
 
     @staticmethod
     def multiple_dataset_problem(dataset_code, datasets):
@@ -40,7 +40,7 @@ class XiboDatasetIdFinder:
         list_summary = ",".join((
             "{} ({:d})".format(info["dataSet"], info["dataSetId"])
             for info in datasets))
-        return "{:d} datasets had code {}: {}".format(
+        return "{:d} Xibo datasets had code {}: {}".format(
             len(datasets), dataset_code, list_summary)
 
 # vim: tabstop=8 expandtab shiftwidth=4 softtabstop=4 autoindent
