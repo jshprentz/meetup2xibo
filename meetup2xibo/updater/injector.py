@@ -3,6 +3,7 @@
 from .logging_context import LoggingContext
 from .logging_setup_manager import LoggingSetupManager
 from .http_response_error import HttpResponseError
+from .exceptions import DatasetDiscoveryError
 from .meetup2xibo import Meetup2Xibo, XiboSessionProcessor, \
         XiboEventCrudProcessor
 from .meetup_api import MeetupEventsRetriever
@@ -33,11 +34,11 @@ def inject_logging_context(application_scope):
     return LoggingContext(
         app_name=application_scope.app_name,
         description=application_scope.version,
-        logging_setup_manager=inject_setup_manager(application_scope),
-        no_trace_exceptions=(HttpResponseError,))
+        logging_setup_manager=inject_logging_setup_manager(application_scope),
+        no_trace_exceptions=inject_no_trace_exceptions())
 
 
-def inject_setup_manager(application_scope):
+def inject_logging_setup_manager(application_scope):
     """Return a logging setup manager configured by an application scope."""
     return LoggingSetupManager(
         log_level=application_scope.log_level,
@@ -45,6 +46,11 @@ def inject_setup_manager(application_scope):
         verbose=application_scope.verbose,
         warnings=application_scope.warnings,
         mappings=application_scope.mappings)
+
+
+def inject_no_trace_exceptions():
+    """Return a tuple listing exception classes that need no traceback."""
+    return (HttpResponseError, DatasetDiscoveryError)
 
 
 def inject_meetup_events_retriever(application_scope):
