@@ -19,6 +19,10 @@ Recent History
 .. Next Release
 .. ------------------
 
+2.4.9 (2019-05-30)
+------------------
+* Improve reporting of Xibo dataset discovery errors.
+
 2.4.8 (2019-05-29)
 ------------------
 * Improve reporting of Meetup.com server errors.

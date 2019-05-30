@@ -53,7 +53,7 @@ def test_discover_dataset_id_none(mocker):
         dataset_id = finder.find_dataset_id("novalabsschedule")
         pytest.fail('Should not find dataset_id {} for code "novalabsschedule"'.format(str(dataset_id)))
     except DatasetDiscoveryError as err:
-        assert str(err) == 'No datasets had code "novalabsschedule"'
+        assert str(err) == 'No Xibo datasets had code "novalabsschedule"'
 
 def test_discover_dataset_id_too_many(mocker):
     """Testing getting the dataset ID when there are too many."""
@@ -65,7 +65,7 @@ def test_discover_dataset_id_too_many(mocker):
         dataset_id = finder.find_dataset_id("novalabsschedule")
         pytest.fail('Should not find dataset_id {} for code "novalabsschedule"'.format(str(dataset_id)))
     except DatasetDiscoveryError as err:
-        assert str(err) == "2 datasets had code novalabsschedule: Nova Labs Schedule (456),Nova Labs Schedule Experimental (789)"
+        assert str(err) == "2 Xibo datasets had code novalabsschedule: Nova Labs Schedule (456),Nova Labs Schedule Experimental (789)"
 
 
 
