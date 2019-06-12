@@ -62,8 +62,4 @@ def test_start_session():
     session = starter.start_session()
     assert isinstance(session, OAuth2Session)
 
-
-##########################
-
-
 # vim: tabstop=8 expandtab shiftwidth=4 softtabstop=4 autoindent
