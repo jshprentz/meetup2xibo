@@ -1,8 +1,9 @@
 """Test starting an OAuth2 web session."""
 
-from meetup2xibo.updater.oauth2_session_starter import Oauth2SessionStarter
+from meetup2xibo.updater.oauth2_session_starter import Oauth2SessionStarter, Oauth2SessionStarterError
 from meetup2xibo.updater.site_cert_assurer import assure_site_cert
 from requests_oauthlib import OAuth2Session
+from oauthlib.oauth2 import MissingTokenError
 import os
 import pytest
 
@@ -45,6 +46,17 @@ def test_authorize_session(mocker):
             token_url = "a_token_url",
             client_id = "a_client_id",
             client_secret = "a_client_secret")
+
+def test_authorize_session_no_token_error(mocker):
+    """Test handling a missing token error when trying to authorize a session.."""
+    mock_session = mocker.Mock()
+    mock_session.fetch_token = mocker.Mock(side_effect=MissingTokenError("Missing access token parameter"))
+    starter = Oauth2SessionStarter("a_client_id", "a_client_secret", "a_token_url", "a_user_agent")
+    expected_message = r"Cannot start OAuth2 session. " \
+            "URL=a_token_url " \
+            "problem=\(missing_token\) Missing access token parameter"
+    with pytest.raises(Oauth2SessionStarterError, match=expected_message):
+        starter.authorize_session(mock_session)
 
 @pytest.mark.skipif(not os.getenv("XIBO_TOKEN_URL"),
             reason = "environment variable XIBO_TOKEN_URL needed to test live session")

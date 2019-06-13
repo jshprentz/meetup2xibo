@@ -1,7 +1,12 @@
 """Starts an OAuth2 session."""
 
-from oauthlib.oauth2 import BackendApplicationClient
+from oauthlib.oauth2 import BackendApplicationClient, OAuth2Error
 from requests_oauthlib import OAuth2Session
+
+
+class Oauth2SessionStarterError(Exception):
+
+    """Raised when an Oauth2 session cannot be started."""
 
 
 class Oauth2SessionStarter(object):
@@ -30,10 +35,15 @@ class Oauth2SessionStarter(object):
 
     def authorize_session(self, session):
         """Authorize an OAuth2 session."""
-        session.fetch_token(
-                token_url=self.token_url,
-                client_id=self.client_id,
-                client_secret=self.client_secret)
+        try:
+            session.fetch_token(
+                    token_url=self.token_url,
+                    client_id=self.client_id,
+                    client_secret=self.client_secret)
+        except OAuth2Error as err:
+            message = "Cannot start OAuth2 session. URL=%s problem=%s" \
+                    % (self.token_url, err)
+            raise Oauth2SessionStarterError(message) from err
 
     def set_user_agent(self, session):
         """Set the user agent for a web session."""

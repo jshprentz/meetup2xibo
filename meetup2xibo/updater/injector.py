@@ -14,7 +14,8 @@ from .event_updater import EventUpdater
 from .phrase_mapper import PhraseMapper
 from .xibo_api_url_builder import XiboApiUrlBuilder
 from .site_cert_assurer import SiteCertAssurer
-from .oauth2_session_starter import Oauth2SessionStarter
+from .oauth2_session_starter import Oauth2SessionStarter, \
+        Oauth2SessionStarterError
 from .special_location_monitor import SpecialLocationMonitor
 from .time_converter import DateTimeCreator
 from .xibo_api import XiboApi
@@ -50,7 +51,10 @@ def inject_logging_setup_manager(application_scope):
 
 def inject_no_trace_exceptions():
     """Return a tuple listing exception classes that need no traceback."""
-    return (HttpResponseError, DatasetDiscoveryError)
+    return (
+            HttpResponseError,
+            DatasetDiscoveryError,
+            Oauth2SessionStarterError)
 
 
 def inject_meetup_events_retriever(application_scope):
