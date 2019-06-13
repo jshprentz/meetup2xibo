@@ -19,6 +19,11 @@ Recent History
 .. Next Release
 .. ------------------
 
+2.4.10 (2019-06-12)
+------------------
+* Report reversion to earlier unknown locations in log summaries.
+* Improve reporting of OAuth2 errors.
+
 2.4.9 (2019-05-30)
 ------------------
 * Improve reporting of Xibo dataset discovery errors.

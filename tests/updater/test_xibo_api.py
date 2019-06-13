@@ -50,6 +50,7 @@ def test_bad_status(xibo_session, xibo_api_url_builder):
     xibo_api = XiboApi(xibo_session, xibo_api_url_builder, SAMPLE_XIBO_PAGE_LENGTH)
     with pytest.raises(XiboApiError, match=r'.*HTTP status is \d+, not ok.*'):
         xibo_api.get_response(bad_about_url)
+
 @pytest.mark.skip(reason="Not authorized to use this API service")
 def test_about_response(module_file_path, xibo_session, xibo_api_url_builder):
     """Save response from an "about" request to Xibo."""
