@@ -16,7 +16,10 @@ Future History
 Recent History
 ~~~~~~~~~~~~~~
 
-Next Release
+.. Next Release
+.. ------------------
+
+2.4.10 (2019-06-12)
 ------------------
 * Report reversion to earlier unknown locations in log summaries.
 * Improve reporting of OAuth2 errors.
