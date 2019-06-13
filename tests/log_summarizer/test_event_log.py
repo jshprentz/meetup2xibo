@@ -15,19 +15,38 @@ def test_add_log_line(event_log, sample_log_lines):
     event_log.add_log_line(log_line)
     assert event_log.log_lines == [log_line]
 
-def test_add_unknown_locaation_log_line(event_log, sample_log_lines):
+def test_add_unknown_location_log_line(event_log, sample_log_lines):
     """Test adding an unknown location log line."""
     log_line = sample_log_lines.make_unknown_location_log_line()
     event_log.add_unknown_location_log_line(log_line)
     assert event_log.log_lines == [log_line]
 
-def test_add_unknown_locaation_log_line_repeated(event_log, sample_log_lines):
+def test_add_unknown_location_log_line_repeated(event_log, sample_log_lines):
     """Test adding a repeated unknown location log line."""
     log_line_1 = sample_log_lines.make_unknown_location_log_line()
     log_line_2 = sample_log_lines.make_unknown_location_log_line()
     event_log.add_unknown_location_log_line(log_line_1)
     event_log.add_unknown_location_log_line(log_line_2)
     assert event_log.log_lines == [log_line_1]
+
+def test_add_unknown_location_log_line_multiple(event_log, sample_log_lines):
+    """Test adding multiple unknown location log line."""
+    log_line_1 = sample_log_lines.make_unknown_location_log_line()
+    log_line_2 = sample_log_lines.make_unknown_location_log_line("another location")
+    event_log.add_unknown_location_log_line(log_line_1)
+    event_log.add_unknown_location_log_line(log_line_2)
+    assert event_log.log_lines == [log_line_1, log_line_2]
+
+def test_add_unknown_location_log_line_reverted(event_log, sample_log_lines):
+    """Test adding an unknown location log line, a different unknown log line,
+    and a third unknown log line with the first location."""
+    log_line_1 = sample_log_lines.make_unknown_location_log_line()
+    log_line_2 = sample_log_lines.make_unknown_location_log_line("another location")
+    log_line_3 = sample_log_lines.make_unknown_location_log_line()
+    event_log.add_unknown_location_log_line(log_line_1)
+    event_log.add_unknown_location_log_line(log_line_2)
+    event_log.add_unknown_location_log_line(log_line_3)
+    assert event_log.log_lines == [log_line_1, log_line_2, log_line_3]
 
 def test_final_event(event_log, sample_log_lines):
     """Test getting the final event."""

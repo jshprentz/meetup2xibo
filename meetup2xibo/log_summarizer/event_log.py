@@ -8,7 +8,7 @@ class EventLog:
     def __init__(self):
         """Initialize ..."""
         self._log_lines = []
-        self._unknown_locations = set()
+        self._last_unknown_location_event = None
         self._final_event = None
         self._sort_key = None
         self._current_event_flag = False
@@ -33,9 +33,9 @@ class EventLog:
         self.add_log_line(log_line)
 
     def add_unknown_location_log_line(self, log_line):
-        """Add an unknown location log line to the list if new."""
-        if log_line.event not in self._unknown_locations:
-            self._unknown_locations.add(log_line.event)
+        """Add an unknown location log line to the list if changed."""
+        if log_line.event != self._last_unknown_location_event:
+            self._last_unknown_location_event = log_line.event
             self.add_event_log_line(log_line)
 
     def note_current_event(self):

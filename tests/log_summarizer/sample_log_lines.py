@@ -239,9 +239,11 @@ class SampleLogLines:
         date_time = self.date_time()
         return RetireEventLogLine(date_time, event)
 
-    def make_unknown_location_log_line(self):
-        """Return an unknown location log line object."""
-        event = Event.from_fields(UNKNOWN_LOCATION_FIELDS)
+    def make_unknown_location_log_line(self, venue_name=''):
+        """Return an unknown location log line object with an optional
+        venue name."""
+        event = Event.from_fields(
+                UNKNOWN_LOCATION_FIELDS + [('venue_name', venue_name)])
         date_time = self.date_time()
         return UnknownLocationLogLine(date_time, event)
 

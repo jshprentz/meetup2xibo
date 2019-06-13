@@ -41,8 +41,9 @@ Meetup2xibo keeps those agendas up-to-date as events are added, cancelled, or up
 Resources
 ---------
 
-* Documentation: https://meetup2xibo.readthedocs.io.
-* GitHub: https://github.com/jshprentz/meetup2xibo
+* Documentation: https://meetup2xibo.readthedocs.io
+* Source code: https://github.com/jshprentz/meetup2xibo
+* Python package: https://pypi.org/project/meetup2xibo/
 * Free software: MIT license
 
 
