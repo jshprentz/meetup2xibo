@@ -11,6 +11,8 @@ LOCATION_PHRASES = [
     ("Classroom A and B", "Classroom A/B"),
     ("Classroom A/B", "Classroom A/B"),
     ("Classroom A", "Classroom A"),
+    ("Conference Rm 1", "Conference Room 1"),
+    ("Conference Rm 2", "Conference Room 2"),
     ("Metal shop", "Metal Shop"),
     ("Metalshop", "Metal Shop"),
 ]
@@ -51,6 +53,19 @@ TEST_EVENT_LOCATIONS = [
     ("Nova Labs","[Metalshop]","Metal Shop"),
     ("Nova Labs","See http://nova-labs.org/contact/#parking for map and parking details.","Nova Labs"),
     ("NVCC Seefeldt Building", "Seefeldt Building room #228", ""),
+]
+
+TEST_FIND_LOCATIONS = [
+    ("", "[]",[]),
+    ("*Nova Labs (Classroom A)", "[ ]",["Classroom A"]),
+    ("Nova Labs (Classroom A)", "[Classroom A]", ["Classroom A"]),
+    ("*Nova Labs (Classroom A  and B)", "[]",["Classroom A/B"]),
+    ("*Nova Labs (Classroom A and B)", "[Metal shop]",["Classroom A/B", "Metal Shop"]),
+    ("*Nova Labs (Conference Rm 1)", "Conference Rm 2 and Conference Rm 1", ["Conference Room 1", "Conference Room 2"]),
+    ("Nova Labs", "[Metal shop]",["Metal Shop"]),
+    ("Nova Labs", "[Metalshop]",["Metal Shop"]),
+    ("Nova Labs", "See http://nova-labs.org/contact/#parking for map and parking details.",["Nova Labs"]),
+    ("NVCC Seefeldt Building", "Seefeldt Building room #228", []),
 ]
 
 def make_partial_event(venue_name = "", find_us = "", name = "Some Event"):
@@ -99,6 +114,14 @@ def test_build_location(venue_name, find_us, expected_location, location_builder
     partial_event = make_partial_event(venue_name = venue_name, find_us = find_us)
     location = location_builder.build_location(partial_event)
     assert expected_location == location
+
+@pytest.mark.parametrize("venue_name,find_us,expected_location_list", TEST_FIND_LOCATIONS)
+def test_find_locations(venue_name, find_us, expected_location_list, location_builder):
+    """Test finding locations from an event's venue name and "how to find us"
+    information."""
+    partial_event = make_partial_event(venue_name = venue_name, find_us = find_us)
+    location_list = location_builder.find_locations(partial_event)
+    assert expected_location_list == location_list
 
 test_location_lists = [
     (["abc"], "abc"),

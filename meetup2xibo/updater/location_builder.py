@@ -1,4 +1,4 @@
-"""Build locations from partial event components."""
+"""Builds a location list from partial event components."""
 
 from collections import OrderedDict
 import logging
@@ -6,13 +6,19 @@ import logging
 
 class LocationBuilder:
 
-    """Builds locations from partial event components."""
+    """Builds a location list from partial event components."""
 
     logger = logging.getLogger("LocationBuilder")
 
     def __init__(self, phrase_mappers):
         """Initialize with a list of phrase mappers."""
         self.phrase_mappers = phrase_mappers
+
+    def find_locations(self, partial_event):
+        """Find a list of locations from a partial Meetup event."""
+        locations = self.map_from_phrase_mappers(partial_event)
+        deduped_locations = list(OrderedDict.fromkeys(locations))
+        return deduped_locations
 
     def build_location(self, partial_event):
         """Build a location from a partial Meetup event."""
@@ -24,7 +30,8 @@ class LocationBuilder:
             return ""
 
     def map_from_phrase_mappers(self, partial_event):
-        """Try all phrase mappers until on finds phrases in a partial event."""
+        """Try all phrase mappers until one finds phrases in a partial
+        event."""
         locations = []
         for phrase_mapper in self.phrase_mappers:
             locations = self.map_phrases_in_venue(phrase_mapper, partial_event)
