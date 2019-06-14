@@ -46,14 +46,4 @@ class LocationBuilder:
         return phrase_mapper.map_phrases(partial_event.venue_name) \
             + phrase_mapper.map_phrases(partial_event.find_us)
 
-    @staticmethod
-    def format_location_list(locations):
-        """Format a list of locations as an English phrase."""
-        if len(locations) == 1:
-            return locations[0]
-        if len(locations) == 2:
-            return "{} and {}".format(locations[0], locations[1])
-        most_locations = ", ".join(locations[0:-1])
-        return "{}, and {}".format(most_locations, locations[-1])
-
 # vim: tabstop=8 expandtab shiftwidth=4 softtabstop=4 autoindent

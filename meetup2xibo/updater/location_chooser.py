@@ -29,10 +29,15 @@ class LocationChooser:
 
     def choose_location(self, partial_event):
         """Choose a location from a partial Meetup event."""
-        computed_location = self.location_builder.build_location(partial_event)
+        computed_location = self.find_locations(partial_event)
         special_location = self.special_locations.get(partial_event.meetup_id)
         return self.resolve_locations(
                 partial_event, computed_location, special_location)
+
+    def find_locations(self, partial_event):
+        """Find locations in a partial Meetup events."""
+        found_locations = self.location_builder.find_locations(partial_event)
+        return self.format_location_list(found_locations)
 
     def resolve_locations(
                 self, partial_event, computed_location, special_location):
@@ -67,5 +72,13 @@ class LocationChooser:
             self.logger.info('Unknown location for %s', partial_event)
             return self.default_location
 
+    @staticmethod
+    def format_location_list(locations):
+        """Format a list of locations as an English phrase."""
+        if len(locations) < 3:
+            return " and ".join(locations)
+        else:
+            most_locations = ", ".join(locations[0:-1])
+            return "{}, and {}".format(most_locations, locations[-1])
 
 # vim: tabstop=8 expandtab shiftwidth=4 softtabstop=4 autoindent
