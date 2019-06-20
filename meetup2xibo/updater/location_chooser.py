@@ -37,7 +37,7 @@ class LocationChooser:
     def find_locations(self, partial_event):
         """Find locations in a partial Meetup events."""
         found_places = self.place_finder.find_places(partial_event)
-        return self.format_location_list(found_places)
+        return self.format_place_list(found_places)
 
     def resolve_locations(
                 self, partial_event, computed_location, special_location):
@@ -73,12 +73,12 @@ class LocationChooser:
             return self.default_location
 
     @staticmethod
-    def format_location_list(locations):
-        """Format a list of locations as an English phrase."""
-        if len(locations) < 3:
-            return " and ".join(locations)
+    def format_place_list(places):
+        """Format a list of places as an English phrase."""
+        if len(places) < 3:
+            return " and ".join(places)
         else:
-            most_locations = ", ".join(locations[0:-1])
-            return "{}, and {}".format(most_locations, locations[-1])
+            most_places = ", ".join(places[0:-1])
+            return "{}, and {}".format(most_places, places[-1])
 
 # vim: tabstop=8 expandtab shiftwidth=4 softtabstop=4 autoindent

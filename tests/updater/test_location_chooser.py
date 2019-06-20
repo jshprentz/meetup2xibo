@@ -113,7 +113,7 @@ def test_choose_location_special(place_finder, caplog):
     assert location == LOCATION_2
     assert not has_warnings(caplog.records)
 
-test_location_lists = [
+test_place_lists = [
     ([], ""),
     (["abc"], "abc"),
     (["def", "abc"], "def and abc"),
@@ -121,10 +121,10 @@ test_location_lists = [
     (["def", "jkl", "abc", "ghi"], "def, jkl, abc, and ghi"),
 ]
 
-@pytest.mark.parametrize("location_list,expected_phrase", test_location_lists)
-def test_format_location_list(location_list, expected_phrase):
-    """Test formatting location lists as a phrase retaining order."""
-    phrase = LocationChooser.format_location_list(location_list)
+@pytest.mark.parametrize("place_list,expected_phrase", test_place_lists)
+def test_format_place_list(place_list, expected_phrase):
+    """Test formatting place lists as a phrase retaining order."""
+    phrase = LocationChooser.format_place_list(place_list)
     assert expected_phrase == phrase
 
 # vim: tabstop=8 expandtab shiftwidth=4 softtabstop=4 autoindent
