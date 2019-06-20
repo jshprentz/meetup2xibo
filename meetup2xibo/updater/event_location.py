@@ -2,16 +2,19 @@
 
 class EventLocation:
 
-    """An event's location."""
+    """An event's location as a textual description and a list of places."""
 
-    def __init__(self, description):
-        """Initialize with the location description."""
+    def __init__(self, description, places):
+        """Initialize with the location description and a list of places."""
         self.description = description
+        self.places = places
 
     def __repr__(self):
-        """Return the represention the event location compatibile with its
-        description string."""
-        return repr(self.description)
+        """Return the represention the event location."""
+        return '{}({!r}, {!r})'.format(
+                self.__class__.__name__,
+                self.description,
+                self.places)
 
     def __str__(self):
         """Return the string version of the event location, represented the
@@ -36,7 +39,7 @@ class EventLocation:
         return self.description != ""
 
 
-NO_LOCATION = EventLocation("")
+NO_LOCATION = EventLocation("", [])
 
 
 
