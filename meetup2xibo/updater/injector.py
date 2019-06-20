@@ -7,7 +7,7 @@ from .exceptions import DatasetDiscoveryError
 from .meetup2xibo import Meetup2Xibo, XiboSessionProcessor, \
         XiboEventCrudProcessor
 from .meetup_api import MeetupEventsRetriever
-from .location_builder import PlaceFinder
+from .place_finder import PlaceFinder
 from .location_chooser import LocationChooser
 from .event_converter import EventConverter
 from .event_updater import EventUpdater

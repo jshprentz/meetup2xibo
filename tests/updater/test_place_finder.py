@@ -1,7 +1,7 @@
-"""Test building locations from a Meetup event."""
+"""Test finding places from a Meetup event."""
 
 from meetup2xibo.updater.event_converter import PartialEvent
-from meetup2xibo.updater.location_builder import PlaceFinder
+from meetup2xibo.updater.place_finder import PlaceFinder
 from meetup2xibo.updater.phrase_mapper import PhraseMapper
 from ahocorasick import Automaton
 import pytest
