@@ -36,8 +36,8 @@ class LocationChooser:
 
     def find_locations(self, partial_event):
         """Find locations in a partial Meetup events."""
-        found_locations = self.place_finder.find_locations(partial_event)
-        return self.format_location_list(found_locations)
+        found_places = self.place_finder.find_places(partial_event)
+        return self.format_location_list(found_places)
 
     def resolve_locations(
                 self, partial_event, computed_location, special_location):

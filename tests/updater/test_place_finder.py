@@ -82,27 +82,27 @@ def place_finder(phrase_mappers):
     """Return a place finder with the test phrase mappers."""
     return PlaceFinder(phrase_mappers)
 
-@pytest.mark.parametrize("venue_name,find_us,expected_locations", TEST_VENUE_MAPPINGS_1)
-def test_map_phrases_in_venue(venue_name, find_us, expected_locations, location_phrase_mapper):
+@pytest.mark.parametrize("venue_name,find_us,expected_places", TEST_VENUE_MAPPINGS_1)
+def test_map_phrases_in_venue(venue_name, find_us, expected_places, location_phrase_mapper):
     """Test mapping phrases in venue and find us fields."""
     partial_event = make_partial_event(venue_name = venue_name, find_us = find_us)
-    locations = PlaceFinder.map_phrases_in_venue(location_phrase_mapper, partial_event)
-    assert locations == expected_locations
+    places = PlaceFinder.map_phrases_in_venue(location_phrase_mapper, partial_event)
+    assert places == expected_places
 
-@pytest.mark.parametrize("venue_name,find_us,expected_locations", TEST_VENUE_MAPPINGS_2)
-def test_map_from_phrase_mappers(venue_name, find_us, expected_locations, place_finder):
+@pytest.mark.parametrize("venue_name,find_us,expected_places", TEST_VENUE_MAPPINGS_2)
+def test_map_from_phrase_mappers(venue_name, find_us, expected_places, place_finder):
     """Test mapping phrases using all phrase mappers."""
     partial_event = make_partial_event(venue_name = venue_name, find_us = find_us)
-    locations = place_finder.map_from_phrase_mappers(partial_event)
-    assert locations == expected_locations
+    places = place_finder.map_from_phrase_mappers(partial_event)
+    assert places == expected_places
 
-@pytest.mark.parametrize("venue_name,find_us,expected_location_list", TEST_FIND_LOCATIONS)
-def test_find_locations(venue_name, find_us, expected_location_list, place_finder):
-    """Test finding locations from an event's venue name and "how to find us"
+@pytest.mark.parametrize("venue_name,find_us,expected_place_list", TEST_FIND_LOCATIONS)
+def test_find_places(venue_name, find_us, expected_place_list, place_finder):
+    """Test finding places from an event's venue name and "how to find us"
     information."""
     partial_event = make_partial_event(venue_name = venue_name, find_us = find_us)
-    location_list = place_finder.find_locations(partial_event)
-    assert expected_location_list == location_list
+    place_list = place_finder.find_places(partial_event)
+    assert expected_place_list == place_list
 
 
 # vim: tabstop=8 expandtab shiftwidth=4 softtabstop=4 autoindent

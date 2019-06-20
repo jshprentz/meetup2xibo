@@ -11,34 +11,25 @@ class PlaceFinder:
         """Initialize with a list of phrase mappers."""
         self.phrase_mappers = phrase_mappers
 
-    def find_locations(self, partial_event):
-        """Find a list of locations from a partial Meetup event."""
-        locations = self.map_from_phrase_mappers(partial_event)
-        deduped_locations = list(OrderedDict.fromkeys(locations))
-        return deduped_locations
-
-    def build_location(self, partial_event):
-        """Build a location from a partial Meetup event."""
-        locations = self.map_from_phrase_mappers(partial_event)
-        if locations:
-            deduped_locations = list(OrderedDict.fromkeys(locations))
-            return self.format_location_list(deduped_locations)
-        else:
-            return ""
+    def find_places(self, partial_event):
+        """Find a list of places from a partial Meetup event."""
+        places = self.map_from_phrase_mappers(partial_event)
+        deduped_places = list(OrderedDict.fromkeys(places))
+        return deduped_places
 
     def map_from_phrase_mappers(self, partial_event):
         """Try all phrase mappers until one finds phrases in a partial
         event."""
-        locations = []
+        places = []
         for phrase_mapper in self.phrase_mappers:
-            locations = self.map_phrases_in_venue(phrase_mapper, partial_event)
-            if locations:
+            places = self.map_phrases_in_venue(phrase_mapper, partial_event)
+            if places:
                 break
-        return locations
+        return places
 
     @staticmethod
     def map_phrases_in_venue(phrase_mapper, partial_event):
-        """Map location phrases in the venue and find us fields of a partial
+        """Map place phrases in the venue and find us fields of a partial
         event."""
         return phrase_mapper.map_phrases(partial_event.venue_name) \
             + phrase_mapper.map_phrases(partial_event.find_us)
