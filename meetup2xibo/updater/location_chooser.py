@@ -20,10 +20,10 @@ class LocationChooser:
 
     logger = logging.getLogger("LocationChooser")
 
-    def __init__(self, location_builder, special_locations, default_location):
-        """Initialize with a location builder, a dictionary of special
-        locations (indexed by Meetup ID), and a default location."""
-        self.location_builder = location_builder
+    def __init__(self, place_finder, special_locations, default_location):
+        """Initialize with a place finder, a dictionary of special locations
+        (indexed by Meetup ID), and a default location."""
+        self.place_finder = place_finder
         self.special_locations = special_locations
         self.default_location = default_location
 
@@ -36,7 +36,7 @@ class LocationChooser:
 
     def find_locations(self, partial_event):
         """Find locations in a partial Meetup events."""
-        found_locations = self.location_builder.find_locations(partial_event)
+        found_locations = self.place_finder.find_locations(partial_event)
         return self.format_location_list(found_locations)
 
     def resolve_locations(

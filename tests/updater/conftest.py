@@ -3,7 +3,7 @@
 from meetup2xibo.updater.xibo_api_url_builder import XiboApiUrlBuilder
 from meetup2xibo.updater.site_cert_assurer import assure_site_cert
 from meetup2xibo.updater.oauth2_session_starter import Oauth2SessionStarter
-from meetup2xibo.updater.location_builder import LocationBuilder
+from meetup2xibo.updater.location_builder import PlaceFinder
 from meetup2xibo.updater.phrase_mapper import PhraseMapper
 from ahocorasick import Automaton
 from pathlib import Path
@@ -41,9 +41,9 @@ def phrase_mappers(location_phrase_mapper, default_phrase_mapper):
     return [location_phrase_mapper, default_phrase_mapper]
 
 @pytest.fixture
-def location_builder(phrase_mappers):
-    """Return a location builder with the test phrase mappers."""
-    return LocationBuilder(phrase_mappers)
+def place_finder(phrase_mappers):
+    """Return a place finder with the test phrase mappers."""
+    return PlaceFinder(phrase_mappers)
 
 @pytest.fixture(scope="module")
 def xibo_api_url_builder():

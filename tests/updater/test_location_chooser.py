@@ -92,23 +92,23 @@ def test_resolve_locations_both_locations_override(minimal_location_chooser, cap
     assert location == LOCATION_2
     assert "Unknown location" not in caplog.text
 
-def test_choose_location_computed(location_builder, caplog):
+def test_choose_location_computed(place_finder, caplog):
     """Test choosing a location from an event's venue name and "how to
     find us" information when there is no special location."""
     caplog.set_level(logging.INFO)
     partial_event = make_partial_event("Metal Shop")
-    location_chooser = LocationChooser(location_builder, {}, SAMPLE_DEFAULT_LOCATION)
+    location_chooser = LocationChooser(place_finder, {}, SAMPLE_DEFAULT_LOCATION)
     location = location_chooser.choose_location(partial_event)
     assert location == "Metal Shop"
     assert "Unknown location" not in caplog.text
 
-def test_choose_location_special(location_builder, caplog):
+def test_choose_location_special(place_finder, caplog):
     """Test choosing a location from an event's venue name and "how to
     find us" information when there is a special location."""
     partial_event = make_partial_event("Metal Shop")
     special_location = make_special_location(override = True)
     special_location_dict = {SAMPLE_MEETUP_ID: special_location}
-    location_chooser = LocationChooser(location_builder, special_location_dict, SAMPLE_DEFAULT_LOCATION)
+    location_chooser = LocationChooser(place_finder, special_location_dict, SAMPLE_DEFAULT_LOCATION)
     location = location_chooser.choose_location(partial_event)
     assert location == LOCATION_2
     assert not has_warnings(caplog.records)

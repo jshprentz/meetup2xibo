@@ -7,7 +7,7 @@ from .exceptions import DatasetDiscoveryError
 from .meetup2xibo import Meetup2Xibo, XiboSessionProcessor, \
         XiboEventCrudProcessor
 from .meetup_api import MeetupEventsRetriever
-from .location_builder import LocationBuilder
+from .location_builder import PlaceFinder
 from .location_chooser import LocationChooser
 from .event_converter import EventConverter
 from .event_updater import EventUpdater
@@ -69,14 +69,14 @@ def inject_meetup_events_retriever(application_scope):
 def inject_location_chooser(application_scope):
     """Return a location builder configured by an application scope."""
     return LocationChooser(
-        inject_location_builder(application_scope),
+        inject_place_finder(application_scope),
         application_scope.special_locations_dict,
         application_scope.default_location)
 
 
-def inject_location_builder(application_scope):
-    """Return a location builder configured by an application scope."""
-    return LocationBuilder(inject_phrase_mappers(application_scope))
+def inject_place_finder(application_scope):
+    """Return a place finder configured by an application scope."""
+    return PlaceFinder(inject_phrase_mappers(application_scope))
 
 
 def inject_phrase_mappers(application_scope):

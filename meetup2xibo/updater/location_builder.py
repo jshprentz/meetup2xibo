@@ -1,14 +1,11 @@
-"""Builds a location list from partial event components."""
+"""Builds a place list from partial event components."""
 
 from collections import OrderedDict
-import logging
 
 
-class LocationBuilder:
+class PlaceFinder:
 
-    """Builds a location list from partial event components."""
-
-    logger = logging.getLogger("LocationBuilder")
+    """Builds a place list from partial event components."""
 
     def __init__(self, phrase_mappers):
         """Initialize with a list of phrase mappers."""

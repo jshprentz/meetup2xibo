@@ -1,7 +1,7 @@
 """Test building locations from a Meetup event."""
 
 from meetup2xibo.updater.event_converter import PartialEvent
-from meetup2xibo.updater.location_builder import LocationBuilder
+from meetup2xibo.updater.location_builder import PlaceFinder
 from meetup2xibo.updater.phrase_mapper import PhraseMapper
 from ahocorasick import Automaton
 import pytest
@@ -78,30 +78,30 @@ def phrase_mappers(location_phrase_mapper, default_phrase_mapper):
     return [location_phrase_mapper, default_phrase_mapper]
 
 @pytest.fixture
-def location_builder(phrase_mappers):
-    """Return a location builder with the test phrase mappers."""
-    return LocationBuilder(phrase_mappers)
+def place_finder(phrase_mappers):
+    """Return a place finder with the test phrase mappers."""
+    return PlaceFinder(phrase_mappers)
 
 @pytest.mark.parametrize("venue_name,find_us,expected_locations", TEST_VENUE_MAPPINGS_1)
 def test_map_phrases_in_venue(venue_name, find_us, expected_locations, location_phrase_mapper):
     """Test mapping phrases in venue and find us fields."""
     partial_event = make_partial_event(venue_name = venue_name, find_us = find_us)
-    locations = LocationBuilder.map_phrases_in_venue(location_phrase_mapper, partial_event)
+    locations = PlaceFinder.map_phrases_in_venue(location_phrase_mapper, partial_event)
     assert locations == expected_locations
 
 @pytest.mark.parametrize("venue_name,find_us,expected_locations", TEST_VENUE_MAPPINGS_2)
-def test_map_from_phrase_mappers(venue_name, find_us, expected_locations, location_builder):
+def test_map_from_phrase_mappers(venue_name, find_us, expected_locations, place_finder):
     """Test mapping phrases using all phrase mappers."""
     partial_event = make_partial_event(venue_name = venue_name, find_us = find_us)
-    locations = location_builder.map_from_phrase_mappers(partial_event)
+    locations = place_finder.map_from_phrase_mappers(partial_event)
     assert locations == expected_locations
 
 @pytest.mark.parametrize("venue_name,find_us,expected_location_list", TEST_FIND_LOCATIONS)
-def test_find_locations(venue_name, find_us, expected_location_list, location_builder):
+def test_find_locations(venue_name, find_us, expected_location_list, place_finder):
     """Test finding locations from an event's venue name and "how to find us"
     information."""
     partial_event = make_partial_event(venue_name = venue_name, find_us = find_us)
-    location_list = location_builder.find_locations(partial_event)
+    location_list = place_finder.find_locations(partial_event)
     assert expected_location_list == location_list
 
 

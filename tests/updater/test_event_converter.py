@@ -146,9 +146,9 @@ SAMPLE_EVENTS = [
 ]
 
 @pytest.fixture
-def location_chooser(location_builder):
+def location_chooser(place_finder):
     """Return a location chooser with no special locations."""
-    return LocationChooser(location_builder, {}, "Orange Bay")
+    return LocationChooser(place_finder, {}, "Orange Bay")
 
 @pytest.fixture
 def datetime_creator():
