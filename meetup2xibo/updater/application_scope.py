@@ -13,7 +13,7 @@ XIBO_PAGE_LENGTH = 50
 SECONDS_PER_HOUR = 60 * 60
 SECONDS_PER_DAY = 24 * SECONDS_PER_HOUR
 
-PhraseLocation = namedtuple("PhraseLocation", "phrase location")
+PhraseLocation = namedtuple("PhraseLocation", "phrase place")
 
 SpecialLocation = namedtuple(
         "SpecialLocation",
