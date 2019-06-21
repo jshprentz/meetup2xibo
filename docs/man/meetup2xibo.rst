@@ -101,13 +101,13 @@ Environment
 .. envvar:: LOCATION_PHRASES
 
    A JSON array of objects containing a phrase to match and a corresponding
-   location. For example::
+   place. For example::
 
     export LOCATION_PHRASES='[
-       {"phrase": "Conf Rm 1",          "location": "Conference Room 1"},
-       {"phrase": "Conf Rm 2",          "location": "Conference Room 2"},
-       {"phrase": "Conference room 1",  "location": "Conference Room 1"},
-       {"phrase": "Conference room 2",  "location": "Conference Room 2"}
+       {"phrase": "Conf Rm 1",          "place": "Conference Room 1"},
+       {"phrase": "Conf Rm 2",          "place": "Conference Room 2"},
+       {"phrase": "Conference room 1",  "place": "Conference Room 1"},
+       {"phrase": "Conference room 2",  "place": "Conference Room 2"}
     ]'
 
 .. envvar:: MEETUP_API_KEY

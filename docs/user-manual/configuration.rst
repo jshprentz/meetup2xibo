@@ -170,10 +170,10 @@ The Meetup.com venue name and how-to-find-us fields usually contain the room
 assignment(s), among other information.
 
 Meetup2xibo scans the venue name and "how to find us" fields, searching for
-known rooms and workshops.
-The room assignments are collected in the order found.
-Meetup2xibo corrects room spelling variations and renders the list as an
-English phrase such as "Room 1, Room 2, and Room 3."
+known places, such as rooms, workshops, studios, classrooms, fields, etc.
+The places are collected in the order found.
+Meetup2xibo corrects place spelling variations and renders the list as an
+English phrase such as "Room 1, Room 2, and Workshop 3."
 The resulting phrase is stored in the Xibo events dataset location field.
 
 For example, a woodworking class has the venue name "\*Nova Labs (Conference Rm
@@ -184,19 +184,19 @@ Location Phrases
 ~~~~~~~~~~~~~~~~
 
 When scanning the venue name and "how to find us" fields, Meetup2xibo searches
-for phrases provided in a curated list of phrases and preferred location names.
-For example, :numref:`Table %s <example_phrases_and_locations>` shows the
-phrases that match the preferred location name "Conference Room 1."
+for phrases provided in a curated list of phrases and preferred place names.
+For example, :numref:`Table %s <example_phrases_and_places>` shows the
+phrases that match the preferred place name "Conference Room 1."
 
 .. tabularcolumns:: |L|L|
 
-.. _example_phrases_and_locations:
+.. _example_phrases_and_places:
 
-.. table:: Example Phrases and Locations
+.. table:: Example Phrases and Places
    :align: center
 
    +-------------------+-------------------+
-   | Phrase            | Location          |
+   | Phrase            | Place             |
    +===================+===================+
    | Conf Rm 1         | Conference Room 1 |
    +-------------------+-------------------+
@@ -205,7 +205,7 @@ phrases that match the preferred location name "Conference Room 1."
    | Conference room 1 | Conference Room 1 |
    +-------------------+-------------------+
 
-The list of phrases and corresponding locations is configured in environment
+The list of phrases and corresponding places is configured in environment
 variable :envvar:`LOCATION_PHRASES` as a
 :abbr:`JSON (JavaScript Object Notation)` list of objects, as shown in
 :numref:`Listing %s <location-phrases-config-example>`.
@@ -215,9 +215,9 @@ variable :envvar:`LOCATION_PHRASES` as a
    :name: location-phrases-config-example
 
    export LOCATION_PHRASES='[
-       {"phrase": "Conf Rm 1",         "location": "Conference Room 1"},
-       {"phrase": "Conference rm 1",   "location": "Conference Room 1"},
-       {"phrase": "Conference room 1", "location": "Conference Room 1"},
+       {"phrase": "Conf Rm 1",         "place": "Conference Room 1"},
+       {"phrase": "Conference rm 1",   "place": "Conference Room 1"},
+       {"phrase": "Conference room 1", "place": "Conference Room 1"},
    ]'
 
 Meetup2xibo ignores spacing and upper/lower case distinctions when searching
@@ -235,8 +235,8 @@ environment variable :envvar:`MORE_LOCATION_PHRASES`.
 The format is the same as shown in
 :numref:`Listing %s <location-phrases-config-example>`.
 At Nova Labs, :envvar:`LOCATION_PHRASES` lists specific rooms within Nova Labs.
-:envvar:`MORE_LOCATION_PHRASES` lists more general event locations including
-Nova Labs; nearby event locations, such as George Mason University; and
+:envvar:`MORE_LOCATION_PHRASES` lists more general event places, such as Nova
+Labs; nearby event places, such as George Mason University; and the uncertain
 :abbr:`TBD (To Be Determined)`.
 
 Default Location
