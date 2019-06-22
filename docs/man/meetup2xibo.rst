@@ -122,6 +122,9 @@ Environment
    failed to match.
    See :envvar:`PLACE_PHRASES` for the JSON format.
 
+   .. versionchanged:: 2.5
+      Was ``MORE_LOCATION_PHRASES`` with a different format.     
+
 .. envvar:: NAME_COLUMN_NAME
 
    The name of the Xibo dataset column containing event names.
@@ -137,6 +140,9 @@ Environment
        {"phrase": "Conference room 1",  "place": "Conference Room 1"},
        {"phrase": "Conference room 2",  "place": "Conference Room 2"}
     ]'
+
+   .. versionchanged:: 2.5
+      Was ``LOCATION_PHRASES`` with a different format.     
 
 .. envvar:: SITE_CA_PATH
 
