@@ -17,7 +17,7 @@ PhraseLocation = namedtuple("PhraseLocation", "phrase place")
 
 SpecialLocation = namedtuple(
         "SpecialLocation",
-        "meetup_id location override comment")
+        "meetup_id location override comment places")
 
 
 class ApplicationScope:

@@ -25,10 +25,10 @@ def make_partial_event(venue_name = "", find_us = "", name = "Some Event"):
         SAMPLE_MEETUP_ID, name, "2019-03-01 19:00:00", "2019-03-01 21:00:00",
         venue_name, find_us)
 
-def make_special_location(meetup_id = SAMPLE_MEETUP_ID,
-        location = LOCATION_2, override = False, comment = ""):
+def make_special_location(meetup_id=SAMPLE_MEETUP_ID,
+        location=LOCATION_2, override=False, comment="", places=[]):
     """Return a special location configured as needed."""
-    return SpecialLocation (meetup_id, location, override, comment)
+    return SpecialLocation (meetup_id, location, override, comment, places)
 
 def has_warnings(log_records):
     """Test whether any log record is a warning."""

@@ -162,9 +162,9 @@ Environment
 
     export SPECIAL_LOCATIONS='[
         {"meetup_id": "zvbxrpl2", "location": "Orange Bay",
-	 "comment": "", "override": false},
+	 "comment": "", "override": false, "places": ["Orange Bay"]},
         {"meetup_id": "lrzzfbhb", "location": "Private",
-	 "comment": "Private meeting", "override": true}
+	 "comment": "Private meeting", "override": true, "places": []}
     ]'
 
    List *meetup_id* to suppress warnings about missing locations.
@@ -173,6 +173,11 @@ Environment
    Any *comment* helps document the special location.
    When true, the *override* flag forces a non-blank location to replace the
    computed location.
+   Conflict resolution examines the list of *places* associated with the
+   location.
+
+   .. versionchanged:: 2.5
+      Added *places.*
 
 .. envvar:: START_TIME_COLUMN_NAME
 

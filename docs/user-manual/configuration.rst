@@ -289,24 +289,28 @@ special locations.
        {
            "meetup_id": "259083135",
            "location": "",
+	   "places": [],
            "override": false,
            "comment": "Electronics 101: no room yet"
        },
        {
            "meetup_id": "gqpyzfbhb",
            "location": "Classroom A",
+	   "places": ["Classroom A"],
            "override": false,
            "comment": "Location in event name"
        },
        {
            "meetup_id": "269568127",
            "location": "Baltimore Museum of Industry",
+	   "places": [],
            "override": false,
            "comment": "Field trip"
        },
        {
            "meetup_id": "259565142",
-           "location": "Parking Lot and Conference Room 2",
+           "location": "Parking Lot, Classroom A, and Conference Room 2",
+	   "places": ["Classroom A", "Conference Room 2"],
            "override": true,
            "comment": "Picnic"
        }
@@ -317,6 +321,7 @@ event ID from Meetup.com.
 The :mailheader:`location` contains the event location for Xibo.
 The :mailheader:`location` may be an empty string if the meetup2xibo default
 location is acceptable.
+The :mailheader:`places` contains a list of places to check for conflicts.
 The :mailheader:`override` flag must have a ``true`` or ``false`` value as
 explained below.
 The :mailheader:`comment` helps administrators remember why the special
@@ -344,9 +349,9 @@ The following examples demonstrate the use of special locations:
 No Meetup.com venue name or how-to-find-us
    Meetup2xibo will use the default location and log a warning.
    When the administrator adds the special location object shown in
-   :numref:`Listing %s <special-locations-config-example>` lines 3--8,
-   meetup2xibo will continue to use the default location without logging a
-   warning.
+   :numref:`Listing %s <special-locations-config-example>` lines 3--9,
+   meetup2xibo will continue to use the default location and places without
+   logging a warning.
    If the event host later adds a venue name or how-to-find-us in Meetup.com,
    meetup2xibo will use known locations found there instead of the default
    location.
@@ -354,24 +359,30 @@ No Meetup.com venue name or how-to-find-us
 Known location only in Meetup.com event name or description
    Meetup2xibo will use the default location and log a warning.
    When the administrator adds the special location object shown in
-   :numref:`Listing %s <special-locations-config-example>` lines 9--14,
+   :numref:`Listing %s <special-locations-config-example>` lines 10--16,
    meetup2xibo will use the special location instead of the default location.
+   The place "Classroom A" will be checked for conflicts.
    If the event host later adds a venue name or how-to-find-us in Meetup.com,
-   meetup2xibo will use known locations found there instead of the special
+   meetup2xibo will use known places found there instead of the special
    location or the default location.
 
 Unknown locations from Meetup.com
    Meetup2xibo will use the default location and log a warning.
    When the administrator adds the special location object shown in
-   :numref:`Listing %s <special-locations-config-example>` lines 15--20,
-   meetup2xibo will use the special location instead of the default location.
+   :numref:`Listing %s <special-locations-config-example>` lines 17--23,
+   meetup2xibo will use the special location and places instead of the default
+   location and places.
 
 Known and unknown locations from Meetup.com
-   Meetup2xibo will use the known locations found in the venue name or
-   how-to-find-us, "Conference Room 2" in this example.
+   Meetup2xibo will derive a location from the known places found in the venue
+   name or how-to-find-us, "Classroom A" and "Conference Room 2" in this
+   example.
+   Meetup2xibo will not recognize "Parking Lot," an uncommon and unconfigured
+   place.
    When the administrator adds the special location object shown in
-   :numref:`Listing %s <special-locations-config-example>` lines 21--26,
-   meetup2xibo will use the special location, overriding the known location(s).
+   :numref:`Listing %s <special-locations-config-example>` lines 24--30,
+   meetup2xibo will use the special location and places, overriding the
+   location derived from the known places.
 
 
 Timezone
