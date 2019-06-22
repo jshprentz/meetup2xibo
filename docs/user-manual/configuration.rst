@@ -246,6 +246,30 @@ If none of the place phrases match, Meetup2xibo uses the location specified
 by environment variable :envvar:`DEFAULT_LOCATION`.
 Meetup2xibo logs a warning message whenever the default location is needed.
 
+To support conflict detection, environment variable :envvar:`DEFAULT_PLACES`
+lists places associated with the default location.
+:numref:`Listing %s <specific-default-location-example>` shows an example of
+a default locaion associated with specific places.
+
+.. code-block:: bash
+   :caption: Default Location with Specific Places Example
+   :name: specific-default-location-example
+
+   export DEFAULT_LOCATION="Dance Studios"
+   export DEFAULT_PLACES='["Studio 1", "Studio 2"]'
+
+:numref:`Listing %s <general-default-location-example>` shows default location
+and places at Nova Labs.
+The default location does not identify any specific room or workshop, so the
+default places list is empty.
+
+.. code-block:: bash
+   :caption: Default Location with No Specific Places Example
+   :name: general-default-location-example
+
+   export DEFAULT_LOCATION="Nova Labs"
+   export DEFAULT_PLACES='[]'
+
 Special Locations
 ~~~~~~~~~~~~~~~~~
 

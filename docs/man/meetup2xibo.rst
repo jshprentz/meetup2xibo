@@ -64,6 +64,12 @@ Environment
    The location to store in Xibo when Meetup's venue name and find-us fields
    contain no recognizable locations.
 
+.. envvar:: DEFAULT_PLACES
+
+   A JSON array of places associated with the default location.
+
+   .. versionadded:: 2.5
+
 .. envvar:: DELETE_AFTER_END_HOURS
 
    The number of hours after an event ends to wait before retiring the event
