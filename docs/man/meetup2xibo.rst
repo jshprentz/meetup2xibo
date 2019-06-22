@@ -98,18 +98,6 @@ Environment
 
    The name of the Xibo dataset column containing event locations.
 
-.. envvar:: LOCATION_PHRASES
-
-   A JSON array of objects containing a phrase to match and a corresponding
-   place. For example::
-
-    export LOCATION_PHRASES='[
-       {"phrase": "Conf Rm 1",          "place": "Conference Room 1"},
-       {"phrase": "Conf Rm 2",          "place": "Conference Room 2"},
-       {"phrase": "Conference room 1",  "place": "Conference Room 1"},
-       {"phrase": "Conference room 2",  "place": "Conference Room 2"}
-    ]'
-
 .. envvar:: MEETUP_API_KEY
 
    The API key that authenticates access to Meetup.com.
@@ -128,15 +116,27 @@ Environment
 
    The name of the Xibo dataset column containing Meetup event IDs.
 
-.. envvar:: MORE_LOCATION_PHRASES
+.. envvar:: MORE_PLACE_PHRASES
 
-   A second list of phrases and locations to try if :envvar:`LOCATION_PHRASES`
+   A second list of phrases and places to try if :envvar:`PLACE_PHRASES`
    failed to match.
-   See :envvar:`LOCATION_PHRASES` for the JSON format.
+   See :envvar:`PLACE_PHRASES` for the JSON format.
 
 .. envvar:: NAME_COLUMN_NAME
 
    The name of the Xibo dataset column containing event names.
+
+.. envvar:: PLACE_PHRASES
+
+   A JSON array of objects containing a phrase to match and a corresponding
+   place. For example::
+
+    export PLACE_PHRASES='[
+       {"phrase": "Conf Rm 1",          "place": "Conference Room 1"},
+       {"phrase": "Conf Rm 2",          "place": "Conference Room 2"},
+       {"phrase": "Conference room 1",  "place": "Conference Room 1"},
+       {"phrase": "Conference room 2",  "place": "Conference Room 2"}
+    ]'
 
 .. envvar:: SITE_CA_PATH
 

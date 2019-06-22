@@ -180,8 +180,8 @@ For example, a woodworking class has the venue name "\*Nova Labs (Conference Rm
 2)" and the how-to-find-us "[woodshop]".
 Meetup.com sets the location in Xibo to "Conference Room 2 and Woodshop".
 
-Location Phrases
-~~~~~~~~~~~~~~~~
+Place Phrases
+~~~~~~~~~~~~~
 
 When scanning the venue name and "how to find us" fields, Meetup2xibo searches
 for phrases provided in a curated list of phrases and preferred place names.
@@ -206,15 +206,15 @@ phrases that match the preferred place name "Conference Room 1."
    +-------------------+-------------------+
 
 The list of phrases and corresponding places is configured in environment
-variable :envvar:`LOCATION_PHRASES` as a
+variable :envvar:`PLACE_PHRASES` as a
 :abbr:`JSON (JavaScript Object Notation)` list of objects, as shown in
-:numref:`Listing %s <location-phrases-config-example>`.
+:numref:`Listing %s <place-phrases-config-example>`.
 
 .. code-block:: bash
-   :caption: Location Phrases JSON Configuration Example
-   :name: location-phrases-config-example
+   :caption: Place Phrases JSON Configuration Example
+   :name: place-phrases-config-example
 
-   export LOCATION_PHRASES='[
+   export PLACE_PHRASES='[
        {"phrase": "Conf Rm 1",         "place": "Conference Room 1"},
        {"phrase": "Conference rm 1",   "place": "Conference Room 1"},
        {"phrase": "Conference room 1", "place": "Conference Room 1"},
@@ -230,19 +230,19 @@ For example, phrase "Room 123" would be matched ahead of phrases "Room 1" and
 "Room 12".
 
 If none of the phrases configured in environment variable
-:envvar:`LOCATION_PHRASES` match, Meetup2Xibo tries matching the phrases in
-environment variable :envvar:`MORE_LOCATION_PHRASES`.
+:envvar:`PLACE_PHRASES` match, Meetup2Xibo tries matching the phrases in
+environment variable :envvar:`MORE_PLACE_PHRASES`.
 The format is the same as shown in
-:numref:`Listing %s <location-phrases-config-example>`.
-At Nova Labs, :envvar:`LOCATION_PHRASES` lists specific rooms within Nova Labs.
-:envvar:`MORE_LOCATION_PHRASES` lists more general event places, such as Nova
+:numref:`Listing %s <place-phrases-config-example>`.
+At Nova Labs, :envvar:`PLACE_PHRASES` lists specific rooms within Nova Labs.
+:envvar:`MORE_PLACE_PHRASES` lists more general event places, such as Nova
 Labs; nearby event places, such as George Mason University; and the uncertain
 :abbr:`TBD (To Be Determined)`.
 
 Default Location
 ~~~~~~~~~~~~~~~~
 
-If none of the location phrases match, Meetup2xibo uses the location specified
+If none of the place phrases match, Meetup2xibo uses the location specified
 by environment variable :envvar:`DEFAULT_LOCATION`.
 Meetup2xibo logs a warning message whenever the default location is needed.
 

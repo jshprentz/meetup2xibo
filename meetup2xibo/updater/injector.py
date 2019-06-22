@@ -82,25 +82,25 @@ def inject_place_finder(application_scope):
 def inject_phrase_mappers(application_scope):
     """Return a list of phrase mappers configured by an application scope."""
     return [
-        inject_locations_phrase_mapper(application_scope),
-        inject_more_locations_phrase_mapper(application_scope),
+        inject_places_phrase_mapper(application_scope),
+        inject_more_places_phrase_mapper(application_scope),
         ]
 
 
-def inject_locations_phrase_mapper(application_scope):
-    """Return a phrase mapper for location phrases configured by an application
+def inject_places_phrase_mapper(application_scope):
+    """Return a phrase mapper for place phrases configured by an application
     scope."""
     return inject_phrase_mapper(
         application_scope,
-        application_scope.location_phrase_tuples)
+        application_scope.place_phrase_tuples)
 
 
-def inject_more_locations_phrase_mapper(application_scope):
-    """Return a phrase mapper for more location phrases configured by an
+def inject_more_places_phrase_mapper(application_scope):
+    """Return a phrase mapper for more place phrases configured by an
     application scope."""
     return inject_phrase_mapper(
         application_scope,
-        application_scope.more_location_phrase_tuples)
+        application_scope.more_place_phrase_tuples)
 
 
 def inject_phrase_mapper(application_scope, phrase_tuples):

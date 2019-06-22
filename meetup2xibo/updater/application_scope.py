@@ -75,14 +75,14 @@ class ApplicationScope:
         return self._env_vars["LOCATION_COLUMN_NAME"]
 
     @property
-    def location_phrases(self):
-        return self._env_vars["LOCATION_PHRASES"]
+    def place_phrases(self):
+        return self._env_vars["PLACE_PHRASES"]
 
     @property
-    def location_phrase_tuples(self):
+    def place_phrase_tuples(self):
         return (
             PhraseLocation(**dict) for dict in
-            json.loads(self.location_phrases)
+            json.loads(self.place_phrases)
         )
 
     @property
@@ -114,14 +114,14 @@ class ApplicationScope:
         return self._env_vars["MEETUP_ID_COLUMN_NAME"]
 
     @property
-    def more_location_phrases(self):
-        return self._env_vars["MORE_LOCATION_PHRASES"]
+    def more_place_phrases(self):
+        return self._env_vars["MORE_PLACE_PHRASES"]
 
     @property
-    def more_location_phrase_tuples(self):
+    def more_place_phrase_tuples(self):
         return (
             PhraseLocation(**dict) for dict in
-            json.loads(self.more_location_phrases)
+            json.loads(self.more_place_phrases)
         )
 
     @property
