@@ -42,15 +42,13 @@ class EventLocation:
 NO_LOCATION = EventLocation("", [])
 
 
-
-def format_location_list(locations):
-    """Format a list of locations as an English phrase."""
-    if len(locations) == 1:
-        return locations[0]
-    if len(locations) == 2:
-        return "{} and {}".format(locations[0], locations[1])
-    most_locations = ", ".join(locations[0:-1])
-    return "{}, and {}".format(most_locations, locations[-1])
+def format_place_list(places):
+    """Format a list of places as an English phrase."""
+    if len(places) < 3:
+        return " and ".join(places)
+    else:
+        most_places = ", ".join(places[0:-1])
+        return "{}, and {}".format(most_places, places[-1])
 
 
 # vim: tabstop=8 expandtab shiftwidth=4 softtabstop=4 autoindent

@@ -1,6 +1,7 @@
 """Test the event converter from Meetup JSON to event object."""
 
 from meetup2xibo.updater.event_converter import EventConverter, Event, PartialEvent
+from meetup2xibo.updater.event_location import EventLocation
 from meetup2xibo.updater.location_chooser import LocationChooser
 from meetup2xibo.updater.time_converter import DateTimeCreator
 from pytz import timezone
@@ -17,6 +18,9 @@ EXPECTED_TIMEZONES = ["EST", "EDT"]
 
 event_prefixes = text(alphabet = string.ascii_uppercase, min_size = 2, max_size = 2)
 event_names = text(min_size = 1)
+
+DEFAULT_LOCATION = "Orange Bay"
+DEFAULT_EVENT_LOCATION = EventLocation(DEFAULT_LOCATION, [DEFAULT_LOCATION])
 
 JSON_EVENT_WITH_VENUE = {
     "duration": 8100000,
@@ -59,7 +63,7 @@ EVENT_WITH_UNKNOWN_VENUE = Event(
     name = "Computational Mathematics: P=NP for students and engineers at Nova Labs",
     start_time = "2017-11-20 19:15:00",
     end_time = "2017-11-20 21:30:00",
-    location = "Orange Bay")
+    location = DEFAULT_LOCATION)
 
 
 JSON_EVENT_WITHOUT_VENUE = {
@@ -148,7 +152,7 @@ SAMPLE_EVENTS = [
 @pytest.fixture
 def location_chooser(place_finder):
     """Return a location chooser with no special locations."""
-    return LocationChooser(place_finder, {}, "Orange Bay")
+    return LocationChooser(place_finder, {}, DEFAULT_EVENT_LOCATION)
 
 @pytest.fixture
 def datetime_creator():

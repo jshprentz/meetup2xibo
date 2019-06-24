@@ -10,6 +10,7 @@ from .meetup_api import MeetupEventsRetriever
 from .place_finder import PlaceFinder
 from .location_chooser import LocationChooser
 from .event_converter import EventConverter
+from .event_location import EventLocation
 from .event_updater import EventUpdater
 from .phrase_mapper import PhraseMapper
 from .xibo_api_url_builder import XiboApiUrlBuilder
@@ -71,7 +72,7 @@ def inject_location_chooser(application_scope):
     return LocationChooser(
         inject_place_finder(application_scope),
         application_scope.special_locations_dict,
-        application_scope.default_location)
+        inject_default_event_location(application_scope))
 
 
 def inject_place_finder(application_scope):
@@ -112,6 +113,14 @@ def inject_phrase_mapper(application_scope, phrase_tuples):
 def inject_automaton():
     """Return an Aho-Corasick automaton."""
     return Automaton()
+
+
+def inject_default_event_location(application_scope):
+    """Return an event location for the default location and places configured
+    by an application scope."""
+    return EventLocation(
+        application_scope.default_location,
+        application_scope.default_places)
 
 
 def inject_event_converter(application_scope):

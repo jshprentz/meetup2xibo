@@ -2,6 +2,7 @@
 
 from meetup2xibo.updater.application_scope import SpecialLocation
 from meetup2xibo.updater.event_converter import PartialEvent
+from meetup2xibo.updater.event_location import EventLocation
 from meetup2xibo.updater.location_chooser import LocationChooser
 import logging
 import pytest
@@ -9,6 +10,7 @@ import pytest
 
 SAMPLE_MEETUP_ID = "A123"
 SAMPLE_DEFAULT_LOCATION = "Lobby"
+SAMPLE_DEFAULT_EVENT_LOCATION = EventLocation(SAMPLE_DEFAULT_LOCATION, [])
 LOCATION_1 = "Room 1"
 LOCATION_2 = "Theater"
 
@@ -17,7 +19,7 @@ LOCATION_2 = "Theater"
 def minimal_location_chooser():
     """Return a location chooser with nothing but the sample default
     location."""
-    return LocationChooser(None, None, SAMPLE_DEFAULT_LOCATION)
+    return LocationChooser(None, None, SAMPLE_DEFAULT_EVENT_LOCATION)
 
 def make_partial_event(venue_name = "", find_us = "", name = "Some Event"):
     """Return a partial event with some test values."""
@@ -97,7 +99,7 @@ def test_choose_location_computed(place_finder, caplog):
     find us" information when there is no special location."""
     caplog.set_level(logging.INFO)
     partial_event = make_partial_event("Metal Shop")
-    location_chooser = LocationChooser(place_finder, {}, SAMPLE_DEFAULT_LOCATION)
+    location_chooser = LocationChooser(place_finder, {}, SAMPLE_DEFAULT_EVENT_LOCATION)
     location = location_chooser.choose_location(partial_event)
     assert location == "Metal Shop"
     assert "Unknown location" not in caplog.text
@@ -108,7 +110,8 @@ def test_choose_location_special(place_finder, caplog):
     partial_event = make_partial_event("Metal Shop")
     special_location = make_special_location(override = True)
     special_location_dict = {SAMPLE_MEETUP_ID: special_location}
-    location_chooser = LocationChooser(place_finder, special_location_dict, SAMPLE_DEFAULT_LOCATION)
+    location_chooser = LocationChooser(place_finder, special_location_dict,
+            SAMPLE_DEFAULT_EVENT_LOCATION)
     location = location_chooser.choose_location(partial_event)
     assert location == LOCATION_2
     assert not has_warnings(caplog.records)
