@@ -49,8 +49,4 @@ class EventLocation:
             most_places = ", ".join(places[0:-1])
             return "{}, and {}".format(most_places, places[-1])
 
-
-NO_LOCATION = EventLocation("", [])
-
-
 # vim: tabstop=8 expandtab shiftwidth=4 softtabstop=4 autoindent

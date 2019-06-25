@@ -26,10 +26,10 @@ class EventConverter:
     def convert(self, event_json):
         """Convert Meetup event JSON to an event tuple."""
         partial_event = self.partial_event(event_json)
-        location = self.location_chooser.choose_location(partial_event)
+        event_location = self.location_chooser.choose_location(partial_event)
         self.logger.debug(
-                "Location='%s' MeetupEvent=%s", location, partial_event)
-        return self.event(partial_event, location)
+                "Location='%s' MeetupEvent=%s", event_location, partial_event)
+        return self.event(partial_event, event_location.description)
 
     def convert_cancelled(self, event_json):
         """Convert Meetup cancelled event JSON to an event tuple."""
