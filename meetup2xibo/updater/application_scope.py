@@ -2,6 +2,7 @@
 environment variables needed by the application."""
 
 
+from .special_location import SpecialLocation
 import meetup2xibo
 import logging
 import json
@@ -14,10 +15,6 @@ SECONDS_PER_HOUR = 60 * 60
 SECONDS_PER_DAY = 24 * SECONDS_PER_HOUR
 
 PhraseLocation = namedtuple("PhraseLocation", "phrase place")
-
-SpecialLocation = namedtuple(
-        "SpecialLocation",
-        "meetup_id location override comment places")
 
 
 class ApplicationScope:

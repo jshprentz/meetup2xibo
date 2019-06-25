@@ -1,6 +1,6 @@
 """Test logging unneeded special locations."""
 
-from meetup2xibo.updater.application_scope import SpecialLocation
+from meetup2xibo.updater.special_location import SpecialLocation
 from meetup2xibo.updater.special_location_monitor import SpecialLocationMonitor
 from meetup2xibo.updater.xibo_event import XiboEvent
 import logging
