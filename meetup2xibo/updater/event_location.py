@@ -38,17 +38,23 @@ class EventLocation:
         false otherwise."""
         return self.description != ""
 
+    @classmethod
+    def from_places(cls, places):
+        """Make an event location from a list of places."""
+        description = cls.format_place_list(places)
+        return cls(description, places)
+
+    @staticmethod
+    def format_place_list(places):
+        """Format a list of places as an English phrase."""
+        if len(places) < 3:
+            return " and ".join(places)
+        else:
+            most_places = ", ".join(places[0:-1])
+            return "{}, and {}".format(most_places, places[-1])
+
 
 NO_LOCATION = EventLocation("", [])
-
-
-def format_place_list(places):
-    """Format a list of places as an English phrase."""
-    if len(places) < 3:
-        return " and ".join(places)
-    else:
-        most_places = ", ".join(places[0:-1])
-        return "{}, and {}".format(most_places, places[-1])
 
 
 # vim: tabstop=8 expandtab shiftwidth=4 softtabstop=4 autoindent
