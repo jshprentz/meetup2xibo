@@ -5,6 +5,7 @@ from meetup2xibo.updater.event_location import EventLocation
 import pytest
 
 SAMPLE_PLACES = ["Woodshop", "Classroom A"]
+OTHER_PLACES = ["Conference Room 1"]
 
 
 def test_repr():
@@ -17,28 +18,22 @@ def test_str():
     location = EventLocation("test", SAMPLE_PLACES)
     assert str(location) == str("test")
 
-def test_hash_same():
-    """Test that two identical locations have the same hash."""
-    location1 = EventLocation("test", SAMPLE_PLACES)
-    location2 = EventLocation("test", SAMPLE_PLACES)
-    assert hash(location1) == hash(location2)
-
-def test_hash_different():
-    """Test that two different locations have different hashes."""
-    location1 = EventLocation("test1", SAMPLE_PLACES)
-    location2 = EventLocation("test2", SAMPLE_PLACES)
-    assert hash(location1) != hash(location2)
-
 def test_equals_same():
     """Test that two identical locations are equals."""
     location1 = EventLocation("test", SAMPLE_PLACES)
     location2 = EventLocation("test", SAMPLE_PLACES)
     assert location1 == location2
 
-def test_equals_different():
+def test_equals_different_descriptions():
     """Test that two different locations are not equals."""
     location1 = EventLocation("test1", SAMPLE_PLACES)
     location2 = EventLocation("test2", SAMPLE_PLACES)
+    assert location1 != location2
+
+def test_equals_different_places():
+    """Test that two different locations are not equals."""
+    location1 = EventLocation("test", SAMPLE_PLACES)
+    location2 = EventLocation("test", OTHER_PLACES)
     assert location1 != location2
 
 def test_bool_true():

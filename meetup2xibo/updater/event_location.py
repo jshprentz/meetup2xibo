@@ -22,16 +22,12 @@ class EventLocation:
         location strings."""
         return str(self.description)
 
-    def __hash__(self):
-        """Return a hash of the event location elements used in __eq__
-        comparisons."""
-        return hash(self.description)
-
     def __eq__(self, other):
         """Return true if this event location is equal the other. Otherwise
-        return false."""
+        return false. Used only for unit testing."""
         return isinstance(other, EventLocation) \
-                and self.description == other.description
+                and self.description == other.description \
+                and self.places == other.places
 
     def __bool__(self):
         """Used for truth testing. Return true if the locatiion is non-blank;
