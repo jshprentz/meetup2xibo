@@ -32,6 +32,10 @@ class ApplicationScope:
         return APP_NAME
 
     @property
+    def conflicts(self):
+        return self._args.conflicts
+
+    @property
     def delete_after_end_seconds(self):
         return int(self._env_vars["DELETE_AFTER_END_HOURS"]) \
                 * SECONDS_PER_HOUR
