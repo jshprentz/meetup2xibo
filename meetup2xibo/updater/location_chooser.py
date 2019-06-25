@@ -1,5 +1,6 @@
 """Chooses locations for partial events."""
 
+from .event_location import EventLocation
 import logging
 
 
@@ -26,19 +27,20 @@ class LocationChooser:
         (indexed by Meetup ID), and a default event location."""
         self.place_finder = place_finder
         self.special_locations = special_locations
+        self.default_event_location = default_event_location
         self.default_location = default_event_location.description
 
     def choose_location(self, partial_event):
         """Choose a location from a partial Meetup event."""
-        computed_location = self.find_locations(partial_event)
+        computed_location = self.find_event_location(partial_event).description
         special_location = self.special_locations.get(partial_event.meetup_id)
         return self.resolve_locations(
                 partial_event, computed_location, special_location)
 
-    def find_locations(self, partial_event):
-        """Find locations in a partial Meetup events."""
+    def find_event_location(self, partial_event):
+        """Find an event location from a partial Meetup event."""
         found_places = self.place_finder.find_places(partial_event)
-        return self.format_place_list(found_places)
+        return EventLocation.from_places(found_places)
 
     def resolve_locations(
                 self, partial_event, computed_location, special_location):
@@ -72,14 +74,5 @@ class LocationChooser:
         else:
             self.logger.info('Unknown location for %s', partial_event)
             return self.default_location
-
-    @staticmethod
-    def format_place_list(places):
-        """Format a list of places as an English phrase."""
-        if len(places) < 3:
-            return " and ".join(places)
-        else:
-            most_places = ", ".join(places[0:-1])
-            return "{}, and {}".format(most_places, places[-1])
 
 # vim: tabstop=8 expandtab shiftwidth=4 softtabstop=4 autoindent

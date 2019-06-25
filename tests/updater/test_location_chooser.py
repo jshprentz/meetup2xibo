@@ -94,6 +94,26 @@ def test_resolve_locations_both_locations_override(minimal_location_chooser, cap
     assert location == LOCATION_2
     assert "Unknown location" not in caplog.text
 
+def test_find_event_location_known(place_finder):
+    """Test finding a known location from an event's venue name and "how to
+    find us" information."""
+    partial_event = make_partial_event("Metalshop", "[Classroom A]")
+    location_chooser = LocationChooser(place_finder, {}, SAMPLE_DEFAULT_EVENT_LOCATION)
+    event_location = location_chooser.find_event_location(partial_event)
+    expected_event_location = EventLocation(
+            "Metal Shop and Classroom A",
+            ["Metal Shop", "Classroom A"])
+    assert event_location == expected_event_location
+
+def test_find_event_location_unknown(place_finder):
+    """Test finding an unknown location from an event's venue name and "how to
+    find us" information."""
+    partial_event = make_partial_event("Orange Bay")
+    location_chooser = LocationChooser(place_finder, {}, SAMPLE_DEFAULT_EVENT_LOCATION)
+    event_location = location_chooser.find_event_location(partial_event)
+    expected_event_location = EventLocation("", [])
+    assert event_location == expected_event_location
+
 def test_choose_location_computed(place_finder, caplog):
     """Test choosing a location from an event's venue name and "how to
     find us" information when there is no special location."""
@@ -115,19 +135,5 @@ def test_choose_location_special(place_finder, caplog):
     location = location_chooser.choose_location(partial_event)
     assert location == LOCATION_2
     assert not has_warnings(caplog.records)
-
-test_place_lists = [
-    ([], ""),
-    (["abc"], "abc"),
-    (["def", "abc"], "def and abc"),
-    (["def", "abc", "ghi"], "def, abc, and ghi"),
-    (["def", "jkl", "abc", "ghi"], "def, jkl, abc, and ghi"),
-]
-
-@pytest.mark.parametrize("place_list,expected_phrase", test_place_lists)
-def test_format_place_list(place_list, expected_phrase):
-    """Test formatting place lists as a phrase retaining order."""
-    phrase = LocationChooser.format_place_list(place_list)
-    assert expected_phrase == phrase
 
 # vim: tabstop=8 expandtab shiftwidth=4 softtabstop=4 autoindent
