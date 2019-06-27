@@ -325,7 +325,7 @@ def inject_selected_conflict_logger(application_scope):
 
 def inject_conflict_logger(application_scope):
     """Return a conflict logger configured by an application scope."""
-    return ConflictLogger()
+    return ConflictLogger(application_scope.conflict_places_list)
 
 
 def inject_null_conflict_logger():

@@ -33,10 +33,10 @@ class ApplicationScope:
 
     @property
     def conflict_places(self):
-        return self._env_vars["DEFAULT_PLACES"]
+        return self._env_vars["CONFLICT_PLACES"]
 
     @property
-    def conflict_place_list(self):
+    def conflict_places_list(self):
         return json.loads(self.conflict_places)
 
     @property
