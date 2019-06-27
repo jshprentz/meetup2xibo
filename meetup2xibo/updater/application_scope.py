@@ -32,6 +32,14 @@ class ApplicationScope:
         return APP_NAME
 
     @property
+    def conflict_places(self):
+        return self._env_vars["DEFAULT_PLACES"]
+
+    @property
+    def conflict_place_list(self):
+        return json.loads(self.conflict_places)
+
+    @property
     def conflicts(self):
         return self._args.conflicts
 

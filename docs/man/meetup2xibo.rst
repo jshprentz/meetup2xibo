@@ -67,6 +67,12 @@ Options
 Environment
 -----------
 
+.. envvar:: CONFLICT_PLACES
+
+   A JSON array of places to check for scheduling conflicts.
+
+   .. versionadded:: 2.5
+
 .. envvar:: DEFAULT_LOCATION
 
    The location to store in Xibo when Meetup's venue name and find-us fields
