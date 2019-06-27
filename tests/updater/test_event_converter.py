@@ -2,6 +2,7 @@
 
 from meetup2xibo.updater.event_converter import EventConverter, Event, PartialEvent
 from meetup2xibo.updater.event_location import EventLocation
+from meetup2xibo.updater.conflict_logger import ConflictLogger, NullConflictLogger
 from meetup2xibo.updater.location_chooser import LocationChooser
 from meetup2xibo.updater.time_converter import DateTimeCreator
 from pytz import timezone
@@ -163,7 +164,7 @@ def datetime_creator():
 @pytest.fixture
 def event_converter(location_chooser, datetime_creator):
     """Return an event converter with the usual location chooser."""
-    return EventConverter(location_chooser, datetime_creator)
+    return EventConverter(location_chooser, datetime_creator, NullConflictLogger())
 
 @given(event_name = text())
 @example(event_name = "AAA: Advanced Anxiety Association")
@@ -171,7 +172,7 @@ def test_edit_name_without_prefix(event_name):
     """Test that an unprefixed name edits to the event name."""
     trimmed_event_name = event_name.strip()
     assume(trimmed_event_name)
-    converter = EventConverter(None, None)
+    converter = EventConverter(None, None, None)
     edited_name = converter.edit_name(event_name)
     assert edited_name == trimmed_event_name
 
@@ -181,7 +182,7 @@ def test_edit_name_with_prefix(prefix, event_name):
     """Test that a prefixed name edits to the event name."""
     trimmed_event_name = event_name.strip()
     assume(trimmed_event_name)
-    converter = EventConverter(None, None)
+    converter = EventConverter(None, None, None)
     raw_name = "{}: {}".format(prefix, event_name)
     edited_name = converter.edit_name(raw_name)
     assert edited_name == trimmed_event_name

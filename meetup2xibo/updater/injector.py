@@ -9,6 +9,7 @@ from .meetup2xibo import Meetup2Xibo, XiboSessionProcessor, \
 from .meetup_api import MeetupEventsRetriever
 from .place_finder import PlaceFinder
 from .location_chooser import LocationChooser
+from .conflict_logger import ConflictLogger, NullConflictLogger
 from .event_converter import EventConverter
 from .event_location import EventLocation
 from .event_updater import EventUpdater
@@ -127,7 +128,8 @@ def inject_event_converter(application_scope):
     """Return an event converter configured by an application scope."""
     return EventConverter(
         inject_location_chooser(application_scope),
-        inject_date_time_creator(application_scope))
+        inject_date_time_creator(application_scope),
+        inject_selected_conflict_logger(application_scope))
 
 
 def inject_xibo_api_url_builder(application_scope):
@@ -310,6 +312,25 @@ def inject_tzinfo(application_scope):
 def inject_date_time_creator(application_scope):
     """Return a date/time creator configured by an application scope."""
     return DateTimeCreator(inject_tzinfo(application_scope))
+
+
+def inject_selected_conflict_logger(application_scope):
+    """Return the conflict logger selected by a command-line argument and
+    configured by an application scope."""
+    if application_scope.conflicts:
+        return inject_conflict_logger(application_scope)
+    else:
+        return inject_null_conflict_logger()
+
+
+def inject_conflict_logger(application_scope):
+    """Return a conflict logger configured by an application scope."""
+    return ConflictLogger()
+
+
+def inject_null_conflict_logger():
+    """Return a null conflict logger."""
+    return NullConflictLogger()
 
 
 def inject_recent_limit(application_scope):
