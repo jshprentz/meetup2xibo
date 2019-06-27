@@ -72,7 +72,7 @@ class ApplicationScope:
 
     @property
     def default_place_list(self):
-        return json.loads(self.places)
+        return json.loads(self.default_places)
 
     @property
     def end_time_column_name(self):
