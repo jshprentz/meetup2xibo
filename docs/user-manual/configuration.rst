@@ -246,8 +246,9 @@ If none of the place phrases match, Meetup2xibo uses the location specified
 by environment variable :envvar:`DEFAULT_LOCATION`.
 Meetup2xibo logs a warning message whenever the default location is needed.
 
-To support conflict detection, environment variable :envvar:`DEFAULT_PLACES`
-lists places associated with the default location.
+To support :ref:`conflict detection <scheduling-conflicts>`, environment
+variable :envvar:`DEFAULT_PLACES` lists places associated with the default
+location.
 :numref:`Listing %s <specific-default-location-example>` shows an example of
 a default locaion associated with specific places.
 
@@ -383,6 +384,37 @@ Known and unknown locations from Meetup.com
    :numref:`Listing %s <special-locations-config-example>` lines 24--30,
    meetup2xibo will use the special location and places, overriding the
    location derived from the known places.
+
+.. _`scheduling-conflicts`:
+
+Detecting Scheduling Conflicts
+------------------------------
+
+Meetup2xibo and summarize-m2x-logs can detect and report possible scheduling
+conflicts.
+A conflict occurs when two or more events are scheduled in the same place at
+the same time.
+
+Meetup2xibo checks for conflicts only in places listed by environment variable
+:envvar:`CONFLICT_PLACES`.
+Other places, such as an entire facility (Nova Labs) or a common gathering
+area (Lobby), can accomodate multiple simultaneous activities.
+:numref:`Listing %s <conflict-places-example>` shows an example of
+a list of places with possible scheduling conflicts.
+
+.. code-block:: bash
+   :caption: Conflict Places Example
+   :name: conflict-places-example
+
+   export CONFLICT_PLACES='[
+       "Classroom A",
+       "Classroom A/B",
+       "Classroom B",
+       "Computer Lab",
+       "Conference Room 1",
+       "Conference Room 2",
+       "Conference Room 3",
+   ]'
 
 
 Timezone
