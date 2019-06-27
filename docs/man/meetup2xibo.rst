@@ -4,7 +4,7 @@ meetup2xibo
 Synopsis
 --------
 
-**meetup2xibo** [-h] [-d] [-l <*LOGFILE*>] [-m] [-v] [-w]
+**meetup2xibo** [-h] [-d] [-l <*LOGFILE*>] [-c] [-m] [-v] [-w]
 
 Description
 -----------
@@ -36,6 +36,14 @@ Options
 .. option:: -l <LOGFILE>, --logfile <LOGFILE>
 
    Path to logfile (default: meetup2xibo.log).
+
+.. option:: -c, --conflicts
+
+   Log conflict detection details about Meetup events and the places where they
+   are scheduled.
+   Default: do not log conflict details.
+
+   .. versionadded:: 2.5
 
 .. option:: -m, --mappings
 
