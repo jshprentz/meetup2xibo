@@ -73,6 +73,18 @@ Environment
 
    .. versionadded:: 2.5
 
+.. envvar:: CONTAINED_PLACES
+
+   A JSON array of objects showing a place and the other places it contains
+   For example::
+
+    export CONTAINING_PLACES='[
+        {"place": "Ballroom", "contains": ["North Ballroom", "South Ballroom"]},
+        {"place": "Ballroom Suite", "contains": ["Ballroom", "Dressing Room"]},
+    ]'
+
+   .. versionadded:: 2.5
+
 .. envvar:: DEFAULT_LOCATION
 
    The location to store in Xibo when Meetup's venue name and find-us fields

@@ -416,6 +416,42 @@ a list of places with possible scheduling conflicts.
        "Conference Room 3",
    ]'
 
+Some places may be subdivided; others may be combined.
+For example, Classroom A/B may be partitioned into Classroom A and Classroom B.
+Conferences Rooms 1, 2, and 3 may be combined to form the Conference Center.
+Meetup2xibo must know which places contain other places to detect scheduling
+conflicts such as simultaneous meetings in Classroom A and Classroom A/B.
+
+Environment variable :envvar:`CONTAINED_PLACES` lists JSON objects describing
+places containing other places.
+:numref:`Listing %s <contained-places-example>` shows the example above of
+Classroom A/B and the Conference Center.
+
+.. code-block:: bash
+   :caption: Contained Places Example
+   :name: contained-places-example
+
+    export CONTAINING_PLACES='[
+        {"place": "Classroom A/B",
+         "contains": ["Classroom A", "Classroom B"]},
+        {"place": "Conference Center",
+         "contains": ["Conference Room 1", "Conference Room 2", "Conference Room 3"]}
+    ]'
+
+Meetup2xibo supports typical facilities with few restrictions.
+
+- Places may be listed in any order.
+- Contained places may be nested.
+  For example, the Convention Center may contain the Conference Center and
+  other places.
+- Contained places may overlap.
+  For example, the Seminar Area may contain Classroom A and Conference 1,
+  overlapping the example contained places.
+- Contained and containing places need not be checked for conflicts.
+  For example, the Conference Center is not on the list of ``CONFLICT_PLACES``.
+- Loops are forbidden.
+  For example, the Conference Center may not contain the Convention Center if
+  the Convention Center already contains the Conference Center.
 
 Timezone
 --------
