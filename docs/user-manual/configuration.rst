@@ -441,14 +441,18 @@ Classroom A/B and the Conference Center.
 Meetup2xibo supports typical facilities with few restrictions.
 
 - Places may be listed in any order.
+
 - Contained places may be nested.
   For example, the Convention Center may contain the Conference Center and
   other places.
+
 - Contained places may overlap.
   For example, the Seminar Area may contain Classroom A and Conference 1,
   overlapping the example contained places.
+
 - Contained and containing places need not be checked for conflicts.
   For example, the Conference Center is not on the list of ``CONFLICT_PLACES``.
+
 - Loops are forbidden.
   For example, the Conference Center may not contain the Convention Center if
   the Convention Center already contains the Conference Center.
