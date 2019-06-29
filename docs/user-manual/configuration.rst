@@ -440,22 +440,23 @@ Classroom A/B and the Conference Center.
 
 Meetup2xibo supports typical facilities with few restrictions.
 
-- Places may be listed in any order.
+Places may be listed in any order.
+   Places are analyzed by name, not by their position in lists.
 
-- Contained places may be nested.
-  For example, the Convention Center may contain the Conference Center and
-  other places.
+Contained places may be nested.
+   For example, the Convention Center may contain the Conference Center among
+   other places.
 
-- Contained places may overlap.
-  For example, the Seminar Area may contain Classroom A and Conference 1,
-  overlapping the example contained places.
+Contained places may overlap.
+   A Seminar Area may contain Classroom A and Conference 1, overlapping the
+   example places Classroom A/B and Conference Center.
 
-- Contained and containing places need not be checked for conflicts.
-  For example, the Conference Center is not on the list of ``CONFLICT_PLACES``.
+Contained and containing places need not be checked for conflicts.
+   For example, the Conference Center is not on the list of ``CONFLICT_PLACES``.
 
-- Loops are forbidden.
-  For example, the Conference Center may not contain the Convention Center if
-  the Convention Center already contains the Conference Center.
+Loops are forbidden.
+   The Conference Center may not contain the Convention Center if the
+   Convention Center already contains the Conference Center.
 
 Timezone
 --------
