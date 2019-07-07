@@ -27,9 +27,9 @@ def test_emtpy_conflict_places(conflict_places):
     """Test getting a place from an empty conflict places."""
     assert conflict_places.named_place("Woodshop") == None
 
-def test_add_conflict_place(conflict_places):
-    """Test adding a conflict place."""
-    conflict_places.add_conflict_place("Woodshop")
+def test_add_checked_place(conflict_places):
+    """Test adding a checked place."""
+    conflict_places.add_checked_place("Woodshop")
     assert_conflict_place(conflict_places, "Woodshop", CheckedPlace)
 
 def test_add_containing_place_new(conflict_places):
@@ -45,9 +45,9 @@ def test_add_containing_place_new(conflict_places):
 def test_add_containing_place_mixed(conflict_places):
     """Test adding a known place containing known and unknown places."""
     known_place = "Metal Shop"
-    conflict_places.add_conflict_place(known_place)
+    conflict_places.add_checked_place(known_place)
     contained_places = ["Room A", "Room B"]
-    conflict_places.add_conflict_place("Room B")
+    conflict_places.add_checked_place("Room B")
     conflict_places.add_containing_place(known_place, contained_places)
     assert_conflict_place(conflict_places, known_place, CheckedPlace)
     assert_conflict_place(conflict_places, "Room A", UncheckedPlace)

@@ -26,7 +26,7 @@ class ConflictPlaces:
             self._places[place_name] = new_place
         return self._places[place_name]
 
-    def add_conflict_place(self, place_name):
+    def add_checked_place(self, place_name):
         """Add a named place to check for conflicts, replacing any previous
         place with the same name."""
         self._places[place_name] = CheckedPlace(place_name)
@@ -39,5 +39,38 @@ class ConflictPlaces:
             other_place = self.named_or_unchecked_place(place)
             containing_place.contain(other_place)
 
+
+class ConflictPlacesLoader:
+
+    """Loads conflict places with checked places and place containment."""
+
+    def __init__(self, conflict_places, checked_place_names,
+            containing_places):
+        """Initialize with a conflict places holder, a list of checked place
+        names, and a list of containing places."""
+        self.conflict_places = conflict_places
+        self.checked_place_names = checked_place_names
+        self.containing_places = containing_places
+
+    def load(self):
+        """Load checked and containing places into conflict places. Return the
+        conflict places."""
+        self.add_checked_places()
+        self.add_containing_places()
+        return self.conflict_places
+
+    def add_checked_places(self):
+        """Add named places to check for conflicts."""
+        for place_name in self.checked_place_names:
+            self.conflict_places.add_checked_place(place_name)
+
+    def add_containing_places(self):
+        """Add places that contain other places."""
+        for containing_place in self.containing_places:
+            place_name = containing_place["place"]
+            contained_places = containing_place["contains"]
+            self.conflict_places.add_containing_place(
+                    place_name,
+                    contained_places)
 
 # vim: tabstop=8 expandtab shiftwidth=4 softtabstop=4 autoindent
