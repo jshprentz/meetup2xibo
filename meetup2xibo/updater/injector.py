@@ -328,6 +328,15 @@ def inject_conflict_logger(application_scope):
     return ConflictLogger(application_scope.conflict_places_list)
 
 
+def inject_conflict_places(application_scope):
+    """Return conflict places configured by an application scope."""
+    return ConflictPlacesLoader(
+            ConflictPlaces(),
+            application_scope.conflict_places_list,
+            application_scope.containing_places_list
+            ).load()
+
+
 def inject_null_conflict_logger():
     """Return a null conflict logger."""
     return NullConflictLogger()

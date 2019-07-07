@@ -44,6 +44,14 @@ class ApplicationScope:
         return self._args.conflicts
 
     @property
+    def containing_places(self):
+        return self._env_vars["CONTAINING_PLACES"]
+
+    @property
+    def containing_places_list(self):
+        return json.loads(self.containing_places)
+
+    @property
     def delete_after_end_seconds(self):
         return int(self._env_vars["DELETE_AFTER_END_HOURS"]) \
                 * SECONDS_PER_HOUR
