@@ -18,12 +18,10 @@ class EventConverter:
 
     logger = logging.getLogger("EventConverter")
 
-    def __init__(self, location_chooser, date_time_creator, conflict_logger):
-        """Initialize with a location chooser, a date/time creator, and a
-        conflict logger."""
+    def __init__(self, location_chooser, date_time_creator):
+        """Initialize with a location chooser, and a date/time creator."""
         self.location_chooser = location_chooser
         self.date_time_creator = date_time_creator
-        self.conflict_logger = conflict_logger
 
     def convert(self, event_json):
         """Convert Meetup event JSON to an event tuple."""
@@ -31,7 +29,6 @@ class EventConverter:
         event_location = self.location_chooser.choose_location(partial_event)
         self.logger.debug(
                 "Location='%s' MeetupEvent=%s", event_location, partial_event)
-        self.conflict_logger.log(partial_event, event_location)
         return self.event(partial_event, event_location.description)
 
     def convert_cancelled(self, event_json):

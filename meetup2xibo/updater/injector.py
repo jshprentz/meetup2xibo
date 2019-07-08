@@ -128,8 +128,7 @@ def inject_event_converter(application_scope):
     """Return an event converter configured by an application scope."""
     return EventConverter(
         inject_location_chooser(application_scope),
-        inject_date_time_creator(application_scope),
-        inject_selected_conflict_logger(application_scope))
+        inject_date_time_creator(application_scope))
 
 
 def inject_xibo_api_url_builder(application_scope):
