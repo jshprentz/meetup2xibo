@@ -38,6 +38,7 @@ EVENT_WITH_VENUE = Event(
     name = "Computational Mathematics: P=NP for students and engineers at Nova Labs",
     start_time = "2017-11-20 19:15:00",
     end_time = "2017-11-20 21:30:00",
+    places = ["Conference Room 2"],
     location = "Conference Room 2")
 
 CANCELLED_EVENT_WITH_VENUE = Event(
@@ -45,6 +46,7 @@ CANCELLED_EVENT_WITH_VENUE = Event(
     name = "Computational Mathematics: P=NP for students and engineers at Nova Labs",
     start_time = "2017-11-20 19:15:00",
     end_time = "2017-11-20 21:30:00",
+    places = [],
     location = "Cancelled")
 
 JSON_EVENT_WITH_UNKNOWN_VENUE = {
@@ -63,6 +65,7 @@ EVENT_WITH_UNKNOWN_VENUE = Event(
     name = "Computational Mathematics: P=NP for students and engineers at Nova Labs",
     start_time = "2017-11-20 19:15:00",
     end_time = "2017-11-20 21:30:00",
+    places = [DEFAULT_LOCATION],
     location = DEFAULT_LOCATION)
 
 
@@ -74,11 +77,12 @@ JSON_EVENT_WITHOUT_VENUE = {
     "time": 1511643600000,
 }
 
-EVENT_WITHOUt_VENUE = Event(
+EVENT_WITHOUT_VENUE = Event(
     meetup_id = "jdvswnywpbhc",
     name = "Blacksmithing for supervised practice and fun",
     start_time = "2017-11-25 16:00:00",
     end_time = "2017-11-25 18:30:00",
+    places = ["Blacksmithing Alley"],
     location = "Blacksmithing Alley")
 
 
@@ -140,12 +144,13 @@ COMPLETE_EVENT = Event(
     name = "Enco Vertical Mill 101",
     start_time = "2017-11-21 18:30:00",
     end_time = "2017-11-21 21:30:00",
+    places = ["Metal Shop"],
     location = "Metal Shop")
 
 SAMPLE_EVENTS = [
     (JSON_EVENT_WITH_VENUE, EVENT_WITH_VENUE),
     (JSON_EVENT_WITH_UNKNOWN_VENUE, EVENT_WITH_UNKNOWN_VENUE),
-    (JSON_EVENT_WITHOUT_VENUE, EVENT_WITHOUt_VENUE),
+    (JSON_EVENT_WITHOUT_VENUE, EVENT_WITHOUT_VENUE),
     (COMPLETE_JSON_EVENT, COMPLETE_EVENT),
 ]
 

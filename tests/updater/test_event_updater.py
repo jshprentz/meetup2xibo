@@ -8,14 +8,14 @@ from unittest.mock import MagicMock, call
 
 
 # New event
-NEW_MEETUP_EVENT = Event("A01", "Sewing Class", "Crafter's Corner", "2017-12-12 19:00:00", "2017-12-11 21:00:00")
+NEW_MEETUP_EVENT = Event("A01", "Sewing Class", "Crafter's Corner", "2017-12-12 19:00:00", "2017-12-11 21:00:00", [])
 
 # Updated event
-UPDATED_MEETUP_EVENT = Event("B01", "Metal Class", "Room 1", "2017-12-11 19:00:00", "2017-12-11 21:00:00")
+UPDATED_MEETUP_EVENT = Event("B01", "Metal Class", "Room 1", "2017-12-11 19:00:00", "2017-12-11 21:00:00", [])
 UPDATED_XIBO_EVENT = XiboEvent("B01", "Metal Class", "Metal Shop", "2017-12-11 19:15:00", "2017-12-11 21:00:00", 101)
 
 # Unchanged event
-UNCHANGED_MEETUP_EVENT = Event("C01", "Wood Class", "Room 2", "2017-12-11 19:30:00", "2017-12-11 21:30:00")
+UNCHANGED_MEETUP_EVENT = Event("C01", "Wood Class", "Room 2", "2017-12-11 19:30:00", "2017-12-11 21:30:00", [])
 UNCHANGED_XIBO_EVENT = XiboEvent("C01", "Wood Class", "Room 2", "2017-12-11 19:30:00", "2017-12-11 21:30:00", 102)
 
 # Deleted event past
@@ -28,11 +28,11 @@ DELETED_CURRENT_XIBO_EVENT = XiboEvent("D02", "Laser Class", "Room 4", "2017-12-
 DELETED_FUTURE_XIBO_EVENT = XiboEvent("D03", "Casting Class", "Room 5", "2017-12-13 17:00:00", "2017-12-13 19:00:00", 105)
 
 # Cancelled event
-CANCELLED_MEETUP_EVENT = Event("E01", "3D Printer Class", "Cancelled", "2017-12-14 19:00:00", "2017-12-14 21:00:00")
+CANCELLED_MEETUP_EVENT = Event("E01", "3D Printer Class", "Cancelled", "2017-12-14 19:00:00", "2017-12-14 21:00:00", [])
 CANCELLED_XIBO_EVENT = XiboEvent("E01", "3D Printer Class", "Room 6", "2017-12-14 19:15:00", "2017-12-14 21:00:00", 106)
 
 # Cancelled event already deleted from Xibo
-OLD_CANCELLED_MEETUP_EVENT = Event("F01", "Electonics Class", "Cancelled", "2017-12-15 19:00:00", "2017-12-15 21:00:00")
+OLD_CANCELLED_MEETUP_EVENT = Event("F01", "Electonics Class", "Cancelled", "2017-12-15 19:00:00", "2017-12-15 21:00:00", [])
 
 
 MEETUP_EVENTS = [NEW_MEETUP_EVENT, UNCHANGED_MEETUP_EVENT, UPDATED_MEETUP_EVENT]
