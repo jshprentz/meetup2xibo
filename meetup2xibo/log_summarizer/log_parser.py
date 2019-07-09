@@ -97,7 +97,7 @@ event = 'Event(' fields:f ')' -> Event.from_fields(f)
 
 fields = field:first (', ' field)*:rest -> [first] + rest
 
-field = time_field | boolean_field | other_field
+field = time_field | boolean_field | list_field | other_field
 
 time_field = time_field_name:n '=\'' event_timestamp:v '\'' -> Field(n, v)
 
@@ -110,7 +110,14 @@ boolean_value = 'True' -> True
 
 boolean_field_name = 'override'
 
+list_field = name:n '=' quoted_value_list:l -> Field(n, l)
+
 other_field = name:n '=' quoted_value:v -> Field(n, v)
+
+quoted_value_list = '[' quoted_values:qv ']' -> qv
+
+quoted_values = quoted_value:first (', ' quoted_value)*:rest -> [first] + rest
+        | -> []
 
 quoted_value = ( '\'' | '"' ):q
         (escaped_char | ~exactly(q) anything)*:c

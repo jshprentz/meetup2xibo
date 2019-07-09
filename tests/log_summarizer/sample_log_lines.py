@@ -18,7 +18,8 @@ END_TEMPLATE = \
 INSERT_TEMPLATE = \
     "2019-03-04 06:{minutes:02d}:12,865 - INFO - XiboEventCrud - " \
     "Inserted Event(meetup_id='tmnbrqyzhbhb', name='Maker Faire Organizing Team', " \
-    "location='Classroom A', start_time='2019-05-05 18:00:00', end_time='2019-05-05 20:00:00')"
+    "location='Classroom A', places=['Classroom A'], " \
+    "start_time='2019-05-05 18:00:00', end_time='2019-05-05 20:00:00')"
 
 INSERT_FIELDS = [
     ('meetup_id', 'tmnbrqyzhbhb'),
@@ -34,6 +35,7 @@ UPDATE_TEMPLATE = \
     "location='Nova Labs', start_time='2019-04-14 08:00:00', end_time='2019-04-14 10:00:00')\n" \
     "2019-03-04 06:{minutes:02d}:59,274 - INFO - XiboEventCrud - Updated to " \
     "Event(meetup_id='259565142', name='EMPOWER2MAKE', location='Orange Bay', " \
+    "places=['Orange Bay'], " \
     "start_time='2019-04-14 08:00:00', end_time='2019-04-14 10:00:00')"
 
 UPDATE_BEFORE_FIELDS = [

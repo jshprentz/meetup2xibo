@@ -95,6 +95,36 @@ def test_quoted_value(log_parser_class):
     parser = log_parser_class("'The quick brown fox'")
     assert parser.quoted_value() == "The quick brown fox"
 
+def test_quoted_values_none(log_parser_class):
+    """Test recognition of no quoted values."""
+    parser = log_parser_class("")
+    assert parser.quoted_values() == []
+
+def test_quoted_values_one(log_parser_class):
+    """Test recognition of one quoted value of possibly many."""
+    parser = log_parser_class("'one'")
+    assert parser.quoted_values() == ['one']
+
+def test_quoted_values_two(log_parser_class):
+    """Test recognition of two quoted values."""
+    parser = log_parser_class("'one', 'two'")
+    assert parser.quoted_values() == ['one', 'two']
+
+def test_quoted_value_list_none(log_parser_class):
+    """Test recognition of no quoted values."""
+    parser = log_parser_class("[]")
+    assert parser.quoted_value_list() == []
+
+def test_quoted_value_list_one(log_parser_class):
+    """Test recognition of one quoted value of possibly many."""
+    parser = log_parser_class("['one']")
+    assert parser.quoted_value_list() == ['one']
+
+def test_quoted_value_list_two(log_parser_class):
+    """Test recognition of two quoted values."""
+    parser = log_parser_class("['one', 'two']")
+    assert parser.quoted_value_list() == ['one', 'two']
+
 def test_field(log_parser_class):
     """Test recognizing a field."""
     parser = log_parser_class("foo='bar'")
@@ -132,6 +162,11 @@ def test_field_with_end_time(log_parser_class):
     seconds."""
     parser = log_parser_class("end_time='2019-02-24 11:22:33'")
     assert parser.field() == ("end_time", "2019-02-24 11:22")
+
+def test_field_with_list(log_parser_class):
+    """Test recognizing a field containing a list."""
+    parser = log_parser_class("places=['Woodshop', 'Classroom A']")
+    assert parser.field() == ("places", ['Woodshop', 'Classroom A'])
 
 def test_fields_1(log_parser_class):
     """Test recognizing fields with one field."""
