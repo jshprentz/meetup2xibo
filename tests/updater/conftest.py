@@ -5,6 +5,7 @@ from meetup2xibo.updater.site_cert_assurer import assure_site_cert
 from meetup2xibo.updater.oauth2_session_starter import Oauth2SessionStarter
 from meetup2xibo.updater.place_finder import PlaceFinder
 from meetup2xibo.updater.phrase_mapper import PhraseMapper
+from .sample_events import SampleEvents
 from ahocorasick import Automaton
 from pathlib import Path
 import os
@@ -115,6 +116,10 @@ def module_file_path(request, module_dir_path):
     test_name = request.function.__name__
     return module_dir_path / test_name
 
+@pytest.fixture
+def sample_events():
+    """Return a sample log line generator."""
+    return SampleEvents()
 
 
 # vim: tabstop=8 expandtab shiftwidth=4 softtabstop=4 autoindent
