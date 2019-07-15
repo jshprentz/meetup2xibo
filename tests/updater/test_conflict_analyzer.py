@@ -102,4 +102,15 @@ def test_analyze_events_at_end_time(early_list_size, late_list_size, sample_even
         assert remaining_event == sorted_events.pop()
     assert not sorted_events
 
+@given(sortable_events_lists)
+def test_earliest_time(events):
+    """Test finding the earliest start or end time."""
+    assume(events)
+    earliest_time = "9999-99-99 99:99:99"
+    for event in events:
+        earliest_time = min(earliest_time, event.start_time, event.end_time)
+    events_sorted_by_start = ConflictAnalyzer.events_by_start_time(events)
+    events_sorted_by_end = ConflictAnalyzer.events_by_end_time(events)
+    assert earliest_time == ConflictAnalyzer.earliest_time(events_sorted_by_start, events_sorted_by_end)
+
 # vim: tabstop=8 expandtab shiftwidth=4 softtabstop=4 autoindent
