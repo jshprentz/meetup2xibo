@@ -67,4 +67,36 @@ class SampleEvents:
         times."""
         return self.make_events(n, D1T3, D1T4)
 
+    def make_non_overlapping_events(self, places=[]):
+        """Return two non overlapping events."""
+        return (self.make_event(D1T1, D1T2, places),
+                self.make_event(D1T3, D1T4, places))
+
+    def make_overlapping_events(self, places=[]):
+        """Return two overlapping events."""
+        return (self.make_event(D1T1, D1T3, places),
+                self.make_event(D1T2, D1T4, places))
+
+    def make_consecutive_events(self, places=[]):
+        """Return two events with the first event ending when the second
+        starts."""
+        return (self.make_event(D1T1, D1T2, places),
+                self.make_event(D1T2, D1T3, places))
+
+    def make_straddling_events(self, places=[]):
+        """Return two events with the first event starting before and ending
+        after the other."""
+        return (self.make_event(D1T1, D1T4, places),
+                self.make_event(D1T2, D1T3, places))
+
+    def make_same_start_events(self, places=[]):
+        """Return two events with the same start time."""
+        return (self.make_event(D1T1, D1T2, places),
+                self.make_event(D1T1, D1T4, places))
+
+    def make_same_end_events(self, places=[]):
+        """Return two events with the same end time."""
+        return (self.make_event(D1T1, D1T3, places),
+                self.make_event(D1T2, D1T3, places))
+
 # vim: tabstop=8 expandtab shiftwidth=4 softtabstop=4 autoindent

@@ -26,6 +26,16 @@ class ContainingPlace:
         otherwise."""
         return other_place in self._contained_places
 
+    def start_event(self, event):
+        """Analyze the start of an event at this place."""
+
+    def end_event(self, event):
+        """Analyze the end of an event at this place."""
+
+    def log_conflicts(self):
+        """Log conflicts found during event analysis."""
+
+
 
 class CheckedPlace(ContainingPlace):
 
