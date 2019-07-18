@@ -1,39 +1,104 @@
 """Places for schedule conflict checking."""
 
+from .meetup_id_comparable import MeetupIdComparable
+from collections import namedtuple, Counter
+from operator import attrgetter
 import logging
+
+
+Conflict = namedtuple(
+        "Conflict",
+        "start_time end_time events")
+
 
 class ContainingPlace:
 
     """ A place that may contain other places."""
 
+    logger = logging.getLogger("ContainingPlace")
+
     def __init__(self, name):
         """Initialize with a place name."""
-        self._name = name
-        self._contained_places = set()
+        self.name = name
+        self.contained_places = set()
+        self.clock = ""
+        self.events = Counter()
+        self.conflict = None
 
     def __repr__(self):
         """Return the debugging representation of a containing place."""
         return '{}({!r})'.format(
                 self.__class__.__name__,
-                self._name)
+                self.name)
 
     def contain(self, other_place):
         """Contain the other place within this place."""
-        self._contained_places.add(other_place)
+        self.contained_places.add(other_place)
 
     def contains(self, other_place):
         """Return true if this place contains the other place; false
         otherwise."""
-        return other_place in self._contained_places
+        return other_place in self.contained_places
 
     def start_event(self, event):
-        """Analyze the start of an event at this place."""
+        """Start an event at this place."""
+        self.advance_clock(event.start_time)
+        self.count_event(event, 1)
+        self.start_event_in_contained_places(event)
+
+    def start_event_in_contained_places(self, event):
+        """Start an event in places contained within this place."""
+        for place in self.contained_places:
+            place.start_event(event)
 
     def end_event(self, event):
-        """Analyze the end of an event at this place."""
+        """End an event at this place."""
+        self.advance_clock(event.end_time)
+        self.count_event(event, -1)
+        self.end_event_in_contained_places(event)
+
+    def end_event_in_contained_places(self, event):
+        """End an event in places contained within this place."""
+        for place in self.contained_places:
+            place.end_event(event)
+
+    def advance_clock(self, new_time):
+        """Advance the clock to the new time. Note conflicts when clock
+        changes."""
+        if (self.clock == new_time):
+            return
+        old_time = self.clock
+        self.clock = new_time
+        self.note_conflicts(old_time, new_time)
+
+    def count_event(self, event, increment):
+        """Increment the event's count."""
+        comparable_event = MeetupIdComparable(event)
+        self.events[comparable_event] += increment
+
+    def note_conflicts(self, start_time, end_time):
+        """Note conflicting events scheduled during the interval from the start
+        time to the end time."""
+        self.events = +self.events
+        if len(self.events) > 1:
+            self.conflict = self.make_conflict(start_time, end_time)
+
+    def make_conflict(self, start_time, end_time):
+        """Make a end conflict tuple from current events and the time
+        interval."""
+        sorted_events = sorted(list(self.events), key=attrgetter('meetup_id'))
+        return Conflict(start_time, end_time, tuple(sorted_events))
 
     def log_conflicts(self):
-        """Log conflicts found during event analysis."""
+        """Log conflict found during event analysis."""
+        if self.conflict:
+            reportable_conflict = Conflict(
+                self.conflict.start_time,
+                self.conflict.end_time,
+                [comparable.event for comparable in self.conflict.events])
+            self.logger.info("Schedule conflict: place=%r %s",
+                    self.name, reportable_conflict)
+            self.conflict = None
 
 
 
@@ -47,5 +112,8 @@ class CheckedPlace(ContainingPlace):
 class UncheckedPlace(ContainingPlace):
 
     """A placed not checked for conflicts."""
+
+    logger = logging.getLogger("UncheckedPlace")
+
 
 # vim: tabstop=8 expandtab shiftwidth=4 softtabstop=4 autoindent
