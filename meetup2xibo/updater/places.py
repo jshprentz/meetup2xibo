@@ -22,8 +22,6 @@ class ContainingPlace:
         self.name = name
         self.contained_places = set()
         self.containing_places = set()
-        self.clock = ""
-        self.events = Counter()
 
     def __repr__(self):
         """Return the debugging representation of a containing place."""
@@ -41,41 +39,15 @@ class ContainingPlace:
         otherwise."""
         return other_place in self.contained_places
 
-    def start_event(self, event):
-        """Start an event at this place."""
-        self.advance_clock(event.start_time)
-        self.count_event(event, 1)
-        self.start_event_in_contained_places(event)
-
     def start_event_in_contained_places(self, event):
         """Start an event in places contained within this place."""
         for place in self.contained_places:
             place.start_event(event)
 
-    def end_event(self, event):
-        """End an event at this place."""
-        self.advance_clock(event.end_time)
-        self.count_event(event, -1)
-        self.end_event_in_contained_places(event)
-
     def end_event_in_contained_places(self, event):
         """End an event in places contained within this place."""
         for place in self.contained_places:
             place.end_event(event)
-
-    def advance_clock(self, new_time):
-        """Advance the clock to the new time. Note conflicts when clock
-        changes."""
-        if (self.clock == new_time):
-            return
-        old_time = self.clock
-        self.clock = new_time
-        self.note_conflicts(old_time, new_time)
-
-    def count_event(self, event, increment):
-        """Increment the event's count."""
-        comparable_event = MeetupIdComparable(event)
-        self.events[comparable_event] += increment
 
     def container_has_conflict(self, conflict):
         """Return true if any containing place has the same conflict as the
@@ -96,7 +68,35 @@ class CheckedPlace(ContainingPlace):
     def __init__(self, name):
         """Initialize with a place name."""
         super().__init__(name)
+        self.clock = ""
+        self.events = Counter()
         self.conflict = None
+
+    def start_event(self, event):
+        """Start an event at this place."""
+        self.advance_clock(event.start_time)
+        self.count_event(event, 1)
+        self.start_event_in_contained_places(event)
+
+    def end_event(self, event):
+        """End an event at this place."""
+        self.advance_clock(event.end_time)
+        self.count_event(event, -1)
+        self.end_event_in_contained_places(event)
+
+    def advance_clock(self, new_time):
+        """Advance the clock to the new time. Note conflicts when clock
+        changes."""
+        if (self.clock == new_time):
+            return
+        old_time = self.clock
+        self.clock = new_time
+        self.note_conflicts(old_time, new_time)
+
+    def count_event(self, event, increment):
+        """Increment the event's count."""
+        comparable_event = MeetupIdComparable(event)
+        self.events[comparable_event] += increment
 
     def note_conflicts(self, start_time, end_time):
         """Note conflicting events scheduled during the interval from the start
@@ -136,9 +136,13 @@ class UncheckedPlace(ContainingPlace):
 
     logger = logging.getLogger("UncheckedPlace")
 
-    def note_conflicts(self, start_time, end_time):
-        """Unchecked places do not note conflicts."""
-        pass
+    def start_event(self, event):
+        """Start an event at this place."""
+        self.start_event_in_contained_places(event)
+
+    def end_event(self, event):
+        """End an event at this place."""
+        self.end_event_in_contained_places(event)
 
     def has_conflict(self, conflict):
         """Return true if any of this place's containers have the same conflict
