@@ -89,16 +89,16 @@ class ContainingPlace:
         sorted_events = sorted(list(self.events), key=attrgetter('meetup_id'))
         return Conflict(start_time, end_time, tuple(sorted_events))
 
-    def log_conflicts(self):
-        """Log conflict found during event analysis."""
-        if self.conflict:
+    def log_conflicts(self, end_time):
+        """Log conflict found during event analysis if it matches the end
+        time."""
+        if self.conflict and self.conflict.end_time == end_time:
             reportable_conflict = Conflict(
                 self.conflict.start_time,
                 self.conflict.end_time,
                 [comparable.event for comparable in self.conflict.events])
             self.logger.info("Schedule conflict: place=%r %s",
                     self.name, reportable_conflict)
-            self.conflict = None
 
 
 

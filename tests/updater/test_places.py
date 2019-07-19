@@ -36,7 +36,7 @@ def test_contains(shops, woodshop):
 def test_no_events(woodshop, caplog):
     """Test logging nothing when there are no events."""
     caplog.set_level(logging.INFO)
-    woodshop.log_conflicts()
+    woodshop.log_conflicts("0000-00-00 00:00:00")
     assert caplog.text == ""
 
 def test_non_overlapping_events(sample_events, woodshop, caplog):
@@ -44,13 +44,13 @@ def test_non_overlapping_events(sample_events, woodshop, caplog):
     caplog.set_level(logging.INFO)
     event1, event2 = sample_events.make_non_overlapping_events()
     woodshop.start_event(event1)
-    woodshop.log_conflicts()
+    woodshop.log_conflicts(event1.start_time)
     woodshop.end_event(event1)
-    woodshop.log_conflicts()
+    woodshop.log_conflicts(event1.end_time)
     woodshop.start_event(event2)
-    woodshop.log_conflicts()
+    woodshop.log_conflicts(event2.start_time)
     woodshop.end_event(event2)
-    woodshop.log_conflicts()
+    woodshop.log_conflicts(event2.end_time)
     assert caplog.text == ""
 
 def test_consecutive_events(sample_events, woodshop, caplog):
@@ -58,12 +58,12 @@ def test_consecutive_events(sample_events, woodshop, caplog):
     caplog.set_level(logging.INFO)
     event1, event2 = sample_events.make_consecutive_events()
     woodshop.start_event(event1)
-    woodshop.log_conflicts()
+    woodshop.log_conflicts(event1.start_time)
     woodshop.start_event(event2)
     woodshop.end_event(event1)
-    woodshop.log_conflicts()
+    woodshop.log_conflicts(event1.end_time)
     woodshop.end_event(event2)
-    woodshop.log_conflicts()
+    woodshop.log_conflicts(event2.end_time)
     assert caplog.text == ""
 
 def test_overlapping_events(sample_events, woodshop, caplog):
@@ -71,13 +71,13 @@ def test_overlapping_events(sample_events, woodshop, caplog):
     caplog.set_level(logging.INFO)
     event1, event2 = sample_events.make_overlapping_events()
     woodshop.start_event(event1)
-    woodshop.log_conflicts()
+    woodshop.log_conflicts(event1.start_time)
     woodshop.start_event(event2)
-    woodshop.log_conflicts()
+    woodshop.log_conflicts(event2.start_time)
     woodshop.end_event(event1)
-    woodshop.log_conflicts()
+    woodshop.log_conflicts(event1.end_time)
     woodshop.end_event(event2)
-    woodshop.log_conflicts()
+    woodshop.log_conflicts(event2.end_time)
     assert len(caplog.messages) == 1
     message = caplog.messages[0]
     assert "Schedule conflict: place='Woodshop'" in message
@@ -92,13 +92,13 @@ def test_straddling_events(sample_events, woodshop, caplog):
     caplog.set_level(logging.INFO)
     event1, event2 = sample_events.make_straddling_events()
     woodshop.start_event(event1)
-    woodshop.log_conflicts()
+    woodshop.log_conflicts(event1.start_time)
     woodshop.start_event(event2)
-    woodshop.log_conflicts()
+    woodshop.log_conflicts(event2.start_time)
     woodshop.end_event(event2)
-    woodshop.log_conflicts()
+    woodshop.log_conflicts(event2.end_time)
     woodshop.end_event(event1)
-    woodshop.log_conflicts()
+    woodshop.log_conflicts(event1.end_time)
     assert len(caplog.messages) == 1
     message = caplog.messages[0]
     assert "Schedule conflict: place='Woodshop'" in message
@@ -114,11 +114,11 @@ def test_same_start_events(sample_events, woodshop, caplog):
     event1, event2 = sample_events.make_same_start_events()
     woodshop.start_event(event1)
     woodshop.start_event(event2)
-    woodshop.log_conflicts()
+    woodshop.log_conflicts(event2.start_time)
     woodshop.end_event(event1)
-    woodshop.log_conflicts()
+    woodshop.log_conflicts(event1.end_time)
     woodshop.end_event(event2)
-    woodshop.log_conflicts()
+    woodshop.log_conflicts(event2.end_time)
     assert len(caplog.messages) == 1
     message = caplog.messages[0]
     assert "Schedule conflict: place='Woodshop'" in message
@@ -133,12 +133,12 @@ def test_same_end_events(sample_events, woodshop, caplog):
     caplog.set_level(logging.INFO)
     event1, event2 = sample_events.make_same_end_events()
     woodshop.start_event(event1)
-    woodshop.log_conflicts()
+    woodshop.log_conflicts(event1.start_time)
     woodshop.start_event(event2)
-    woodshop.log_conflicts()
+    woodshop.log_conflicts(event2.start_time)
     woodshop.end_event(event1)
     woodshop.end_event(event2)
-    woodshop.log_conflicts()
+    woodshop.log_conflicts(event2.end_time)
     assert len(caplog.messages) == 1
     message = caplog.messages[0]
     assert "Schedule conflict: place='Woodshop'" in message
