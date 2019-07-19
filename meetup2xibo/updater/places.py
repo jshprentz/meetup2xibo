@@ -24,7 +24,6 @@ class ContainingPlace:
         self.containing_places = set()
         self.clock = ""
         self.events = Counter()
-        self.conflict = None
 
     def __repr__(self):
         """Return the debugging representation of a containing place."""
@@ -78,6 +77,27 @@ class ContainingPlace:
         comparable_event = MeetupIdComparable(event)
         self.events[comparable_event] += increment
 
+    def container_has_conflict(self, conflict):
+        """Return true if any containing place has the same conflict as the
+        given conflict."""
+        for place in self.containing_places:
+            if place.has_conflict(conflict):
+                return True
+        return False
+
+
+
+class CheckedPlace(ContainingPlace):
+
+    """A placed checked for conflicts."""
+
+    logger = logging.getLogger("CheckedPlace")
+
+    def __init__(self, name):
+        """Initialize with a place name."""
+        super().__init__(name)
+        self.conflict = None
+
     def note_conflicts(self, start_time, end_time):
         """Note conflicting events scheduled during the interval from the start
         time to the end time."""
@@ -96,14 +116,6 @@ class ContainingPlace:
         conflict."""
         return conflict == self.conflict
 
-    def container_has_conflict(self, conflict):
-        """Return true if any containing place has the same conflict as the
-        given conflict."""
-        for place in self.containing_places:
-            if place.has_conflict(conflict):
-                return True
-        return False
-
     def log_conflicts(self, end_time):
         """Log conflict found during event analysis if it matches the end
         time."""
@@ -118,19 +130,24 @@ class ContainingPlace:
                     self.name, reportable_conflict)
 
 
-
-class CheckedPlace(ContainingPlace):
-
-    """A placed checked for conflicts."""
-
-    logger = logging.getLogger("CheckedPlace")
-
-
 class UncheckedPlace(ContainingPlace):
 
     """A placed not checked for conflicts."""
 
     logger = logging.getLogger("UncheckedPlace")
+
+    def note_conflicts(self, start_time, end_time):
+        """Unchecked places do not note conflicts."""
+        pass
+
+    def has_conflict(self, conflict):
+        """Return true if any of this place's containers have the same conflict
+        as the given conflict."""
+        return self.container_has_conflict(conflict)
+
+    def log_conflicts(self, end_time):
+        """Log no conflicts from unchecked places."""
+        pass
 
 
 # vim: tabstop=8 expandtab shiftwidth=4 softtabstop=4 autoindent
