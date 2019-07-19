@@ -21,6 +21,7 @@ class ContainingPlace:
         """Initialize with a place name."""
         self.name = name
         self.contained_places = set()
+        self.containing_places = set()
         self.clock = ""
         self.events = Counter()
         self.conflict = None
@@ -34,6 +35,7 @@ class ContainingPlace:
     def contain(self, other_place):
         """Contain the other place within this place."""
         self.contained_places.add(other_place)
+        other_place.containing_places.add(self)
 
     def contains(self, other_place):
         """Return true if this place contains the other place; false
@@ -89,10 +91,25 @@ class ContainingPlace:
         sorted_events = sorted(list(self.events), key=attrgetter('meetup_id'))
         return Conflict(start_time, end_time, tuple(sorted_events))
 
+    def has_conflict(self, conflict):
+        """Return true if this place has the same conflict as the given
+        conflict."""
+        return conflict == self.conflict
+
+    def container_has_conflict(self, conflict):
+        """Return true if any containing place has the same conflict as the
+        given conflict."""
+        for place in self.containing_places:
+            if place.has_conflict(conflict):
+                return True
+        return False
+
     def log_conflicts(self, end_time):
         """Log conflict found during event analysis if it matches the end
         time."""
-        if self.conflict and self.conflict.end_time == end_time:
+        if self.conflict \
+                and self.conflict.end_time == end_time \
+                and not self.container_has_conflict(self.conflict):
             reportable_conflict = Conflict(
                 self.conflict.start_time,
                 self.conflict.end_time,

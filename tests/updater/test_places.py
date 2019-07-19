@@ -23,6 +23,10 @@ def shops(woodshop, metalshop):
     shops.contain(metalshop)
     return shops
 
+def log_conflicts(clock, places):
+    """Log conflicts at a clock time in a list of places."""
+    for place in places:
+        place.log_conflicts(clock)
 
 def test_contains_not(woodshop, metalshop):
     """Test not containing a place."""
@@ -144,6 +148,28 @@ def test_same_end_events(sample_events, woodshop, caplog):
     assert "Schedule conflict: place='Woodshop'" in message
     expected_conflict_times = "Conflict(start_time='{}', end_time='{}',".format(
             event2.start_time, event2.end_time)
+    assert expected_conflict_times in message
+    assert event1.meetup_id in message
+    assert event2.meetup_id in message
+
+def test_overlapping_events_containing_place(sample_events, shops, woodshop, metalshop, caplog):
+    """Test logging only in the checked containing place when events overlap."""
+    caplog.set_level(logging.INFO)
+    places = [shops, woodshop, metalshop]
+    event1, event2 = sample_events.make_overlapping_events()
+    shops.start_event(event1)
+    log_conflicts(event1.start_time, places)
+    shops.start_event(event2)
+    log_conflicts(event2.start_time, places)
+    shops.end_event(event1)
+    log_conflicts(event1.end_time, places)
+    shops.end_event(event2)
+    log_conflicts(event2.end_time, places)
+    assert len(caplog.messages) == 1
+    message = caplog.messages[0]
+    assert "Schedule conflict: place='Shops'" in message
+    expected_conflict_times = "Conflict(start_time='{}', end_time='{}',".format(
+            event2.start_time, event1.end_time)
     assert expected_conflict_times in message
     assert event1.meetup_id in message
     assert event2.meetup_id in message
