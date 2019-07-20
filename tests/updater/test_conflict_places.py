@@ -14,7 +14,7 @@ def assert_conflict_place(conflict_places, name, expected_class):
     """Assert that the named conflict place has the expected class."""
     place = conflict_places.named_place(name)
     assert isinstance(place, expected_class)
-    assert place._name == name
+    assert place.name == name
 
 def assert_contains(conflict_places, name, other_names):
     """Assert that the named place contains places with the other names."""
