@@ -39,6 +39,23 @@ class ConflictPlaces:
             other_place = self.named_or_unchecked_place(place)
             containing_place.contain(other_place)
 
+    def start_event(self, event):
+        """Analyze the start of an event at its places."""
+        for place_name in event.places:
+            place = self.named_or_unchecked_place(place_name)
+            place.start_event(event)
+
+    def end_event(self, event):
+        """Analyze the end of an event at its places."""
+        for place_name in event.places:
+            place = self.named_or_unchecked_place(place_name)
+            place.end_event(event)
+
+    def log_conflicts(self, end_time):
+        """Log conflicts in all places at an end time."""
+        for place in self._places.values():
+            place.log_conflicts(end_time)
+
 
 class ConflictPlacesLoader:
 
