@@ -212,4 +212,22 @@ def test_overlapping_events_unchecked(sample_events, lobby, caplog):
     overlap_events(event1, event2, lobby, lobby, [lobby])
     assert len(caplog.messages) == 0
 
+def test_overlapping_events_places_contained_in_unchecked(
+        sample_events, blacksmithing, forge, metalshop, caplog):
+    """Test logging only in the checked contained place when events overlap in
+    their unchecked container."""
+    caplog.set_level(logging.INFO)
+    places = [blacksmithing, forge, metalshop]
+    event1, event2 = sample_events.make_overlapping_events()
+    overlap_events(event1, event2, blacksmithing, blacksmithing, places)
+    assert len(caplog.messages) == 2
+    message = caplog.messages[0]
+    assert "Schedule conflict: place='Forge'" in message \
+            or "Schedule conflict: place='Metal Shop'" in message
+    expected_conflict_times = "Conflict(start_time='{}', end_time='{}',".format(
+            event2.start_time, event1.end_time)
+    assert expected_conflict_times in message
+    assert event1.meetup_id in message
+    assert event2.meetup_id in message
+
 # vim: tabstop=8 expandtab shiftwidth=4 softtabstop=4 autoindent
