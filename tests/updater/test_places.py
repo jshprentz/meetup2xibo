@@ -47,6 +47,17 @@ def log_conflicts(clock, places):
     for place in places:
         place.log_conflicts(clock)
 
+def overlap_events(event1, event2, place1, place2, log_places):
+    """Overlap two events at their respective places."""
+    place1.start_event(event1)
+    log_conflicts(event1.start_time, log_places)
+    place2.start_event(event2)
+    log_conflicts(event2.start_time, log_places)
+    place1.end_event(event1)
+    log_conflicts(event1.end_time, log_places)
+    place2.end_event(event2)
+    log_conflicts(event2.end_time, log_places)
+
 def test_contains_not(woodshop, metalshop):
     """Test not containing a place."""
     assert not woodshop.contains(metalshop)
@@ -93,14 +104,7 @@ def test_overlapping_events(sample_events, woodshop, caplog):
     """Test logging when events overlap."""
     caplog.set_level(logging.INFO)
     event1, event2 = sample_events.make_overlapping_events()
-    woodshop.start_event(event1)
-    woodshop.log_conflicts(event1.start_time)
-    woodshop.start_event(event2)
-    woodshop.log_conflicts(event2.start_time)
-    woodshop.end_event(event1)
-    woodshop.log_conflicts(event1.end_time)
-    woodshop.end_event(event2)
-    woodshop.log_conflicts(event2.end_time)
+    overlap_events(event1, event2, woodshop, woodshop, [woodshop])
     assert len(caplog.messages) == 1
     message = caplog.messages[0]
     assert "Schedule conflict: place='Woodshop'" in message
@@ -176,14 +180,7 @@ def test_overlapping_events_containing_place(sample_events, shops, woodshop, met
     caplog.set_level(logging.INFO)
     places = [shops, woodshop, metalshop]
     event1, event2 = sample_events.make_overlapping_events()
-    shops.start_event(event1)
-    log_conflicts(event1.start_time, places)
-    shops.start_event(event2)
-    log_conflicts(event2.start_time, places)
-    shops.end_event(event1)
-    log_conflicts(event1.end_time, places)
-    shops.end_event(event2)
-    log_conflicts(event2.end_time, places)
+    overlap_events(event1, event2, shops, shops, places)
     assert len(caplog.messages) == 1
     message = caplog.messages[0]
     assert "Schedule conflict: place='Shops'" in message
@@ -198,14 +195,7 @@ def test_overlapping_events_contained_place(sample_events, shops, woodshop, meta
     caplog.set_level(logging.INFO)
     places = [shops, woodshop, metalshop]
     event1, event2 = sample_events.make_overlapping_events()
-    shops.start_event(event1)
-    log_conflicts(event1.start_time, places)
-    woodshop.start_event(event2)
-    log_conflicts(event2.start_time, places)
-    shops.end_event(event1)
-    log_conflicts(event1.end_time, places)
-    woodshop.end_event(event2)
-    log_conflicts(event2.end_time, places)
+    overlap_events(event1, event2, shops, woodshop, places)
     assert len(caplog.messages) == 1
     message = caplog.messages[0]
     assert "Schedule conflict: place='Woodshop'" in message
@@ -219,14 +209,7 @@ def test_overlapping_events_unchecked(sample_events, lobby, caplog):
     """Test logging when events overlap."""
     caplog.set_level(logging.INFO)
     event1, event2 = sample_events.make_overlapping_events()
-    lobby.start_event(event1)
-    lobby.log_conflicts(event1.start_time)
-    lobby.start_event(event2)
-    lobby.log_conflicts(event2.start_time)
-    lobby.end_event(event1)
-    lobby.log_conflicts(event1.end_time)
-    lobby.end_event(event2)
-    lobby.log_conflicts(event2.end_time)
+    overlap_events(event1, event2, lobby, lobby, [lobby])
     assert len(caplog.messages) == 0
 
 # vim: tabstop=8 expandtab shiftwidth=4 softtabstop=4 autoindent
