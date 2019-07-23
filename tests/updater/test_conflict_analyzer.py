@@ -185,4 +185,32 @@ def test_overlapping_events_unchecked_containing_place(sample_events,
     assert_overlap_conflict(messages[0], event1, event2, "Metal Shop")
     assert_overlap_conflict(messages[1], event1, event2, "Woodshop")
 
+def test_multiple_overlapping_events(sample_events, conflict_analyzer,
+        caplog):
+    """Test analyzing a four events with overlaps in a checked places."""
+    caplog.set_level(logging.INFO)
+    place = "Classroom A"
+    event1, event2 = sample_events.make_overlapping_events([place])
+    event3, event4 = sample_events.make_overlapping_events([place])
+    conflict_analyzer.analyze_conflicts([event1, event3, event2, event4])
+    assert len(caplog.messages) == 3
+    assert_conflict(caplog.messages[0], place, event1.start_time,
+            event2.start_time, [event1.meetup_id, event3.meetup_id])
+    assert_conflict(caplog.messages[1], place, event2.start_time, event1.end_time,
+            [event1.meetup_id, event2.meetup_id, event3.meetup_id, event4.meetup_id])
+    assert_conflict(caplog.messages[2], place, event1.end_time,
+            event2.end_time, [event2.meetup_id, event4.meetup_id])
+
+def test_overlapping_events_from_sequence(sample_events, conflict_analyzer,
+        caplog):
+    """Test analyzing a sequence of events with overlaps in a checked places."""
+    caplog.set_level(logging.INFO)
+    event1, event2 = sample_events.make_same_start_events(["Classroom A"])
+    event3, event4 = sample_events.make_same_end_events(["Classroom A/B"])
+    conflict_analyzer.analyze_conflicts([event1, event3, event2, event4])
+    assert len(caplog.messages) == 3
+    assert_overlap_conflict(caplog.messages[0], event1, event1, "Classroom A")
+    assert_overlap_conflict(caplog.messages[1], event2, event3, "Classroom A")
+    assert_overlap_conflict(caplog.messages[2], event4, event4, "Classroom A/B")
+
 # vim: tabstop=8 expandtab shiftwidth=4 softtabstop=4 autoindent
