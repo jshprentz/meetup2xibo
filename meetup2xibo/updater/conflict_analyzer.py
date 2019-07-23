@@ -2,14 +2,11 @@
 
 from .places import CheckedPlace
 from operator import attrgetter
-import logging
 
 
 class ConflictAnalyzer:
 
     """Analyzes events scheduled at places, checking for conflicts."""
-
-    logger = logging.getLogger("ConflictAnalyzer")
 
     def __init__(self, conflict_places):
         """Initialize with conflict places."""
@@ -91,5 +88,10 @@ class ConflictAnalyzer:
 class NullConflictAnalyzer:
 
     """Skips time consuming analysis."""
+
+
+    def analyze_conflicts(self, events):
+        """Do not analyze place scheduling conflicts among a list of events."""
+        pass
 
 # vim: tabstop=8 expandtab shiftwidth=4 softtabstop=4 autoindent

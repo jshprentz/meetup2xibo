@@ -18,7 +18,7 @@ class Meetup2Xibo:
     """Downloads Meetup events into a Xibo databse."""
 
     def __init__(
-            self, logging_context, meetup_events_retriever,
+            self, logging_context, meetup_events_retriever, conflict_analyzer,
             event_converter, site_cert_assurer, oauth2_session_starter,
             enter_xibo_session_scope):
         """Initialize with a logging context, a Meetup events retriever, an
@@ -26,6 +26,7 @@ class Meetup2Xibo:
         a Xibo sesson scope entrance function """
         self.logging_context = logging_context
         self.meetup_events_retriever = meetup_events_retriever
+        self.conflict_analyzer = conflict_analyzer
         self.event_converter = event_converter
         self.site_cert_assurer = site_cert_assurer
         self.oauth2_session_starter = oauth2_session_starter
@@ -34,12 +35,13 @@ class Meetup2Xibo:
     def run(self):
         """Run the Meetup to Xibo conversion within a logging context."""
         with self.logging_context:
-            self.convert()
+            meetup_events = self.retreive_meetup_events()
+            cancelled_meetup_events = self.retreive_cancelled_meetup_events()
+            self.convert(meetup_events, cancelled_meetup_events)
+            self.conflict_analyzer.analyze_conflicts(meetup_events)
 
-    def convert(self):
+    def convert(self, meetup_events, cancelled_meetup_events):
         """Convert Meetup events to Xibo events."""
-        meetup_events = self.retreive_meetup_events()
-        cancelled_meetup_events = self.retreive_cancelled_meetup_events()
         xibo_session = self.start_xibo_session()
         self.update_xibo_events(
                 meetup_events, cancelled_meetup_events, xibo_session)
@@ -62,7 +64,7 @@ class Meetup2Xibo:
     def extract_events_from_json(self, json_events, convert):
         """Extract event tuples from a list of Meetup JSON events with a
         conversion function."""
-        return (convert(event_json) for event_json in json_events)
+        return [convert(event_json) for event_json in json_events]
 
     def start_xibo_session(self):
         """Return a new web session with the Xibo API server."""

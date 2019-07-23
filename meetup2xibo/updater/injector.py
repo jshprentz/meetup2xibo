@@ -9,7 +9,8 @@ from .meetup2xibo import Meetup2Xibo, XiboSessionProcessor, \
 from .meetup_api import MeetupEventsRetriever
 from .place_finder import PlaceFinder
 from .location_chooser import LocationChooser
-from .conflict_logger import ConflictLogger, NullConflictLogger
+from .conflict_analyzer import ConflictAnalyzer, NullConflictAnalyzer
+from .conflict_places import ConflictPlaces, ConflictPlacesLoader
 from .event_converter import EventConverter
 from .event_location import EventLocation
 from .event_updater import EventUpdater
@@ -313,18 +314,18 @@ def inject_date_time_creator(application_scope):
     return DateTimeCreator(inject_tzinfo(application_scope))
 
 
-def inject_selected_conflict_logger(application_scope):
-    """Return the conflict logger selected by a command-line argument and
+def inject_selected_conflict_analyzer(application_scope):
+    """Return the conflict analyzer selected by a command-line argument and
     configured by an application scope."""
     if application_scope.conflicts:
-        return inject_conflict_logger(application_scope)
+        return inject_conflict_analyzer(application_scope)
     else:
-        return inject_null_conflict_logger()
+        return inject_null_conflict_analyzer()
 
 
-def inject_conflict_logger(application_scope):
-    """Return a conflict logger configured by an application scope."""
-    return ConflictLogger(application_scope.conflict_places_list)
+def inject_conflict_analyzer(application_scope):
+    """Return a conflict analyzer configured by an application scope."""
+    return ConflictAnalyzer(inject_conflict_places(application_scope))
 
 
 def inject_conflict_places(application_scope):
@@ -336,9 +337,9 @@ def inject_conflict_places(application_scope):
             ).load()
 
 
-def inject_null_conflict_logger():
-    """Return a null conflict logger."""
-    return NullConflictLogger()
+def inject_null_conflict_analyzer():
+    """Return a null conflict analyzer."""
+    return NullConflictAnalyzer()
 
 
 def inject_recent_limit(application_scope):
@@ -371,6 +372,7 @@ def inject_meetup_2_xibo(application_scope):
     return Meetup2Xibo(
         inject_logging_context(application_scope),
         inject_meetup_events_retriever(application_scope),
+        inject_selected_conflict_analyzer(application_scope),
         inject_event_converter(application_scope),
         inject_site_cert_assurer(application_scope),
         inject_oauth2_session_starter(application_scope),
