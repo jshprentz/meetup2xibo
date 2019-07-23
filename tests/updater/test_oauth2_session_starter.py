@@ -53,8 +53,8 @@ def test_authorize_session_no_token_error(mocker):
     mock_session.fetch_token = mocker.Mock(side_effect=MissingTokenError("Missing access token parameter"))
     starter = Oauth2SessionStarter("a_client_id", "a_client_secret", "a_token_url", "a_user_agent")
     expected_message = r"Cannot start OAuth2 session. " \
-            "URL=a_token_url " \
-            "problem=\(missing_token\) Missing access token parameter"
+            r"URL=a_token_url " \
+            r"problem=\(missing_token\) Missing access token parameter"
     with pytest.raises(Oauth2SessionStarterError, match=expected_message):
         starter.authorize_session(mock_session)
 
