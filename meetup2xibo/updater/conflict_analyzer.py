@@ -1,6 +1,5 @@
 """Analyzes events scheduled at places, checking for conflicts."""
 
-from .places import CheckedPlace
 from operator import attrgetter
 
 
@@ -88,7 +87,6 @@ class ConflictAnalyzer:
 class NullConflictAnalyzer:
 
     """Skips time consuming analysis."""
-
 
     def analyze_conflicts(self, events):
         """Do not analyze place scheduling conflicts among a list of events."""

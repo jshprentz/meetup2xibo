@@ -1,5 +1,6 @@
 """An event's location."""
 
+
 class EventLocation:
 
     """An event's location as a textual description and a list of places."""
@@ -26,8 +27,8 @@ class EventLocation:
         """Return true if this event location is equal the other. Otherwise
         return false. Used only for unit testing."""
         return isinstance(other, EventLocation) \
-                and self.description == other.description \
-                and self.places == other.places
+            and self.description == other.description \
+            and self.places == other.places
 
     def __bool__(self):
         """Used for truth testing. Return true if the locatiion is non-blank;

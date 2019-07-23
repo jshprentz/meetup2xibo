@@ -17,16 +17,16 @@ class ConflictLogger:
         """Log for later conflict analysis a partial event, its location, and
         its places."""
         filtered_places = self.filter_conflict_places(event_location.places)
-        self.log_possible_conflicts(partial_event, event_location,
-                filtered_places)
+        self.log_possible_conflicts(
+                partial_event, event_location, filtered_places)
 
     def filter_conflict_places(self, places):
         """Given iterable places, return a list of places also in the conflict
         places set."""
         return list(self.conflict_places & set(places))
 
-    def log_possible_conflicts(self, partial_event, event_location,
-            filtered_places):
+    def log_possible_conflicts(
+            self, partial_event, event_location, filtered_places):
         """Log any possibly conflicting places."""
         if filtered_places:
             self.logger.info(

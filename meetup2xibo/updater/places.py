@@ -58,7 +58,6 @@ class ContainingPlace:
         return False
 
 
-
 class CheckedPlace(ContainingPlace):
 
     """A placed checked for conflicts."""
@@ -126,7 +125,8 @@ class CheckedPlace(ContainingPlace):
                 self.conflict.start_time,
                 self.conflict.end_time,
                 [comparable.event for comparable in self.conflict.events])
-            self.logger.info("Schedule conflict: place=%r %s",
+            self.logger.info(
+                    "Schedule conflict: place=%r %s",
                     self.name, reportable_conflict)
 
 

@@ -21,8 +21,8 @@ class LocationChooser:
 
     logger = logging.getLogger("LocationChooser")
 
-    def __init__(self, place_finder, special_locations,
-            default_event_location):
+    def __init__(
+            self, place_finder, special_locations, default_event_location):
         """Initialize with a place finder, a dictionary of special locations
         (indexed by Meetup ID), and a default event location."""
         self.place_finder = place_finder

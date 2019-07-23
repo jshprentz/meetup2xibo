@@ -61,8 +61,8 @@ class ConflictPlacesLoader:
 
     """Loads conflict places with checked places and place containment."""
 
-    def __init__(self, conflict_places, checked_place_names,
-            containing_places):
+    def __init__(
+            self, conflict_places, checked_place_names, containing_places):
         """Initialize with a conflict places holder, a list of checked place
         names, and a list of containing places."""
         self.conflict_places = conflict_places
