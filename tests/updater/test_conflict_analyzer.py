@@ -157,7 +157,7 @@ def test_overlapping_events_checked_place(sample_events, conflict_analyzer, capl
     caplog.set_level(logging.INFO)
     places = ["Woodshop"]
     event1, event2 = sample_events.make_overlapping_events(places)
-    conflict_analyzer.analyze_conflicts([event1, event2])
+    conflict_analyzer.sort_and_analyze_events([event1, event2])
     assert len(caplog.messages) == 1
     assert_overlap_conflict(caplog.messages[0], event1, event2, "Woodshop")
 
@@ -168,7 +168,7 @@ def test_overlapping_events_checked_containing_place(sample_events,
     caplog.set_level(logging.INFO)
     places = ["Classroom A/B"]
     event1, event2 = sample_events.make_overlapping_events(places)
-    conflict_analyzer.analyze_conflicts([event1, event2])
+    conflict_analyzer.sort_and_analyze_events([event1, event2])
     assert len(caplog.messages) == 1
     assert_overlap_conflict(caplog.messages[0], event1, event2, "Classroom A/B")
 
@@ -179,7 +179,7 @@ def test_overlapping_events_unchecked_containing_place(sample_events,
     caplog.set_level(logging.INFO)
     places = ["Shops"]
     event1, event2 = sample_events.make_overlapping_events(places)
-    conflict_analyzer.analyze_conflicts([event1, event2])
+    conflict_analyzer.sort_and_analyze_events([event1, event2])
     assert len(caplog.messages) == 2
     messages = sorted(caplog.messages)
     assert_overlap_conflict(messages[0], event1, event2, "Metal Shop")
@@ -192,7 +192,7 @@ def test_multiple_overlapping_events(sample_events, conflict_analyzer,
     place = "Classroom A"
     event1, event2 = sample_events.make_overlapping_events([place])
     event3, event4 = sample_events.make_overlapping_events([place])
-    conflict_analyzer.analyze_conflicts([event1, event3, event2, event4])
+    conflict_analyzer.sort_and_analyze_events([event1, event3, event2, event4])
     assert len(caplog.messages) == 3
     assert_conflict(caplog.messages[0], place, event1.start_time,
             event2.start_time, [event1.meetup_id, event3.meetup_id])
@@ -207,7 +207,7 @@ def test_overlapping_events_from_sequence(sample_events, conflict_analyzer,
     caplog.set_level(logging.INFO)
     event1, event2 = sample_events.make_same_start_events(["Classroom A"])
     event3, event4 = sample_events.make_same_end_events(["Classroom A/B"])
-    conflict_analyzer.analyze_conflicts([event1, event3, event2, event4])
+    conflict_analyzer.sort_and_analyze_events([event1, event3, event2, event4])
     assert len(caplog.messages) == 3
     assert_overlap_conflict(caplog.messages[0], event1, event1, "Classroom A")
     assert_overlap_conflict(caplog.messages[1], event2, event3, "Classroom A")

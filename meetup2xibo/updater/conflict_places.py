@@ -1,14 +1,11 @@
 """Holds places to check for scheduling conflicts."""
 
 from .places import CheckedPlace, UncheckedPlace
-import logging
 
 
 class ConflictPlaces:
 
     """Places to check for scheduling conflicts."""
-
-    logger = logging.getLogger("ConflictPlaces")
 
     def __init__(self):
         """Initialize."""
@@ -55,6 +52,11 @@ class ConflictPlaces:
         """Log conflicts in all places at an end time."""
         for place in self._places.values():
             place.log_conflicts(end_time)
+
+    def log_place_names(self):
+        """Log place names."""
+        for place in self._places.values():
+            place.log_place_name()
 
 
 class ConflictPlacesLoader:

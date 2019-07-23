@@ -57,6 +57,10 @@ class ContainingPlace:
                 return True
         return False
 
+    def log_place_name(self):
+        """Log the name of this place."""
+        self.logger.info("Name=%r", self.name)
+
 
 class CheckedPlace(ContainingPlace):
 

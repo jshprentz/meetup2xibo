@@ -1,11 +1,14 @@
 """Analyzes events scheduled at places, checking for conflicts."""
 
 from operator import attrgetter
+import logging
 
 
 class ConflictAnalyzer:
 
     """Analyzes events scheduled at places, checking for conflicts."""
+
+    logger = logging.getLogger("ConflictAnalyzer")
 
     def __init__(self, conflict_places):
         """Initialize with conflict places."""
@@ -13,6 +16,12 @@ class ConflictAnalyzer:
 
     def analyze_conflicts(self, events):
         """Analyze place scheduling conflicts among a list of events."""
+        self.logger.info("Start conflict analyzsis")
+        self.log_place_names()
+        self.sort_and_analyze_events(events)
+
+    def sort_and_analyze_events(self, events):
+        """Sort events by start and end times before analyzing them."""
         start_events = self.events_by_start_time(events)
         end_events = self.events_by_end_time(events)
         self.analyze_events(start_events, end_events)
@@ -58,6 +67,10 @@ class ConflictAnalyzer:
     def log_conflicts(self, clock):
         """Log accumulated conflicts ending at a clock time."""
         self.conflict_places.log_conflicts(clock)
+
+    def log_place_names(self):
+        """Log place names."""
+        self.conflict_places.log_place_names()
 
     @staticmethod
     def events_by_start_time(events):
