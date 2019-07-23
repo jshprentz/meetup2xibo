@@ -1,12 +1,15 @@
 """Test the anti-flapper's judgements about event times."""
 
 from meetup2xibo.updater.conflict_analyzer import ConflictAnalyzer
+from meetup2xibo.updater.conflict_places import ConflictPlaces
 from meetup2xibo.updater.event_converter import Event
 from hypothesis import given, assume, example
 from .sample_events import SampleEvents
+import pytest
 import hypothesis.strategies as st
 from datetime import datetime
 import string
+import logging
 
 MINIMUM_TEST_DATE = datetime(2019, 1, 1, 0, 0, 0)
 MAXIMUM_TEST_DATE = datetime(2029, 12, 31, 23, 59, 59)
@@ -37,6 +40,24 @@ sortable_events_lists = st.lists(
         max_size=6,
         unique_by = lambda event: event.meetup_id)
 
+
+@pytest.fixture
+def conflict_places():
+    """Return a populated conflict places."""
+    conflict_places = ConflictPlaces()
+    conflict_places.add_checked_place("Woodshop")
+    conflict_places.add_checked_place("Metal Shop")
+    conflict_places.add_checked_place("Classroom A")
+    conflict_places.add_checked_place("Classroom B")
+    conflict_places.add_checked_place("Classroom A/B")
+    conflict_places.add_containing_place("Shops", ["Woodshop", "Metal Shop", "Storeroom"])
+    conflict_places.add_containing_place("Classroom A/B", ["Classroom A", "Classroom B"])
+    return conflict_places
+
+@pytest.fixture
+def conflict_analyzer(conflict_places):
+    """Return a conflict analyzer for the conflict places."""
+    return ConflictAnalyzer(conflict_places)
 
 @given(sortable_events_lists)
 @example(SampleEvents().make_sample_sortable_events())
@@ -111,6 +132,57 @@ def test_earliest_time(events):
         earliest_time = min(earliest_time, event.start_time, event.end_time)
     events_sorted_by_start = ConflictAnalyzer.events_by_start_time(events)
     events_sorted_by_end = ConflictAnalyzer.events_by_end_time(events)
-    assert earliest_time == ConflictAnalyzer.earliest_time(events_sorted_by_start, events_sorted_by_end)
+    assert earliest_time == ConflictAnalyzer.earliest_time(
+            events_sorted_by_start, events_sorted_by_end)
+
+def assert_overlap_conflict(message, event1, event2, place):
+    """Assert that a log message describes an overlap conflict between two
+    events at a place."""
+    assert_conflict(message, place, event2.start_time, event1.end_time,
+            [event1.meetup_id, event2.meetup_id])
+
+def assert_conflict(message, expected_place, expected_start_time,
+        expected_end_time, expected_meetup_ids):
+    """Assert that a log message describes a conflict with the expected place,
+    times, and message IDs."""
+    assert "Schedule conflict: place='{}'".format(expected_place) in message
+    expected_conflict_times = "Conflict(start_time='{}', end_time='{}',".format(
+            expected_start_time, expected_end_time)
+    assert expected_conflict_times in message
+    for meetup_id in expected_meetup_ids:
+        assert meetup_id in message
+
+def test_overlapping_events_checked_place(sample_events, conflict_analyzer, caplog):
+    """Test analyzing overlapping events in a checked place."""
+    caplog.set_level(logging.INFO)
+    places = ["Woodshop"]
+    event1, event2 = sample_events.make_overlapping_events(places)
+    conflict_analyzer.analyze_conflicts([event1, event2])
+    assert len(caplog.messages) == 1
+    assert_overlap_conflict(caplog.messages[0], event1, event2, "Woodshop")
+
+def test_overlapping_events_checked_containing_place(sample_events,
+        conflict_analyzer, caplog):
+    """Test analyzing overlapping events in a checked place that contains other
+    checked places."""
+    caplog.set_level(logging.INFO)
+    places = ["Classroom A/B"]
+    event1, event2 = sample_events.make_overlapping_events(places)
+    conflict_analyzer.analyze_conflicts([event1, event2])
+    assert len(caplog.messages) == 1
+    assert_overlap_conflict(caplog.messages[0], event1, event2, "Classroom A/B")
+
+def test_overlapping_events_unchecked_containing_place(sample_events,
+        conflict_analyzer, caplog):
+    """Test analyzing overlapping events in an unchecked place that contains
+    checked and unchecked places."""
+    caplog.set_level(logging.INFO)
+    places = ["Shops"]
+    event1, event2 = sample_events.make_overlapping_events(places)
+    conflict_analyzer.analyze_conflicts([event1, event2])
+    assert len(caplog.messages) == 2
+    messages = sorted(caplog.messages)
+    assert_overlap_conflict(messages[0], event1, event2, "Metal Shop")
+    assert_overlap_conflict(messages[1], event1, event2, "Woodshop")
 
 # vim: tabstop=8 expandtab shiftwidth=4 softtabstop=4 autoindent

@@ -23,6 +23,9 @@ class ConflictAnalyzer:
 
     def analyze_events(self, start_events, end_events):
         """Analyze the events listed by start and end times."""
+        self.analyze_start_and_end_events(start_events, end_events)
+        self.analyze_start_events(start_events)
+        self.analyze_end_events(end_events)
 
     def analyze_start_and_end_events(self, start_events, end_events):
         """Analyze events while both start and end events remain."""
@@ -30,8 +33,21 @@ class ConflictAnalyzer:
             clock = self.earliest_time(start_events, end_events)
             self.analyze_events_at_start_time(start_events, clock)
             self.analyze_events_at_end_time(end_events, clock)
-            self.log_conflicts()
+            self.log_conflicts(clock)
 
+    def analyze_start_events(self, start_events):
+        """Analyze events while both start events remain."""
+        while start_events:
+            clock = start_events[-1].start_time
+            self.analyze_events_at_start_time(start_events, clock)
+            self.log_conflicts(clock)
+
+    def analyze_end_events(self, end_events):
+        """Analyze events while both end events remain."""
+        while end_events:
+            clock = end_events[-1].end_time
+            self.analyze_events_at_end_time(end_events, clock)
+            self.log_conflicts(clock)
 
     def analyze_events_at_start_time(self, start_events, start_time):
         """Remove and analyze events scheduled at a start time."""
@@ -42,6 +58,10 @@ class ConflictAnalyzer:
         """Remove and analyze events scheduled at a end time."""
         while end_events and end_events[-1].end_time == end_time:
             self.conflict_places.end_event(end_events.pop())
+
+    def log_conflicts(self, clock):
+        """Log accumulated conflicts ending at a clock time."""
+        self.conflict_places.log_conflicts(clock)
 
     @staticmethod
     def events_by_start_time(events):
