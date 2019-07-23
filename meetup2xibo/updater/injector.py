@@ -3,7 +3,7 @@
 from .logging_context import LoggingContext
 from .logging_setup_manager import LoggingSetupManager
 from .http_response_error import HttpResponseError
-from .exceptions import DatasetDiscoveryError
+from .exceptions import DatasetDiscoveryError, ContainmentLoopError
 from .meetup2xibo import Meetup2Xibo, XiboSessionProcessor, \
         XiboEventCrudProcessor
 from .meetup_api import MeetupEventsRetriever
@@ -56,6 +56,7 @@ def inject_no_trace_exceptions():
     """Return a tuple listing exception classes that need no traceback."""
     return (
             HttpResponseError,
+            ContainmentLoopError,
             DatasetDiscoveryError,
             Oauth2SessionStarterError)
 

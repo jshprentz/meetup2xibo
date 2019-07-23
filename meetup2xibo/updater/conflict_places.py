@@ -1,6 +1,7 @@
 """Holds places to check for scheduling conflicts."""
 
 from .places import CheckedPlace, UncheckedPlace
+from .exceptions import ContainmentLoopError
 
 
 class ConflictPlaces:
@@ -40,13 +41,13 @@ class ConflictPlaces:
         """Analyze the start of an event at its places."""
         for place_name in event.places:
             place = self.named_or_unchecked_place(place_name)
-            place.start_event(event)
+            place.start_event_carefully(event)
 
     def end_event(self, event):
         """Analyze the end of an event at its places."""
         for place_name in event.places:
             place = self.named_or_unchecked_place(place_name)
-            place.end_event(event)
+            place.end_event_carefully(event)
 
     def log_conflicts(self, end_time):
         """Log conflicts in all places at an end time."""

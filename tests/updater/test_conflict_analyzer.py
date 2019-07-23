@@ -3,6 +3,7 @@
 from meetup2xibo.updater.conflict_analyzer import ConflictAnalyzer
 from meetup2xibo.updater.conflict_places import ConflictPlaces
 from meetup2xibo.updater.event_converter import Event
+from meetup2xibo.updater.exceptions import ContainmentLoopError
 from hypothesis import given, assume, example
 from .sample_events import SampleEvents
 import pytest
@@ -212,5 +213,16 @@ def test_overlapping_events_from_sequence(sample_events, conflict_analyzer,
     assert_overlap_conflict(caplog.messages[0], event1, event1, "Classroom A")
     assert_overlap_conflict(caplog.messages[1], event2, event3, "Classroom A")
     assert_overlap_conflict(caplog.messages[2], event4, event4, "Classroom A/B")
+
+def test_analyzing_containment_loops(sample_events, conflict_places,
+        conflict_analyzer, caplog):
+    """Test analyzing an event in a place that contains a place that contains
+    the first place.."""
+    caplog.set_level(logging.INFO)
+    conflict_places.add_containing_place("Storeroom", ["Shops"])
+    try:
+        sample_events.make_overlapping_events(["Storeroom"])
+    except ContainmentLoopError as err:
+        assert str(err) == "Loop found among containing places. Check 'Storeroom'."
 
 # vim: tabstop=8 expandtab shiftwidth=4 softtabstop=4 autoindent

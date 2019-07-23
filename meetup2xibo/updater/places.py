@@ -1,6 +1,7 @@
 """Places for schedule conflict checking."""
 
 from .meetup_id_comparable import MeetupIdComparable
+from .exceptions import ContainmentLoopError
 from collections import namedtuple, Counter
 from operator import attrgetter
 import logging
@@ -39,10 +40,24 @@ class ContainingPlace:
         otherwise."""
         return other_place in self.contained_places
 
+    def start_event_carefully(self, event):
+        """Start an event at this place, checking for containment loops."""
+        try:
+            self.start_event(event)
+        except RecursionError:
+            raise ContainmentLoopError(self.containment_loop_message())
+
     def start_event_in_contained_places(self, event):
         """Start an event in places contained within this place."""
         for place in self.contained_places:
             place.start_event(event)
+
+    def end_event_carefully(self, event):
+        """End an event at this place, checking for containment loops."""
+        try:
+            self.end_event(event)
+        except RecursionError:
+            raise ContainmentLoopError(self.containment_loop_message())
 
     def end_event_in_contained_places(self, event):
         """End an event in places contained within this place."""
@@ -56,6 +71,18 @@ class ContainingPlace:
             if place.has_conflict(conflict):
                 return True
         return False
+
+    def start_event_carefully(self, event):
+        """Start an event at this place, checking for containment loops."""
+        try:
+            self.start_event(event)
+        except RecursionError:
+            raise ContainmentLoopError(self.containment_loop_message())
+
+    def containment_loop_message(self):
+        """Return a containment loop error message for this place."""
+        return "Loop found among containing places. Check {!r}." \
+            .format(self.name)
 
     def log_place_name(self):
         """Log the name of this place."""
@@ -132,7 +159,6 @@ class CheckedPlace(ContainingPlace):
             self.logger.info(
                     "Schedule conflict: place=%r %s",
                     self.name, reportable_conflict)
-
 
 class UncheckedPlace(ContainingPlace):
 
