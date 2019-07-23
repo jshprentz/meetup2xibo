@@ -1,7 +1,6 @@
 """Holds places to check for scheduling conflicts."""
 
 from .places import CheckedPlace, UncheckedPlace
-from .exceptions import ContainmentLoopError
 
 
 class ConflictPlaces:

@@ -72,13 +72,6 @@ class ContainingPlace:
                 return True
         return False
 
-    def start_event_carefully(self, event):
-        """Start an event at this place, checking for containment loops."""
-        try:
-            self.start_event(event)
-        except RecursionError:
-            raise ContainmentLoopError(self.containment_loop_message())
-
     def containment_loop_message(self):
         """Return a containment loop error message for this place."""
         return "Loop found among containing places. Check {!r}." \
@@ -159,6 +152,7 @@ class CheckedPlace(ContainingPlace):
             self.logger.info(
                     "Schedule conflict: place=%r %s",
                     self.name, reportable_conflict)
+
 
 class UncheckedPlace(ContainingPlace):
 
