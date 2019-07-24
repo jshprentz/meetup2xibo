@@ -16,7 +16,7 @@ class ConflictAnalyzer:
 
     def analyze_conflicts(self, events):
         """Analyze place scheduling conflicts among a list of events."""
-        self.logger.info("Start conflict analyzsis")
+        self.logger.info("Start conflict analysis")
         self.log_place_names()
         self.sort_and_analyze_events(events)
 

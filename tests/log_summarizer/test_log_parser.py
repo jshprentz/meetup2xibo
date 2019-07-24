@@ -6,6 +6,7 @@ from meetup2xibo.log_summarizer.log_lines import InsertEventLogLine, \
     UpdateEventLogLine, DeleteEventLogLine, RetireEventLogLine, \
     UnknownLocationLogLine, EventLocationLogLine, SpecialLocationLogLine
 from meetup2xibo.log_summarizer.start_counter import StartCounter
+from meetup2xibo.log_summarizer.conflict_reporter import ConflictReporter
 from meetup2xibo.log_summarizer.crud_lister import CrudLister
 from meetup2xibo.log_summarizer.location_mapper import LocationMapper
 from parsley import ParseError
@@ -17,6 +18,11 @@ def log_parser_class():
     """Return a log parser class, which creates a parser when called
     with string."""
     return make_log_parser_class()
+
+@pytest.fixture
+def conflict_reporter():
+    """Return a conflict reporter."""
+    return ConflictReporter()
 
 @pytest.fixture
 def crud_lister():
@@ -349,6 +355,12 @@ def test_log_lines_with_special_location(log_parser_class, sample_log_lines,
     assert isinstance(log_line_1, SpecialLocationLogLine)
     assert log_line_1.timestamp == '2019-03-04 06:01'
     assert log_line_1.meetup_id == meetup_id
+
+def test_start_conflict_analysis_log_line(log_parser_class, sample_log_lines):
+    """Test recognizing a start conflict analysis log line."""
+    log_line = sample_log_lines.start_conflict_analysis_line()
+    parser = log_parser_class(log_line)
+    parser.start_conflict_analysis_log_line()
 
 
 # vim: tabstop=8 expandtab shiftwidth=4 softtabstop=4 autoindent

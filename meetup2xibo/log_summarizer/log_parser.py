@@ -70,6 +70,9 @@ event_location_log_line = log_line_start('EventConverter'):s
         'Location=' quoted_value:l ' MeetupEvent=Partial' event:e
         -> EventLocationLogLine(s.timestamp, l, e)
 
+start_conflict_analysis_log_line = log_line_start('ConflictAnalyzer')
+        'Start conflict analysis'
+
 special_location = 'SpecialLocation(' fields:f ')'
         -> SpecialLocation(**dict(f))
 

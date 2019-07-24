@@ -128,6 +128,27 @@ EVENT_LOCATION_FIELDS = [
     ('find_us', '[Woodshop Red area]'),
     ]
 
+START_CONFLICT_ANALYSIS_TEMPLATE = \
+    "2019-03-04 06:{minutes:02d}:27,521 - INFO - ConflictAnalyzer - " \
+    "Start conflict analysis"
+
+CHECKED_PLACE_TEMPLATE = \
+    "2019-03-04 06:{minutes:02d}:16,418 - INFO - CheckedPlace - " \
+    "Name='Conference Room 1'"
+
+CONFLICT_TEMPLATE = \
+    "2019-03-04 06:{minutes:02d}:54,246 - INFO - CheckedPlace - " \
+    "Schedule conflict: place='Conference Room 2' " \
+    "Conflict(start_time='2019-09-03 19:00:00', end_time='2019-09-03 " \
+    "21:00:00', events=[Event(meetup_id='vzgnvqyzmbfb', name='Computational " \
+    "Mathematics: P=NP for students and engineers at Nova Labs', " \
+    "location='Conference Room 2', start_time='2019-09-03 19:00:00', " \
+    "end_time='2019-09-03 21:00:00', places=['Conference Room 2']), " \
+    "Event(meetup_id='whkcdryzmbfb', name='National Drone Science University " \
+    "(NDSU) Drone Science', location='Conference Room 2', " \
+    "start_time='2019-09-03 19:00:00', end_time='2019-09-03 21:00:00', " \
+    "places=['Conference Room 2'])])" 
+
 
 class SampleLogLines:
 
@@ -182,6 +203,18 @@ class SampleLogLines:
     def event_location_line(self):
         """Return an event location line."""
         return self.make_line(EVENT_LOCATION_TEMPLATE)
+
+    def start_conflict_analysis_line(self):
+        """Return a start conflict analysis line."""
+        return self.make_line(START_CONFLICT_ANALYSIS_TEMPLATE)
+
+    def checked_place_line(self):
+        """Return a checked place line."""
+        return self.make_line(CHECKED_PLACE_TEMPLATE)
+
+    def conflict_line(self):
+        """Return a conflict line."""
+        return self.make_line(CONFLICT_TEMPLATE)
 
     @property
     def insert_fields(self):
@@ -261,6 +294,5 @@ class SampleLogLines:
         event = Event.from_fields(EVENT_LOCATION_FIELDS)
         date_time = self.date_time()
         return EventLocationLogLine(date_time, location, event)
-
 
 # vim: tabstop=8 expandtab shiftwidth=4 softtabstop=4 autoindent
