@@ -73,6 +73,8 @@ event_location_log_line = log_line_start('EventConverter'):s
 start_conflict_analysis_log_line = log_line_start('ConflictAnalyzer')
         'Start conflict analysis'
 
+checked_place_log_line = log_line_start('CheckedPlace') 'Name=' quoted_value
+
 special_location = 'SpecialLocation(' fields:f ')'
         -> SpecialLocation(**dict(f))
 

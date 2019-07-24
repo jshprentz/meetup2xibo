@@ -362,5 +362,12 @@ def test_start_conflict_analysis_log_line(log_parser_class, sample_log_lines):
     parser = log_parser_class(log_line)
     parser.start_conflict_analysis_log_line()
 
+def test_checked_place_log_line(log_parser_class, sample_log_lines):
+    """Test recognizing a checked place log line."""
+    log_line = sample_log_lines.checked_place_line()
+    parser = log_parser_class(log_line)
+    name = parser.checked_place_log_line()
+    assert name == "Conference Room 1"
+
 
 # vim: tabstop=8 expandtab shiftwidth=4 softtabstop=4 autoindent
