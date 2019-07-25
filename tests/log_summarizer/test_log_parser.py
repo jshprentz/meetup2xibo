@@ -1,6 +1,7 @@
 """Test log parser productions."""
 
 from meetup2xibo.log_summarizer.log_parser import make_log_parser_class, Field, Summary
+from meetup2xibo.log_summarizer.conflict import Conflict
 from meetup2xibo.log_summarizer.event import Event
 from meetup2xibo.log_summarizer.log_lines import InsertEventLogLine, \
     UpdateEventLogLine, DeleteEventLogLine, RetireEventLogLine, \
@@ -395,5 +396,38 @@ def test_event_list(log_parser_class):
             places=['Woodshop'])
         ]
     assert parser.event_list() == expected_events
+
+def test_conflict(log_parser_class):
+    """Test recognizing a conflict."""
+    parser = log_parser_class(
+            "Conflict(start_time='2019-08-05 19:00:00', end_time='2019-08-05 " \
+            "21:00:00', events=[Event(meetup_id='ngbwqqyzlbhb', name='Board " \
+            "Meeting (Private)', location='Conference Room 2', " \
+            "start_time='2019-08-05 19:00:00', end_time='2019-08-05 22:00:00', " \
+            "places=['Conference Room 2']), Event(meetup_id='wjvcdryzlbhb', " \
+            "name='National Space Science University (NSSU) Quantum Gravity', " \
+            "location='Conference Room 2', start_time='2019-08-05 19:00:00', " \
+            "end_time='2019-08-05 21:00:00', places=['Conference Room 2'])])")
+    expected_conflict = Conflict(
+        start_time='2019-08-05 19:00',
+        end_time='2019-08-05 21:00',
+        events=[
+            Event(
+                meetup_id='ngbwqqyzlbhb',
+                name='Board Meeting (Private)',
+                location='Conference Room 2',
+                start_time='2019-08-05 19:00',
+                end_time='2019-08-05 22:00',
+                places=['Conference Room 2']),
+            Event(
+                meetup_id='wjvcdryzlbhb',
+                name='National Space Science University (NSSU) Quantum Gravity',
+                location='Conference Room 2',
+                start_time='2019-08-05 19:00',
+                end_time='2019-08-05 21:00',
+                places=['Conference Room 2'])
+            ])
+    assert parser.conflict() == expected_conflict
+
 
 # vim: tabstop=8 expandtab shiftwidth=4 softtabstop=4 autoindent

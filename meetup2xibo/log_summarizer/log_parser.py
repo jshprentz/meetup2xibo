@@ -1,5 +1,6 @@
 """Parses logs and collects the interesting information."""
 
+from .conflict import Conflict
 from .event import Event
 from .log_lines import InsertEventLogLine, DeleteEventLogLine, \
     UpdateEventLogLine, UnknownLocationLogLine, EventLocationLogLine, \
@@ -8,9 +9,9 @@ from parsley import makeGrammar, ParseError
 from collections import namedtuple
 
 
+Field = namedtuple("Field", "name value")
 LogLineStart = namedtuple("LogLineStart", "timestamp log_level")
 UpdateToLogLine = namedtuple("UpdateToLogLine", "timestamp event")
-Field = namedtuple("Field", "name value")
 Summary = namedtuple("Summary", "counter crud_lister location_mapper")
 SpecialLocation = namedtuple(
         "SpecialLocation",
@@ -66,6 +67,9 @@ special_location_log_line = log_line_start('SpecialEventsMonitor'):s
         'No longer needed ' special_location:l
         -> SpecialLocationLogLine(s.timestamp, l)
 
+special_location = 'SpecialLocation(' fields:f ')'
+        -> SpecialLocation(**dict(f))
+
 event_location_log_line = log_line_start('EventConverter'):s
         'Location=' quoted_value:l ' MeetupEvent=Partial' event:e
         -> EventLocationLogLine(s.timestamp, l, e)
@@ -75,8 +79,10 @@ start_conflict_analysis_log_line = log_line_start('ConflictAnalyzer')
 
 checked_place_log_line = log_line_start('CheckedPlace') 'Name=' quoted_value
 
-special_location = 'SpecialLocation(' fields:f ')'
-        -> SpecialLocation(**dict(f))
+schedule_conflict_log_line = log_line_start('CheckedPlace') 'Schedule conflict: '
+        'place=' quoted_value:p conflict:c
+
+conflict = 'Conflict(' conflict_fields:f ')' -> Conflict.from_fields(f)
 
 other_log_line = rest_of_line
 
@@ -103,7 +109,11 @@ event = 'Event(' fields:f ')' -> Event.from_fields(f)
 
 fields = field:first (', ' field)*:rest -> [first] + rest
 
+conflict_fields = conflict_field:first (', ' conflict_field)*:rest -> [first] + rest
+
 field = time_field | boolean_field | list_field | other_field
+
+conflict_field = event_list_field | field
 
 time_field = time_field_name:n '=\'' event_timestamp:v '\'' -> Field(n, v)
 
@@ -145,6 +155,7 @@ dash = ' - '
 def make_log_parser_class():
     """Make a log line parser class."""
     context = {
+            'Conflict': Conflict,
             'Field': Field,
             'Event': Event,
             'InsertEventLogLine': InsertEventLogLine,
