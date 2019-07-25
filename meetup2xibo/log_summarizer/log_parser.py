@@ -74,6 +74,10 @@ event_location_log_line = log_line_start('EventConverter'):s
         'Location=' quoted_value:l ' MeetupEvent=Partial' event:e
         -> EventLocationLogLine(s.timestamp, l, e)
 
+conflict_analysis_log_line :conflict_reporter =
+        start_conflict_analysis_log_line -> conflict_reporter.clear()
+        | checked_place_log_line:n -> conflict_reporter.add_checked_place(n)
+
 start_conflict_analysis_log_line = log_line_start('ConflictAnalyzer')
         'Start conflict analysis'
 

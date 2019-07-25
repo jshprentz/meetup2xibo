@@ -429,5 +429,24 @@ def test_conflict(log_parser_class):
             ])
     assert parser.conflict() == expected_conflict
 
+def test_conflict_analysis_log_line_start_analysis(
+        log_parser_class, sample_log_lines, conflict_reporter):
+    """Test clearing a conflict_reporter when starting a conflict analysis."""
+    conflict_reporter.add_checked_place("Woodshop")
+    log_line = sample_log_lines.start_conflict_analysis_line()
+    parser = log_parser_class(log_line)
+    parser.conflict_analysis_log_line(conflict_reporter)
+    assert [] == conflict_reporter.sorted_checked_places()
+
+def test_conflict_analysis_log_line_checked_place(
+        log_parser_class, sample_log_lines, conflict_reporter):
+    """Test recognizing a checked place log line and adding it to a conflict
+    reporter."""
+    log_line = sample_log_lines.checked_place_line()
+    parser = log_parser_class(log_line)
+    parser.conflict_analysis_log_line(conflict_reporter)
+    assert ["Conference Room 1"] == conflict_reporter.sorted_checked_places()
+
+
 
 # vim: tabstop=8 expandtab shiftwidth=4 softtabstop=4 autoindent
