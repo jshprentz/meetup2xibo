@@ -10,16 +10,16 @@ class ConflictReporter:
 
     def __init__(self):
         """Initialize with no conflicts or places."""
-        pass
+        self._checked_places = []
 
     def clear(self):
         """Clear previously collected conflicts and places to start a new
         analysis."""
-        pass
+        self._checked_places.clear()
 
     def add_checked_place(self, name):
         """Add the named checked place."""
-        pass
+        self._checked_places.append(name)
 
     def add_conflict(self, conflict):
         """Add the scheduling conflict."""
@@ -31,7 +31,7 @@ class ConflictReporter:
 
     def sorted_checked_places(self):
         """Return a sorted list of checked places."""
-        return []
+        return sorted(self._checked_places)
 
     def sorted_conflict_places(self):
         """Return a sorted list of places with their conflicts."""
