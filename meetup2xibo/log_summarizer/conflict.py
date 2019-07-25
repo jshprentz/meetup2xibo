@@ -32,7 +32,7 @@ class Conflict:
 
     def __hash__(self):
         """Hash the contents of this event."""
-        return hash((self._start_time, self._end_time, self._events))
+        return hash((self._start_time, self._end_time, tuple(self._events)))
 
     def __repr__(self):
         """Return the debugging representation of this event."""
