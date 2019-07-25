@@ -369,5 +369,31 @@ def test_checked_place_log_line(log_parser_class, sample_log_lines):
     name = parser.checked_place_log_line()
     assert name == "Conference Room 1"
 
+def test_event_list(log_parser_class):
+    """Test recognizing an event list."""
+    parser = log_parser_class(
+        "[Event(meetup_id='lksvbqyzmbhb', name='ShopSabre CNC Open Office " \
+        "Hours', location='Woodshop', start_time='2019-09-05 18:00:00', " \
+        "end_time='2019-09-05 20:00:00', places=['Woodshop']), " \
+        "Event(meetup_id='qbwpbryzmbhb', name='Personal Project Night in the " \
+        "Woodshop', location='Woodshop', start_time='2019-09-05 19:00:00', " \
+        "end_time='2019-09-05 21:00:00', places=['Woodshop'])]")
+    expected_events = [
+        Event(
+            meetup_id='lksvbqyzmbhb',
+            name='ShopSabre CNC Open Office Hours',
+            location='Woodshop',
+            start_time='2019-09-05 18:00',
+            end_time='2019-09-05 20:00',
+            places=['Woodshop']),
+        Event(
+            meetup_id='qbwpbryzmbhb',
+            name='Personal Project Night in the Woodshop',
+            location='Woodshop',
+            start_time='2019-09-05 19:00',
+            end_time='2019-09-05 21:00',
+            places=['Woodshop'])
+        ]
+    assert parser.event_list() == expected_events
 
 # vim: tabstop=8 expandtab shiftwidth=4 softtabstop=4 autoindent

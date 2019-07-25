@@ -97,6 +97,7 @@ level = 'INFO' | 'DEBUG' | 'WARNING' | 'ERROR' | 'CRITICAL'
 
 name = <(letterOrDigit | '_')+>
 
+event_list = '[' event:first (', ' event)+:rest ']' -> [first] + rest
 
 event = 'Event(' fields:f ')' -> Event.from_fields(f)
 
@@ -114,6 +115,8 @@ boolean_value = 'True' -> True
         | 'False' -> False
 
 boolean_field_name = 'override'
+
+event_list_field = name:n '=' event_list:l -> Field(n, l)
 
 list_field = name:n '=' quoted_value_list:l -> Field(n, l)
 
