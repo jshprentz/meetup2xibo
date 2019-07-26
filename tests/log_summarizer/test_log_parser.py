@@ -1,11 +1,13 @@
 """Test log parser productions."""
 
 from meetup2xibo.log_summarizer.log_parser import make_log_parser_class, Field, Summary
+from meetup2xibo.log_summarizer.conflict import Conflict
 from meetup2xibo.log_summarizer.event import Event
 from meetup2xibo.log_summarizer.log_lines import InsertEventLogLine, \
     UpdateEventLogLine, DeleteEventLogLine, RetireEventLogLine, \
     UnknownLocationLogLine, EventLocationLogLine, SpecialLocationLogLine
 from meetup2xibo.log_summarizer.start_counter import StartCounter
+from meetup2xibo.log_summarizer.conflict_reporter import ConflictReporter
 from meetup2xibo.log_summarizer.crud_lister import CrudLister
 from meetup2xibo.log_summarizer.location_mapper import LocationMapper
 from parsley import ParseError
@@ -17,6 +19,11 @@ def log_parser_class():
     """Return a log parser class, which creates a parser when called
     with string."""
     return make_log_parser_class()
+
+@pytest.fixture
+def conflict_reporter():
+    """Return a conflict reporter."""
+    return ConflictReporter()
 
 @pytest.fixture
 def crud_lister():
@@ -34,9 +41,9 @@ def location_mapper():
     return LocationMapper()
 
 @pytest.fixture
-def summary(counter, crud_lister, location_mapper):
+def summary(counter, crud_lister, conflict_reporter, location_mapper):
     """Return a summary tuple."""
-    return Summary(counter, crud_lister, location_mapper)
+    return Summary(counter, crud_lister, conflict_reporter, location_mapper)
 
 def test_dash(log_parser_class):
     """Test recognizing the dash separator between log line components."""
@@ -95,6 +102,36 @@ def test_quoted_value(log_parser_class):
     parser = log_parser_class("'The quick brown fox'")
     assert parser.quoted_value() == "The quick brown fox"
 
+def test_quoted_values_none(log_parser_class):
+    """Test recognition of no quoted values."""
+    parser = log_parser_class("")
+    assert parser.quoted_values() == []
+
+def test_quoted_values_one(log_parser_class):
+    """Test recognition of one quoted value of possibly many."""
+    parser = log_parser_class("'one'")
+    assert parser.quoted_values() == ['one']
+
+def test_quoted_values_two(log_parser_class):
+    """Test recognition of two quoted values."""
+    parser = log_parser_class("'one', 'two'")
+    assert parser.quoted_values() == ['one', 'two']
+
+def test_quoted_value_list_none(log_parser_class):
+    """Test recognition of no quoted values."""
+    parser = log_parser_class("[]")
+    assert parser.quoted_value_list() == []
+
+def test_quoted_value_list_one(log_parser_class):
+    """Test recognition of one quoted value of possibly many."""
+    parser = log_parser_class("['one']")
+    assert parser.quoted_value_list() == ['one']
+
+def test_quoted_value_list_two(log_parser_class):
+    """Test recognition of two quoted values."""
+    parser = log_parser_class("['one', 'two']")
+    assert parser.quoted_value_list() == ['one', 'two']
+
 def test_field(log_parser_class):
     """Test recognizing a field."""
     parser = log_parser_class("foo='bar'")
@@ -132,6 +169,11 @@ def test_field_with_end_time(log_parser_class):
     seconds."""
     parser = log_parser_class("end_time='2019-02-24 11:22:33'")
     assert parser.field() == ("end_time", "2019-02-24 11:22")
+
+def test_field_with_list(log_parser_class):
+    """Test recognizing a field containing a list."""
+    parser = log_parser_class("places=['Woodshop', 'Classroom A']")
+    assert parser.field() == ("places", ['Woodshop', 'Classroom A'])
 
 def test_fields_1(log_parser_class):
     """Test recognizing fields with one field."""
@@ -314,6 +356,127 @@ def test_log_lines_with_special_location(log_parser_class, sample_log_lines,
     assert isinstance(log_line_1, SpecialLocationLogLine)
     assert log_line_1.timestamp == '2019-03-04 06:01'
     assert log_line_1.meetup_id == meetup_id
+
+def test_start_conflict_analysis_log_line(log_parser_class, sample_log_lines):
+    """Test recognizing a start conflict analysis log line."""
+    log_line = sample_log_lines.start_conflict_analysis_line()
+    parser = log_parser_class(log_line)
+    parser.start_conflict_analysis_log_line()
+
+def test_checked_place_log_line(log_parser_class, sample_log_lines):
+    """Test recognizing a checked place log line."""
+    log_line = sample_log_lines.checked_place_line()
+    parser = log_parser_class(log_line)
+    name = parser.checked_place_log_line()
+    assert name == "Conference Room 1"
+
+def test_schedule_conflict_log_line(log_parser_class, sample_log_lines):
+    """Test recognizing a schedule conflict log line."""
+    expected_conflict = sample_log_lines.make_schedule_conflict()
+    log_line = sample_log_lines.schedule_conflict_line()
+    parser = log_parser_class(log_line)
+    name, conflicts = parser.schedule_conflict_log_line()
+    assert name == "Conference Room 2"
+    assert conflicts == expected_conflict
+
+def test_event_list(log_parser_class):
+    """Test recognizing an event list."""
+    parser = log_parser_class(
+        "[Event(meetup_id='lksvbqyzmbhb', name='ShopSabre CNC Open Office " \
+        "Hours', location='Woodshop', start_time='2019-09-05 18:00:00', " \
+        "end_time='2019-09-05 20:00:00', places=['Woodshop']), " \
+        "Event(meetup_id='qbwpbryzmbhb', name='Personal Project Night in the " \
+        "Woodshop', location='Woodshop', start_time='2019-09-05 19:00:00', " \
+        "end_time='2019-09-05 21:00:00', places=['Woodshop'])]")
+    expected_events = [
+        Event(
+            meetup_id='lksvbqyzmbhb',
+            name='ShopSabre CNC Open Office Hours',
+            location='Woodshop',
+            start_time='2019-09-05 18:00',
+            end_time='2019-09-05 20:00',
+            places=['Woodshop']),
+        Event(
+            meetup_id='qbwpbryzmbhb',
+            name='Personal Project Night in the Woodshop',
+            location='Woodshop',
+            start_time='2019-09-05 19:00',
+            end_time='2019-09-05 21:00',
+            places=['Woodshop'])
+        ]
+    assert parser.event_list() == expected_events
+
+def test_conflict(log_parser_class):
+    """Test recognizing a conflict."""
+    parser = log_parser_class(
+            "Conflict(start_time='2019-08-05 19:00:00', end_time='2019-08-05 " \
+            "21:00:00', events=[Event(meetup_id='ngbwqqyzlbhb', name='Board " \
+            "Meeting (Private)', location='Conference Room 2', " \
+            "start_time='2019-08-05 19:00:00', end_time='2019-08-05 22:00:00', " \
+            "places=['Conference Room 2']), Event(meetup_id='wjvcdryzlbhb', " \
+            "name='National Space Science University (NSSU) Quantum Gravity', " \
+            "location='Conference Room 2', start_time='2019-08-05 19:00:00', " \
+            "end_time='2019-08-05 21:00:00', places=['Conference Room 2'])])")
+    expected_conflict = Conflict(
+        start_time='2019-08-05 19:00',
+        end_time='2019-08-05 21:00',
+        events=[
+            Event(
+                meetup_id='ngbwqqyzlbhb',
+                name='Board Meeting (Private)',
+                location='Conference Room 2',
+                start_time='2019-08-05 19:00',
+                end_time='2019-08-05 22:00',
+                places=['Conference Room 2']),
+            Event(
+                meetup_id='wjvcdryzlbhb',
+                name='National Space Science University (NSSU) Quantum Gravity',
+                location='Conference Room 2',
+                start_time='2019-08-05 19:00',
+                end_time='2019-08-05 21:00',
+                places=['Conference Room 2'])
+            ])
+    assert parser.conflict() == expected_conflict
+
+def test_conflict_analysis_log_line_start_analysis(
+        log_parser_class, sample_log_lines, conflict_reporter):
+    """Test clearing a conflict_reporter when starting a conflict analysis."""
+    conflict_reporter.add_checked_place("Woodshop")
+    log_line = sample_log_lines.start_conflict_analysis_line()
+    parser = log_parser_class(log_line)
+    parser.conflict_analysis_log_line(conflict_reporter)
+    assert [] == conflict_reporter.sorted_checked_places()
+
+def test_conflict_analysis_log_line_checked_place(
+        log_parser_class, sample_log_lines, conflict_reporter):
+    """Test recognizing a checked place log line and adding it to a conflict
+    reporter."""
+    log_line = sample_log_lines.checked_place_line()
+    parser = log_parser_class(log_line)
+    parser.conflict_analysis_log_line(conflict_reporter)
+    assert ["Conference Room 1"] == conflict_reporter.sorted_checked_places()
+
+def test_conflict_analysis_log_line_schedule_conflict(
+        log_parser_class, sample_log_lines, conflict_reporter):
+    """Test recognizing a schedule conflict log line and adding it to a
+    conflict reporter."""
+    expected_conflict = sample_log_lines.make_schedule_conflict()
+    log_line = sample_log_lines.schedule_conflict_line()
+    parser = log_parser_class(log_line)
+    parser.conflict_analysis_log_line(conflict_reporter)
+    expected_conflict_places = [("Conference Room 2", [expected_conflict])]
+    assert conflict_reporter.sorted_conflict_places() == expected_conflict_places
+
+def test_log_line_schedule_conflict(
+        log_parser_class, sample_log_lines, conflict_reporter, summary):
+    """Test recognizing a schedule conflict log line and adding it to a
+    conflict reporter."""
+    expected_conflict = sample_log_lines.make_schedule_conflict()
+    log_line = sample_log_lines.schedule_conflict_line() + "\n"
+    parser = log_parser_class(log_line)
+    parser.log_line(summary)
+    expected_conflict_places = [("Conference Room 2", [expected_conflict])]
+    assert conflict_reporter.sorted_conflict_places() == expected_conflict_places
 
 
 # vim: tabstop=8 expandtab shiftwidth=4 softtabstop=4 autoindent

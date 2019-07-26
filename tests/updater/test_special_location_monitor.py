@@ -1,6 +1,6 @@
 """Test logging unneeded special locations."""
 
-from meetup2xibo.updater.application_scope import SpecialLocation
+from meetup2xibo.updater.special_location import SpecialLocation
 from meetup2xibo.updater.special_location_monitor import SpecialLocationMonitor
 from meetup2xibo.updater.xibo_event import XiboEvent
 import logging
@@ -18,10 +18,10 @@ SAMPLE_XIBO_EVENT = XiboEvent(
     end_time = "2018-02-10 17:00:00"
 )
 
-def make_special_location(meetup_id = SAMPLE_MEETUP_ID,
-        location = SAMPLE_LOCATION, override = False, comment = ""):
+def make_special_location(meetup_id=SAMPLE_MEETUP_ID, location=SAMPLE_LOCATION,
+        override=False, comment="", places=[]):
     """Return a special location configured as needed."""
-    return SpecialLocation (meetup_id, location, override, comment)
+    return SpecialLocation (meetup_id, location, override, comment, places)
 
 def has_warnings(log_records):
     """Test whether any log record is a warning."""

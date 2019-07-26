@@ -6,11 +6,10 @@ History
 Future History
 ~~~~~~~~~~~~~~
 
-2.5
+3.1
 ---
 
 * Support Meetup.com OAuth2.
-* Detect and report room conflicts.
 
 ~~~~~~~~~~~~~~
 Recent History
@@ -18,6 +17,7 @@ Recent History
 
 .. Next Release
 .. ------------------
+* Detect and report room conflicts.
 
 2.4.10 (2019-06-12)
 ------------------

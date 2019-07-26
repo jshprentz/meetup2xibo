@@ -1,6 +1,7 @@
 """Test the event converter from Meetup JSON to event object."""
 
 from meetup2xibo.updater.event_converter import EventConverter, Event, PartialEvent
+from meetup2xibo.updater.event_location import EventLocation
 from meetup2xibo.updater.location_chooser import LocationChooser
 from meetup2xibo.updater.time_converter import DateTimeCreator
 from pytz import timezone
@@ -18,6 +19,9 @@ EXPECTED_TIMEZONES = ["EST", "EDT"]
 event_prefixes = text(alphabet = string.ascii_uppercase, min_size = 2, max_size = 2)
 event_names = text(min_size = 1)
 
+DEFAULT_LOCATION = "Orange Bay"
+DEFAULT_EVENT_LOCATION = EventLocation(DEFAULT_LOCATION, [DEFAULT_LOCATION])
+
 JSON_EVENT_WITH_VENUE = {
     "duration": 8100000,
     "how_to_find_us": "Nova Labs is a short walk north from the Wiehle-Reston East Metro station (Silver line), and, for cyclists, the W&OD trail crosses one of the parking lot driveways.",
@@ -34,6 +38,7 @@ EVENT_WITH_VENUE = Event(
     name = "Computational Mathematics: P=NP for students and engineers at Nova Labs",
     start_time = "2017-11-20 19:15:00",
     end_time = "2017-11-20 21:30:00",
+    places = ["Conference Room 2"],
     location = "Conference Room 2")
 
 CANCELLED_EVENT_WITH_VENUE = Event(
@@ -41,6 +46,7 @@ CANCELLED_EVENT_WITH_VENUE = Event(
     name = "Computational Mathematics: P=NP for students and engineers at Nova Labs",
     start_time = "2017-11-20 19:15:00",
     end_time = "2017-11-20 21:30:00",
+    places = [],
     location = "Cancelled")
 
 JSON_EVENT_WITH_UNKNOWN_VENUE = {
@@ -59,7 +65,8 @@ EVENT_WITH_UNKNOWN_VENUE = Event(
     name = "Computational Mathematics: P=NP for students and engineers at Nova Labs",
     start_time = "2017-11-20 19:15:00",
     end_time = "2017-11-20 21:30:00",
-    location = "Orange Bay")
+    places = [DEFAULT_LOCATION],
+    location = DEFAULT_LOCATION)
 
 
 JSON_EVENT_WITHOUT_VENUE = {
@@ -70,11 +77,12 @@ JSON_EVENT_WITHOUT_VENUE = {
     "time": 1511643600000,
 }
 
-EVENT_WITHOUt_VENUE = Event(
+EVENT_WITHOUT_VENUE = Event(
     meetup_id = "jdvswnywpbhc",
     name = "Blacksmithing for supervised practice and fun",
     start_time = "2017-11-25 16:00:00",
     end_time = "2017-11-25 18:30:00",
+    places = ["Blacksmithing Alley"],
     location = "Blacksmithing Alley")
 
 
@@ -136,19 +144,20 @@ COMPLETE_EVENT = Event(
     name = "Enco Vertical Mill 101",
     start_time = "2017-11-21 18:30:00",
     end_time = "2017-11-21 21:30:00",
+    places = ["Metal Shop"],
     location = "Metal Shop")
 
 SAMPLE_EVENTS = [
     (JSON_EVENT_WITH_VENUE, EVENT_WITH_VENUE),
     (JSON_EVENT_WITH_UNKNOWN_VENUE, EVENT_WITH_UNKNOWN_VENUE),
-    (JSON_EVENT_WITHOUT_VENUE, EVENT_WITHOUt_VENUE),
+    (JSON_EVENT_WITHOUT_VENUE, EVENT_WITHOUT_VENUE),
     (COMPLETE_JSON_EVENT, COMPLETE_EVENT),
 ]
 
 @pytest.fixture
-def location_chooser(location_builder):
+def location_chooser(place_finder):
     """Return a location chooser with no special locations."""
-    return LocationChooser(location_builder, {}, "Orange Bay")
+    return LocationChooser(place_finder, {}, DEFAULT_EVENT_LOCATION)
 
 @pytest.fixture
 def datetime_creator():

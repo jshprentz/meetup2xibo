@@ -1,5 +1,6 @@
 """Provides time ordered sample log lines."""
 
+from meetup2xibo.log_summarizer.conflict import Conflict
 from meetup2xibo.log_summarizer.event import Event
 from meetup2xibo.log_summarizer.log_lines import InsertEventLogLine, \
     UpdateEventLogLine, DeleteEventLogLine, UnknownLocationLogLine, \
@@ -18,7 +19,8 @@ END_TEMPLATE = \
 INSERT_TEMPLATE = \
     "2019-03-04 06:{minutes:02d}:12,865 - INFO - XiboEventCrud - " \
     "Inserted Event(meetup_id='tmnbrqyzhbhb', name='Maker Faire Organizing Team', " \
-    "location='Classroom A', start_time='2019-05-05 18:00:00', end_time='2019-05-05 20:00:00')"
+    "location='Classroom A', places=['Classroom A'], " \
+    "start_time='2019-05-05 18:00:00', end_time='2019-05-05 20:00:00')"
 
 INSERT_FIELDS = [
     ('meetup_id', 'tmnbrqyzhbhb'),
@@ -34,6 +36,7 @@ UPDATE_TEMPLATE = \
     "location='Nova Labs', start_time='2019-04-14 08:00:00', end_time='2019-04-14 10:00:00')\n" \
     "2019-03-04 06:{minutes:02d}:59,274 - INFO - XiboEventCrud - Updated to " \
     "Event(meetup_id='259565142', name='EMPOWER2MAKE', location='Orange Bay', " \
+    "places=['Orange Bay'], " \
     "start_time='2019-04-14 08:00:00', end_time='2019-04-14 10:00:00')"
 
 UPDATE_BEFORE_FIELDS = [
@@ -126,6 +129,27 @@ EVENT_LOCATION_FIELDS = [
     ('find_us', '[Woodshop Red area]'),
     ]
 
+START_CONFLICT_ANALYSIS_TEMPLATE = \
+    "2019-03-04 06:{minutes:02d}:27,521 - INFO - ConflictAnalyzer - " \
+    "Start conflict analysis"
+
+CHECKED_PLACE_TEMPLATE = \
+    "2019-03-04 06:{minutes:02d}:16,418 - INFO - CheckedPlace - " \
+    "Name='Conference Room 1'"
+
+SCHEDULE_CONFLICT_TEMPLATE = \
+    "2019-03-04 06:{minutes:02d}:54,246 - INFO - CheckedPlace - " \
+    "Schedule conflict: place='Conference Room 2' " \
+    "Conflict(start_time='2019-09-03 19:00:00', end_time='2019-09-03 " \
+    "21:00:00', events=[Event(meetup_id='vzgnvqyzmbfb', name='Computational " \
+    "Mathematics: P=NP for students and engineers at Nova Labs', " \
+    "location='Conference Room 2', start_time='2019-09-03 19:00:00', " \
+    "end_time='2019-09-03 21:00:00', places=['Conference Room 2']), " \
+    "Event(meetup_id='whkcdryzmbfb', name='National Drone Science University " \
+    "(NDSU) Drone Science', location='Conference Room 2', " \
+    "start_time='2019-09-03 19:00:00', end_time='2019-09-03 21:00:00', " \
+    "places=['Conference Room 2'])])" 
+
 
 class SampleLogLines:
 
@@ -180,6 +204,18 @@ class SampleLogLines:
     def event_location_line(self):
         """Return an event location line."""
         return self.make_line(EVENT_LOCATION_TEMPLATE)
+
+    def start_conflict_analysis_line(self):
+        """Return a start conflict analysis line."""
+        return self.make_line(START_CONFLICT_ANALYSIS_TEMPLATE)
+
+    def checked_place_line(self):
+        """Return a checked place line."""
+        return self.make_line(CHECKED_PLACE_TEMPLATE)
+
+    def schedule_conflict_line(self):
+        """Return a conflict line."""
+        return self.make_line(SCHEDULE_CONFLICT_TEMPLATE)
 
     @property
     def insert_fields(self):
@@ -260,5 +296,26 @@ class SampleLogLines:
         date_time = self.date_time()
         return EventLocationLogLine(date_time, location, event)
 
+    def make_schedule_conflict(self):
+        """Return a schedule conflict for the conflict line."""
+        return Conflict(
+            start_time='2019-09-03 19:00',
+            end_time='2019-09-03 21:00',
+            events=[
+                Event(
+                    meetup_id='vzgnvqyzmbfb',
+                    name='Computational Mathematics: P=NP for students and engineers at Nova Labs', 
+                    location='Conference Room 2',
+                    start_time='2019-09-03 19:00', 
+                    end_time='2019-09-03 21:00',
+                    places=['Conference Room 2']), 
+                Event(
+                    meetup_id='whkcdryzmbfb',
+                    name='National Drone Science University (NDSU) Drone Science',
+                    location='Conference Room 2', 
+                    start_time='2019-09-03 19:00',
+                    end_time='2019-09-03 21:00', 
+                    places=['Conference Room 2'])
+                ])
 
 # vim: tabstop=8 expandtab shiftwidth=4 softtabstop=4 autoindent
