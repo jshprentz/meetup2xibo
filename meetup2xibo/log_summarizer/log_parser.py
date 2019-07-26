@@ -87,8 +87,8 @@ start_conflict_analysis_log_line = log_line_start('ConflictAnalyzer')
 
 checked_place_log_line = log_line_start('CheckedPlace') 'Name=' quoted_value
 
-schedule_conflict_log_line = log_line_start('CheckedPlace') 'Schedule conflict: '
-        'place=' quoted_value:p ' ' conflict:c -> (p, c)
+schedule_conflict_log_line = log_line_start('CheckedPlace')
+        'Schedule conflict: place=' quoted_value:p ' ' conflict:c -> (p, c)
 
 conflict = 'Conflict(' conflict_fields:f ')' -> Conflict.from_fields(f)
 
@@ -117,7 +117,8 @@ event = 'Event(' fields:f ')' -> Event.from_fields(f)
 
 fields = field:first (', ' field)*:rest -> [first] + rest
 
-conflict_fields = conflict_field:first (', ' conflict_field)*:rest -> [first] + rest
+conflict_fields = conflict_field:first (', ' conflict_field)*:rest
+        -> [first] + rest
 
 field = time_field | boolean_field | list_field | other_field
 

@@ -40,7 +40,7 @@ class Conflict:
         """Return the debugging representation of this event."""
         return "{}(start_time={!r}, end_time={!r}, events={!r})" \
             .format(self.__class__.__name__,
-                self._start_time, self._end_time, self._events)
+                    self._start_time, self._end_time, self._events)
 
     def report_sort_key(self):
         """Return a sort key for sorting into reporting order."""

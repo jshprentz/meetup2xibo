@@ -53,8 +53,8 @@ class Event:
         return "{}(name={!r}, start_time={!r}, end_time={!r}, " \
             "meetup_id={!r}, location={!r}, venue_name={!r}, find_us={!r})" \
             .format(self.__class__.__name__, self._name, self._start_time,
-                self._end_time, self._meetup_id, self._location,
-                self._venue_name, self._find_us)
+                    self._end_time, self._meetup_id, self._location,
+                    self._venue_name, self._find_us)
 
     def report_sort_key(self):
         """Return a sort key for sorting into reporting order."""
