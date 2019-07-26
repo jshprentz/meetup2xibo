@@ -43,7 +43,7 @@ Options
    are scheduled.
    Default: do not log conflict details.
 
-   .. versionadded:: 2.5
+   .. versionadded:: 3.0
 
 .. option:: -m, --mappings
 
@@ -71,7 +71,7 @@ Environment
 
    A JSON array of places to check for scheduling conflicts.
 
-   .. versionadded:: 2.5
+   .. versionadded:: 3.0
 
 .. envvar:: CONTAINED_PLACES
 
@@ -83,7 +83,7 @@ Environment
         {"place": "Ballroom Suite", "contains": ["Ballroom", "Dressing Room"]},
     ]'
 
-   .. versionadded:: 2.5
+   .. versionadded:: 3.0
 
 .. envvar:: DEFAULT_LOCATION
 
@@ -94,7 +94,7 @@ Environment
 
    A JSON array of places associated with the default location.
 
-   .. versionadded:: 2.5
+   .. versionadded:: 3.0
 
 .. envvar:: DELETE_AFTER_END_HOURS
 
@@ -154,7 +154,7 @@ Environment
    failed to match.
    See :envvar:`PLACE_PHRASES` for the JSON format.
 
-   .. versionchanged:: 2.5
+   .. versionchanged:: 3.0
       Was ``MORE_LOCATION_PHRASES`` with a different format.     
 
 .. envvar:: NAME_COLUMN_NAME
@@ -173,7 +173,7 @@ Environment
        {"phrase": "Conference room 2",  "place": "Conference Room 2"}
     ]'
 
-   .. versionchanged:: 2.5
+   .. versionchanged:: 3.0
       Was ``LOCATION_PHRASES`` with a different format.     
 
 .. envvar:: SITE_CA_PATH
@@ -202,7 +202,7 @@ Environment
    Conflict resolution examines the list of *places* associated with the
    location.
 
-   .. versionchanged:: 2.5
+   .. versionchanged:: 3.0
       Added *places.*
 
 .. envvar:: START_TIME_COLUMN_NAME
