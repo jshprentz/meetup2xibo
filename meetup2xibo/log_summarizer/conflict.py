@@ -1,6 +1,8 @@
 """Conflicts when two or more events are scheduled in the same place at the
 same time."""
 
+from .event import Event
+
 
 class Conflict:
 
@@ -43,6 +45,10 @@ class Conflict:
     def report_sort_key(self):
         """Return a sort key for sorting into reporting order."""
         return (self._start_time, self._end_time)
+
+    def sorted_events(self):
+        """Return the list of events sorted for reporting."""
+        return sorted(self._events, key=Event.report_sort_key)
 
     @property
     def start_time(self):

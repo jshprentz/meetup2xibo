@@ -5,6 +5,7 @@ from .log_parser import make_log_parser_class, Summary
 from .location_mapper import LocationMapper
 from .start_counter import StartCounter
 from .crud_lister import CrudLister
+from .conflict_reporter import ConflictReporter
 from .renderer import Renderer, EmailRenderer, SummaryRenderer, \
         LocationMappingCsvRenderer, make_jinja2_env
 

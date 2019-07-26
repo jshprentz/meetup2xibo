@@ -77,6 +77,21 @@ table.blueTable thead th:first-child {
     <p>None</p>
 {% endif %}
 
+{% if has_conflicts %}
+    <h2>Schedule Conflicts</h2>
+{% for place, conflicts in conflict_places %}
+        <h3>{{ place }}</h3>
+{% for conflict in conflicts %}
+            <h4>{{ conflict.start_time }} to {{ conflict.end_time }}</h4>
+                <ul>
+{% for event in conflict.sorted_events()  %}
+                <li>{{ report.linked_event_display(event) }}</li>
+{% endfor %}
+                </ul>
+{% endfor %}
+{% endfor %}
+{% endif %}
+
 {% if current_event_logs %}
     <h2>Changes to Xibo Current and Future Event Listings</h2>
         <dl>
