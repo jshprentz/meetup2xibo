@@ -3,13 +3,16 @@
 from .logging_context import LoggingContext
 from .logging_setup_manager import LoggingSetupManager
 from .http_response_error import HttpResponseError
-from .exceptions import DatasetDiscoveryError
+from .exceptions import DatasetDiscoveryError, ContainmentLoopError
 from .meetup2xibo import Meetup2Xibo, XiboSessionProcessor, \
         XiboEventCrudProcessor
 from .meetup_api import MeetupEventsRetriever
-from .location_builder import LocationBuilder
+from .place_finder import PlaceFinder
 from .location_chooser import LocationChooser
+from .conflict_analyzer import ConflictAnalyzer, NullConflictAnalyzer
+from .conflict_places import ConflictPlaces, ConflictPlacesLoader
 from .event_converter import EventConverter
+from .event_location import EventLocation
 from .event_updater import EventUpdater
 from .phrase_mapper import PhraseMapper
 from .xibo_api_url_builder import XiboApiUrlBuilder
@@ -53,6 +56,7 @@ def inject_no_trace_exceptions():
     """Return a tuple listing exception classes that need no traceback."""
     return (
             HttpResponseError,
+            ContainmentLoopError,
             DatasetDiscoveryError,
             Oauth2SessionStarterError)
 
@@ -69,38 +73,38 @@ def inject_meetup_events_retriever(application_scope):
 def inject_location_chooser(application_scope):
     """Return a location builder configured by an application scope."""
     return LocationChooser(
-        inject_location_builder(application_scope),
+        inject_place_finder(application_scope),
         application_scope.special_locations_dict,
-        application_scope.default_location)
+        inject_default_event_location(application_scope))
 
 
-def inject_location_builder(application_scope):
-    """Return a location builder configured by an application scope."""
-    return LocationBuilder(inject_phrase_mappers(application_scope))
+def inject_place_finder(application_scope):
+    """Return a place finder configured by an application scope."""
+    return PlaceFinder(inject_phrase_mappers(application_scope))
 
 
 def inject_phrase_mappers(application_scope):
     """Return a list of phrase mappers configured by an application scope."""
     return [
-        inject_locations_phrase_mapper(application_scope),
-        inject_more_locations_phrase_mapper(application_scope),
+        inject_places_phrase_mapper(application_scope),
+        inject_more_places_phrase_mapper(application_scope),
         ]
 
 
-def inject_locations_phrase_mapper(application_scope):
-    """Return a phrase mapper for location phrases configured by an application
+def inject_places_phrase_mapper(application_scope):
+    """Return a phrase mapper for place phrases configured by an application
     scope."""
     return inject_phrase_mapper(
         application_scope,
-        application_scope.location_phrase_tuples)
+        application_scope.place_phrase_tuples)
 
 
-def inject_more_locations_phrase_mapper(application_scope):
-    """Return a phrase mapper for more location phrases configured by an
+def inject_more_places_phrase_mapper(application_scope):
+    """Return a phrase mapper for more place phrases configured by an
     application scope."""
     return inject_phrase_mapper(
         application_scope,
-        application_scope.more_location_phrase_tuples)
+        application_scope.more_place_phrase_tuples)
 
 
 def inject_phrase_mapper(application_scope, phrase_tuples):
@@ -112,6 +116,14 @@ def inject_phrase_mapper(application_scope, phrase_tuples):
 def inject_automaton():
     """Return an Aho-Corasick automaton."""
     return Automaton()
+
+
+def inject_default_event_location(application_scope):
+    """Return an event location for the default location and places configured
+    by an application scope."""
+    return EventLocation(
+        application_scope.default_location,
+        application_scope.default_place_list)
 
 
 def inject_event_converter(application_scope):
@@ -303,6 +315,34 @@ def inject_date_time_creator(application_scope):
     return DateTimeCreator(inject_tzinfo(application_scope))
 
 
+def inject_selected_conflict_analyzer(application_scope):
+    """Return the conflict analyzer selected by a command-line argument and
+    configured by an application scope."""
+    if application_scope.conflicts:
+        return inject_conflict_analyzer(application_scope)
+    else:
+        return inject_null_conflict_analyzer()
+
+
+def inject_conflict_analyzer(application_scope):
+    """Return a conflict analyzer configured by an application scope."""
+    return ConflictAnalyzer(inject_conflict_places(application_scope))
+
+
+def inject_conflict_places(application_scope):
+    """Return conflict places configured by an application scope."""
+    return ConflictPlacesLoader(
+            ConflictPlaces(),
+            application_scope.conflict_places_list,
+            application_scope.containing_places_list
+            ).load()
+
+
+def inject_null_conflict_analyzer():
+    """Return a null conflict analyzer."""
+    return NullConflictAnalyzer()
+
+
 def inject_recent_limit(application_scope):
     """Return the recent flapping limit configured by an application scope."""
     return inject_date_time_creator(application_scope).xibo_offset_time(
@@ -333,6 +373,7 @@ def inject_meetup_2_xibo(application_scope):
     return Meetup2Xibo(
         inject_logging_context(application_scope),
         inject_meetup_events_retriever(application_scope),
+        inject_selected_conflict_analyzer(application_scope),
         inject_event_converter(application_scope),
         inject_site_cert_assurer(application_scope),
         inject_oauth2_session_starter(application_scope),

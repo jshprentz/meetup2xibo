@@ -11,20 +11,20 @@ def parse_command_line(line):
     """Parse the supplied command line."""
     return command_line.parse_args(line.split())
 
-def test_debug_flag_off():
-    """Test the default debug flag value."""
+def test_conflicts_flag_off():
+    """Test the default conflicts flag value."""
     args = parse_without_args()
-    assert not args.debug
+    assert not args.conflicts
 
-def test_debug_flag_short():
-    """Test setting the debug flag with the short argument."""
+def test_conflicts_flag_short():
+    """Test setting the conflicts flag with the short argument."""
     args = parse_command_line("-d")
-    assert args.debug
+    assert args.conflicts
 
-def test_debug_flag_long():
-    """Test setting the debug flag with the long argument."""
-    args = parse_command_line("--debug")
-    assert args.debug
+def test_conflicts_flag_long():
+    """Test setting the conflicts flag with the long argument."""
+    args = parse_command_line("--conflicts")
+    assert args.conflicts
 
 def test_warnings_flag_off():
     """Test the default warnings flag value."""
@@ -85,6 +85,21 @@ def test_mappings_flag_long():
     """Test setting the mappings flag with the long argument."""
     args = parse_command_line("--mappings")
     assert args.mappings
+
+def test_conflicts_flag_off():
+    """Test the default conflicts flag value."""
+    args = parse_without_args()
+    assert not args.conflicts
+
+def test_conflicts_flag_short():
+    """Test setting the conflicts flag with the short argument."""
+    args = parse_command_line("-c")
+    assert args.conflicts
+
+def test_conflicts_flag_long():
+    """Test setting the conflicts flag with the long argument."""
+    args = parse_command_line("--conflicts")
+    assert args.conflicts
 
 
 # vim: tabstop=8 expandtab shiftwidth=4 softtabstop=4 autoindent

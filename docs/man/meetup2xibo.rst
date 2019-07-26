@@ -4,7 +4,7 @@ meetup2xibo
 Synopsis
 --------
 
-**meetup2xibo** [-h] [-d] [-l <*LOGFILE*>] [-m] [-v] [-w]
+**meetup2xibo** [-h] [-d] [-l <*LOGFILE*>] [-c] [-m] [-v] [-w]
 
 Description
 -----------
@@ -37,6 +37,14 @@ Options
 
    Path to logfile (default: meetup2xibo.log).
 
+.. option:: -c, --conflicts
+
+   Log conflict detection details about Meetup events and the places where they
+   are scheduled.
+   Default: do not log conflict details.
+
+   .. versionadded:: 3.0
+
 .. option:: -m, --mappings
 
    Log location mappings from Meetup.com's venue name and find-us fields
@@ -59,10 +67,34 @@ Options
 Environment
 -----------
 
+.. envvar:: CONFLICT_PLACES
+
+   A JSON array of places to check for scheduling conflicts.
+
+   .. versionadded:: 3.0
+
+.. envvar:: CONTAINED_PLACES
+
+   A JSON array of objects showing a place and the other places it contains
+   For example::
+
+    export CONTAINING_PLACES='[
+        {"place": "Ballroom", "contains": ["North Ballroom", "South Ballroom"]},
+        {"place": "Ballroom Suite", "contains": ["Ballroom", "Dressing Room"]},
+    ]'
+
+   .. versionadded:: 3.0
+
 .. envvar:: DEFAULT_LOCATION
 
    The location to store in Xibo when Meetup's venue name and find-us fields
    contain no recognizable locations.
+
+.. envvar:: DEFAULT_PLACES
+
+   A JSON array of places associated with the default location.
+
+   .. versionadded:: 3.0
 
 .. envvar:: DELETE_AFTER_END_HOURS
 
@@ -98,18 +130,6 @@ Environment
 
    The name of the Xibo dataset column containing event locations.
 
-.. envvar:: LOCATION_PHRASES
-
-   A JSON array of objects containing a phrase to match and a corresponding
-   location. For example::
-
-    export LOCATION_PHRASES='[
-       {"phrase": "Conf Rm 1",          "location": "Conference Room 1"},
-       {"phrase": "Conf Rm 2",          "location": "Conference Room 2"},
-       {"phrase": "Conference room 1",  "location": "Conference Room 1"},
-       {"phrase": "Conference room 2",  "location": "Conference Room 2"}
-    ]'
-
 .. envvar:: MEETUP_API_KEY
 
    The API key that authenticates access to Meetup.com.
@@ -128,15 +148,33 @@ Environment
 
    The name of the Xibo dataset column containing Meetup event IDs.
 
-.. envvar:: MORE_LOCATION_PHRASES
+.. envvar:: MORE_PLACE_PHRASES
 
-   A second list of phrases and locations to try if :envvar:`LOCATION_PHRASES`
+   A second list of phrases and places to try if :envvar:`PLACE_PHRASES`
    failed to match.
-   See :envvar:`LOCATION_PHRASES` for the JSON format.
+   See :envvar:`PLACE_PHRASES` for the JSON format.
+
+   .. versionchanged:: 3.0
+      Was ``MORE_LOCATION_PHRASES`` with a different format.     
 
 .. envvar:: NAME_COLUMN_NAME
 
    The name of the Xibo dataset column containing event names.
+
+.. envvar:: PLACE_PHRASES
+
+   A JSON array of objects containing a phrase to match and a corresponding
+   place. For example::
+
+    export PLACE_PHRASES='[
+       {"phrase": "Conf Rm 1",          "place": "Conference Room 1"},
+       {"phrase": "Conf Rm 2",          "place": "Conference Room 2"},
+       {"phrase": "Conference room 1",  "place": "Conference Room 1"},
+       {"phrase": "Conference room 2",  "place": "Conference Room 2"}
+    ]'
+
+   .. versionchanged:: 3.0
+      Was ``LOCATION_PHRASES`` with a different format.     
 
 .. envvar:: SITE_CA_PATH
 
@@ -150,9 +188,9 @@ Environment
 
     export SPECIAL_LOCATIONS='[
         {"meetup_id": "zvbxrpl2", "location": "Orange Bay",
-	 "comment": "", "override": false},
+	 "comment": "", "override": false, "places": ["Orange Bay"]},
         {"meetup_id": "lrzzfbhb", "location": "Private",
-	 "comment": "Private meeting", "override": true}
+	 "comment": "Private meeting", "override": true, "places": []}
     ]'
 
    List *meetup_id* to suppress warnings about missing locations.
@@ -161,6 +199,11 @@ Environment
    Any *comment* helps document the special location.
    When true, the *override* flag forces a non-blank location to replace the
    computed location.
+   Conflict resolution examines the list of *places* associated with the
+   location.
+
+   .. versionchanged:: 3.0
+      Added *places.*
 
 .. envvar:: START_TIME_COLUMN_NAME
 

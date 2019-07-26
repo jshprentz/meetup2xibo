@@ -170,33 +170,33 @@ The Meetup.com venue name and how-to-find-us fields usually contain the room
 assignment(s), among other information.
 
 Meetup2xibo scans the venue name and "how to find us" fields, searching for
-known rooms and workshops.
-The room assignments are collected in the order found.
-Meetup2xibo corrects room spelling variations and renders the list as an
-English phrase such as "Room 1, Room 2, and Room 3."
+known places, such as rooms, workshops, studios, classrooms, fields, etc.
+The places are collected in the order found.
+Meetup2xibo corrects place spelling variations and renders the list as an
+English phrase such as "Room 1, Room 2, and Workshop 3."
 The resulting phrase is stored in the Xibo events dataset location field.
 
 For example, a woodworking class has the venue name "\*Nova Labs (Conference Rm
 2)" and the how-to-find-us "[woodshop]".
 Meetup.com sets the location in Xibo to "Conference Room 2 and Woodshop".
 
-Location Phrases
-~~~~~~~~~~~~~~~~
+Place Phrases
+~~~~~~~~~~~~~
 
 When scanning the venue name and "how to find us" fields, Meetup2xibo searches
-for phrases provided in a curated list of phrases and preferred location names.
-For example, :numref:`Table %s <example_phrases_and_locations>` shows the
-phrases that match the preferred location name "Conference Room 1."
+for phrases provided in a curated list of phrases and preferred place names.
+For example, :numref:`Table %s <example_phrases_and_places>` shows the
+phrases that match the preferred place name "Conference Room 1."
 
 .. tabularcolumns:: |L|L|
 
-.. _example_phrases_and_locations:
+.. _example_phrases_and_places:
 
-.. table:: Example Phrases and Locations
+.. table:: Example Phrases and Places
    :align: center
 
    +-------------------+-------------------+
-   | Phrase            | Location          |
+   | Phrase            | Place             |
    +===================+===================+
    | Conf Rm 1         | Conference Room 1 |
    +-------------------+-------------------+
@@ -205,19 +205,19 @@ phrases that match the preferred location name "Conference Room 1."
    | Conference room 1 | Conference Room 1 |
    +-------------------+-------------------+
 
-The list of phrases and corresponding locations is configured in environment
-variable :envvar:`LOCATION_PHRASES` as a
+The list of phrases and corresponding places is configured in environment
+variable :envvar:`PLACE_PHRASES` as a
 :abbr:`JSON (JavaScript Object Notation)` list of objects, as shown in
-:numref:`Listing %s <location-phrases-config-example>`.
+:numref:`Listing %s <place-phrases-config-example>`.
 
 .. code-block:: bash
-   :caption: Location Phrases JSON Configuration Example
-   :name: location-phrases-config-example
+   :caption: Place Phrases JSON Configuration Example
+   :name: place-phrases-config-example
 
-   export LOCATION_PHRASES='[
-       {"phrase": "Conf Rm 1",         "location": "Conference Room 1"},
-       {"phrase": "Conference rm 1",   "location": "Conference Room 1"},
-       {"phrase": "Conference room 1", "location": "Conference Room 1"},
+   export PLACE_PHRASES='[
+       {"phrase": "Conf Rm 1",         "place": "Conference Room 1"},
+       {"phrase": "Conference rm 1",   "place": "Conference Room 1"},
+       {"phrase": "Conference room 1", "place": "Conference Room 1"},
    ]'
 
 Meetup2xibo ignores spacing and upper/lower case distinctions when searching
@@ -230,21 +230,46 @@ For example, phrase "Room 123" would be matched ahead of phrases "Room 1" and
 "Room 12".
 
 If none of the phrases configured in environment variable
-:envvar:`LOCATION_PHRASES` match, Meetup2Xibo tries matching the phrases in
-environment variable :envvar:`MORE_LOCATION_PHRASES`.
+:envvar:`PLACE_PHRASES` match, Meetup2Xibo tries matching the phrases in
+environment variable :envvar:`MORE_PLACE_PHRASES`.
 The format is the same as shown in
-:numref:`Listing %s <location-phrases-config-example>`.
-At Nova Labs, :envvar:`LOCATION_PHRASES` lists specific rooms within Nova Labs.
-:envvar:`MORE_LOCATION_PHRASES` lists more general event locations including
-Nova Labs; nearby event locations, such as George Mason University; and
+:numref:`Listing %s <place-phrases-config-example>`.
+At Nova Labs, :envvar:`PLACE_PHRASES` lists specific rooms within Nova Labs.
+:envvar:`MORE_PLACE_PHRASES` lists more general event places, such as Nova
+Labs; nearby event places, such as George Mason University; and the uncertain
 :abbr:`TBD (To Be Determined)`.
 
 Default Location
 ~~~~~~~~~~~~~~~~
 
-If none of the location phrases match, Meetup2xibo uses the location specified
+If none of the place phrases match, Meetup2xibo uses the location specified
 by environment variable :envvar:`DEFAULT_LOCATION`.
 Meetup2xibo logs a warning message whenever the default location is needed.
+
+To support :ref:`conflict detection <scheduling-conflicts>`, environment
+variable :envvar:`DEFAULT_PLACES` lists places associated with the default
+location.
+:numref:`Listing %s <specific-default-location-example>` shows an example of
+a default locaion associated with specific places.
+
+.. code-block:: bash
+   :caption: Default Location with Specific Places Example
+   :name: specific-default-location-example
+
+   export DEFAULT_LOCATION="Dance Studios"
+   export DEFAULT_PLACES='["Studio 1", "Studio 2"]'
+
+:numref:`Listing %s <general-default-location-example>` shows default location
+and places at Nova Labs.
+The default location does not identify any specific room or workshop, so the
+default places list is empty.
+
+.. code-block:: bash
+   :caption: Default Location with No Specific Places Example
+   :name: general-default-location-example
+
+   export DEFAULT_LOCATION="Nova Labs"
+   export DEFAULT_PLACES='[]'
 
 Special Locations
 ~~~~~~~~~~~~~~~~~
@@ -265,24 +290,28 @@ special locations.
        {
            "meetup_id": "259083135",
            "location": "",
+	   "places": [],
            "override": false,
            "comment": "Electronics 101: no room yet"
        },
        {
            "meetup_id": "gqpyzfbhb",
            "location": "Classroom A",
+	   "places": ["Classroom A"],
            "override": false,
            "comment": "Location in event name"
        },
        {
            "meetup_id": "269568127",
            "location": "Baltimore Museum of Industry",
+	   "places": [],
            "override": false,
            "comment": "Field trip"
        },
        {
            "meetup_id": "259565142",
-           "location": "Parking Lot and Conference Room 2",
+           "location": "Parking Lot, Classroom A, and Conference Room 2",
+	   "places": ["Classroom A", "Conference Room 2"],
            "override": true,
            "comment": "Picnic"
        }
@@ -293,6 +322,7 @@ event ID from Meetup.com.
 The :mailheader:`location` contains the event location for Xibo.
 The :mailheader:`location` may be an empty string if the meetup2xibo default
 location is acceptable.
+The :mailheader:`places` contains a list of places to check for conflicts.
 The :mailheader:`override` flag must have a ``true`` or ``false`` value as
 explained below.
 The :mailheader:`comment` helps administrators remember why the special
@@ -320,9 +350,9 @@ The following examples demonstrate the use of special locations:
 No Meetup.com venue name or how-to-find-us
    Meetup2xibo will use the default location and log a warning.
    When the administrator adds the special location object shown in
-   :numref:`Listing %s <special-locations-config-example>` lines 3--8,
-   meetup2xibo will continue to use the default location without logging a
-   warning.
+   :numref:`Listing %s <special-locations-config-example>` lines 3--9,
+   meetup2xibo will continue to use the default location and places without
+   logging a warning.
    If the event host later adds a venue name or how-to-find-us in Meetup.com,
    meetup2xibo will use known locations found there instead of the default
    location.
@@ -330,25 +360,103 @@ No Meetup.com venue name or how-to-find-us
 Known location only in Meetup.com event name or description
    Meetup2xibo will use the default location and log a warning.
    When the administrator adds the special location object shown in
-   :numref:`Listing %s <special-locations-config-example>` lines 9--14,
+   :numref:`Listing %s <special-locations-config-example>` lines 10--16,
    meetup2xibo will use the special location instead of the default location.
+   The place "Classroom A" will be checked for conflicts.
    If the event host later adds a venue name or how-to-find-us in Meetup.com,
-   meetup2xibo will use known locations found there instead of the special
+   meetup2xibo will use known places found there instead of the special
    location or the default location.
 
 Unknown locations from Meetup.com
    Meetup2xibo will use the default location and log a warning.
    When the administrator adds the special location object shown in
-   :numref:`Listing %s <special-locations-config-example>` lines 15--20,
-   meetup2xibo will use the special location instead of the default location.
+   :numref:`Listing %s <special-locations-config-example>` lines 17--23,
+   meetup2xibo will use the special location and places instead of the default
+   location and places.
 
 Known and unknown locations from Meetup.com
-   Meetup2xibo will use the known locations found in the venue name or
-   how-to-find-us, "Conference Room 2" in this example.
+   Meetup2xibo will derive a location from the known places found in the venue
+   name or how-to-find-us, "Classroom A" and "Conference Room 2" in this
+   example.
+   Meetup2xibo will not recognize "Parking Lot," an uncommon and unconfigured
+   place.
    When the administrator adds the special location object shown in
-   :numref:`Listing %s <special-locations-config-example>` lines 21--26,
-   meetup2xibo will use the special location, overriding the known location(s).
+   :numref:`Listing %s <special-locations-config-example>` lines 24--30,
+   meetup2xibo will use the special location and places, overriding the
+   location derived from the known places.
 
+.. _`scheduling-conflicts`:
+
+Detecting Scheduling Conflicts
+------------------------------
+
+Meetup2xibo and summarize-m2x-logs can detect and report possible scheduling
+conflicts.
+A conflict occurs when two or more events are scheduled in the same place at
+the same time.
+
+Meetup2xibo checks for conflicts only in places listed by environment variable
+:envvar:`CONFLICT_PLACES`.
+Other places, such as an entire facility (Nova Labs) or a common gathering
+area (Lobby), can accomodate multiple simultaneous activities.
+:numref:`Listing %s <conflict-places-example>` shows an example of
+a list of places with possible scheduling conflicts.
+
+.. code-block:: bash
+   :caption: Conflict Places Example
+   :name: conflict-places-example
+
+   export CONFLICT_PLACES='[
+       "Classroom A",
+       "Classroom A/B",
+       "Classroom B",
+       "Computer Lab",
+       "Conference Room 1",
+       "Conference Room 2",
+       "Conference Room 3",
+   ]'
+
+Some places may be subdivided; others may be combined.
+For example, Classroom A/B may be partitioned into Classroom A and Classroom B.
+Conferences Rooms 1, 2, and 3 may be combined to form the Conference Center.
+Meetup2xibo must know which places contain other places to detect scheduling
+conflicts such as simultaneous meetings in Classroom A and Classroom A/B.
+
+Environment variable :envvar:`CONTAINED_PLACES` lists JSON objects describing
+places containing other places.
+:numref:`Listing %s <contained-places-example>` shows the example above of
+Classroom A/B and the Conference Center.
+
+.. code-block:: bash
+   :caption: Contained Places Example
+   :name: contained-places-example
+
+    export CONTAINING_PLACES='[
+        {"place": "Classroom A/B",
+         "contains": ["Classroom A", "Classroom B"]},
+        {"place": "Conference Center",
+         "contains": ["Conference Room 1", "Conference Room 2", "Conference Room 3"]}
+    ]'
+
+Meetup2xibo supports typical facilities with few restrictions.
+
+Places may be listed in any order.
+   Places are analyzed by name, not by their position in lists.
+
+Contained places may be nested.
+   For example, the Convention Center may contain the Conference Center among
+   other places.
+
+Contained places may overlap.
+   A Seminar Area may contain Classroom A and Conference 1, overlapping the
+   example places Classroom A/B and Conference Center.
+
+Contained and containing places need not be checked for conflicts.
+   For example, the Conference Center is not on the list of ``CONFLICT_PLACES``.
+
+Loops are forbidden.
+   The Conference Center may not contain the Convention Center if the
+   Convention Center already contains the Conference Center.
 
 Timezone
 --------

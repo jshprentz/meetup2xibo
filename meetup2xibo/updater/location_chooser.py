@@ -1,5 +1,6 @@
 """Chooses locations for partial events."""
 
+from .event_location import EventLocation
 import logging
 
 
@@ -20,52 +21,59 @@ class LocationChooser:
 
     logger = logging.getLogger("LocationChooser")
 
-    def __init__(self, location_builder, special_locations, default_location):
-        """Initialize with a location builder, a dictionary of special
-        locations (indexed by Meetup ID), and a default location."""
-        self.location_builder = location_builder
+    def __init__(
+            self, place_finder, special_locations, default_event_location):
+        """Initialize with a place finder, a dictionary of special locations
+        (indexed by Meetup ID), and a default event location."""
+        self.place_finder = place_finder
         self.special_locations = special_locations
-        self.default_location = default_location
+        self.default_event_location = default_event_location
 
     def choose_location(self, partial_event):
         """Choose a location from a partial Meetup event."""
-        computed_location = self.location_builder.build_location(partial_event)
+        computed_event_location = self.find_event_location(partial_event)
         special_location = self.special_locations.get(partial_event.meetup_id)
         return self.resolve_locations(
-                partial_event, computed_location, special_location)
+                partial_event, computed_event_location, special_location)
+
+    def find_event_location(self, partial_event):
+        """Find an event location from a partial Meetup event."""
+        found_places = self.place_finder.find_places(partial_event)
+        return EventLocation.from_places(found_places)
 
     def resolve_locations(
-                self, partial_event, computed_location, special_location):
-        """Consider computed and special locations for a partial event and the
-        default location. Return the most appropriate location."""
+                self, partial_event, computed_event_location,
+                special_location):
+        """Choose an appropriate event location based on the availability of a
+        special location."""
         if special_location:
             return self.resolve_with_special(
-                    computed_location, special_location)
+                    computed_event_location, special_location)
         else:
             return self.resolve_without_special(
-                    partial_event, computed_location)
+                    partial_event, computed_event_location)
 
-    def resolve_with_special(self, computed_location, special_location):
-        """Consider computed and the default location. Return the most
-        appropriate location."""
+    def resolve_with_special(self, computed_event_location, special_location):
+        """Consider the computed event location and the special location (both
+        for a partial event) and the default event location. Return the most
+        appropriate event location."""
         if special_location.override:
-            best_location = special_location.location \
-                    or computed_location \
-                    or self.default_location
+            best_event_location = special_location.event_location \
+                    or computed_event_location \
+                    or self.default_event_location
         else:
-            best_location = computed_location \
-                    or special_location.location \
-                    or self.default_location
-        return best_location
+            best_event_location = computed_event_location \
+                    or special_location.event_location \
+                    or self.default_event_location
+        return best_event_location
 
-    def resolve_without_special(self, partial_event, computed_location):
-        """Consider computed and the default location. Return the most
+    def resolve_without_special(self, partial_event, computed_event_location):
+        """Consider computed and the default event locations. Return the most
         appropriate location."""
-        if computed_location:
-            return computed_location
+        if computed_event_location:
+            return computed_event_location
         else:
             self.logger.info('Unknown location for %s', partial_event)
-            return self.default_location
-
+            return self.default_event_location
 
 # vim: tabstop=8 expandtab shiftwidth=4 softtabstop=4 autoindent

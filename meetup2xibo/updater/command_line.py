@@ -6,6 +6,11 @@ parser = argparse.ArgumentParser(
         description='Download Meetup events into a XIBO CMS')
 
 parser.add_argument(
+        '-c', '--conflicts',
+        action='store_true',
+        help='Log conflict checking event details (default: do not log)')
+
+parser.add_argument(
         '-d', '--debug',
         action='store_true',
         help='Log debug messages (default: info and higher)')

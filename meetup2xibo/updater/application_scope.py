@@ -2,6 +2,7 @@
 environment variables needed by the application."""
 
 
+from .special_location import SpecialLocation
 import meetup2xibo
 import logging
 import json
@@ -13,11 +14,7 @@ XIBO_PAGE_LENGTH = 50
 SECONDS_PER_HOUR = 60 * 60
 SECONDS_PER_DAY = 24 * SECONDS_PER_HOUR
 
-PhraseLocation = namedtuple("PhraseLocation", "phrase location")
-
-SpecialLocation = namedtuple(
-        "SpecialLocation",
-        "meetup_id location override comment")
+PhraseLocation = namedtuple("PhraseLocation", "phrase place")
 
 
 class ApplicationScope:
@@ -33,6 +30,26 @@ class ApplicationScope:
     @property
     def app_name(self):
         return APP_NAME
+
+    @property
+    def conflict_places(self):
+        return self._env_vars["CONFLICT_PLACES"]
+
+    @property
+    def conflict_places_list(self):
+        return json.loads(self.conflict_places)
+
+    @property
+    def conflicts(self):
+        return self._args.conflicts
+
+    @property
+    def containing_places(self):
+        return self._env_vars["CONTAINING_PLACES"]
+
+    @property
+    def containing_places_list(self):
+        return json.loads(self.containing_places)
 
     @property
     def delete_after_end_seconds(self):
@@ -58,6 +75,14 @@ class ApplicationScope:
         return self._env_vars["DEFAULT_LOCATION"]
 
     @property
+    def default_places(self):
+        return self._env_vars["DEFAULT_PLACES"]
+
+    @property
+    def default_place_list(self):
+        return json.loads(self.default_places)
+
+    @property
     def end_time_column_name(self):
         return self._env_vars["END_TIME_COLUMN_NAME"]
 
@@ -75,14 +100,14 @@ class ApplicationScope:
         return self._env_vars["LOCATION_COLUMN_NAME"]
 
     @property
-    def location_phrases(self):
-        return self._env_vars["LOCATION_PHRASES"]
+    def place_phrases(self):
+        return self._env_vars["PLACE_PHRASES"]
 
     @property
-    def location_phrase_tuples(self):
+    def place_phrase_tuples(self):
         return (
             PhraseLocation(**dict) for dict in
-            json.loads(self.location_phrases)
+            json.loads(self.place_phrases)
         )
 
     @property
@@ -114,14 +139,14 @@ class ApplicationScope:
         return self._env_vars["MEETUP_ID_COLUMN_NAME"]
 
     @property
-    def more_location_phrases(self):
-        return self._env_vars["MORE_LOCATION_PHRASES"]
+    def more_place_phrases(self):
+        return self._env_vars["MORE_PLACE_PHRASES"]
 
     @property
-    def more_location_phrase_tuples(self):
+    def more_place_phrase_tuples(self):
         return (
             PhraseLocation(**dict) for dict in
-            json.loads(self.more_location_phrases)
+            json.loads(self.more_place_phrases)
         )
 
     @property

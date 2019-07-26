@@ -59,6 +59,7 @@ SAMPLE_MEETUP_EVENT_1 = Event(
     meetup_id = "zvbxrpl",
     name = "Nova Labs Open House",
     location = "Orange Bay",
+    places = ["Orange Bay"],
     start_time = "2018-02-10 15:00:00",
     end_time = "2018-02-10 17:00:00"
 )
