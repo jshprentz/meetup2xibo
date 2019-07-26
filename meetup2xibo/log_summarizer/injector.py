@@ -25,6 +25,7 @@ def inject_summary():
     return Summary(
         inject_start_counter(),
         inject_crud_lister(),
+        inject_conflict_reporter(),
         inject_location_mapper())
 
 
@@ -46,6 +47,11 @@ def inject_start_counter():
 def inject_crud_lister():
     """Return an empty event CRUD lister."""
     return CrudLister()
+
+
+def inject_conflict_reporter():
+    """Return an empty conflict reporter."""
+    return ConflictReporter()
 
 
 def inject_location_mapper():

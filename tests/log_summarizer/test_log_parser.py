@@ -41,9 +41,9 @@ def location_mapper():
     return LocationMapper()
 
 @pytest.fixture
-def summary(counter, crud_lister, location_mapper):
+def summary(counter, crud_lister, conflict_reporter, location_mapper):
     """Return a summary tuple."""
-    return Summary(counter, crud_lister, location_mapper)
+    return Summary(counter, crud_lister, conflict_reporter, location_mapper)
 
 def test_dash(log_parser_class):
     """Test recognizing the dash separator between log line components."""
@@ -464,6 +464,17 @@ def test_conflict_analysis_log_line_schedule_conflict(
     log_line = sample_log_lines.schedule_conflict_line()
     parser = log_parser_class(log_line)
     parser.conflict_analysis_log_line(conflict_reporter)
+    expected_conflict_places = [("Conference Room 2", [expected_conflict])]
+    assert conflict_reporter.sorted_conflict_places() == expected_conflict_places
+
+def test_log_line_schedule_conflict(
+        log_parser_class, sample_log_lines, conflict_reporter, summary):
+    """Test recognizing a schedule conflict log line and adding it to a
+    conflict reporter."""
+    expected_conflict = sample_log_lines.make_schedule_conflict()
+    log_line = sample_log_lines.schedule_conflict_line() + "\n"
+    parser = log_parser_class(log_line)
+    parser.log_line(summary)
     expected_conflict_places = [("Conference Room 2", [expected_conflict])]
     assert conflict_reporter.sorted_conflict_places() == expected_conflict_places
 

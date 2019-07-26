@@ -12,7 +12,9 @@ from collections import namedtuple
 Field = namedtuple("Field", "name value")
 LogLineStart = namedtuple("LogLineStart", "timestamp log_level")
 UpdateToLogLine = namedtuple("UpdateToLogLine", "timestamp event")
-Summary = namedtuple("Summary", "counter crud_lister location_mapper")
+Summary = namedtuple(
+        "Summary",
+        "counter crud_lister conflict_reporter location_mapper")
 SpecialLocation = namedtuple(
         "SpecialLocation",
         "meetup_id location override comment")
@@ -23,6 +25,7 @@ log_lines :summary = log_line(summary)*
 
 log_line :summary = (start_log_line(summary.counter)
         | event_log_line(summary.crud_lister)
+        | conflict_analysis_log_line(summary.conflict_reporter)
         | event_location_log_line:l
                 -> summary.location_mapper.add_event_location_log_line(l)
         | other_log_line) '\n'
