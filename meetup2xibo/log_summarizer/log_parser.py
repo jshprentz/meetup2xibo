@@ -77,6 +77,7 @@ event_location_log_line = log_line_start('EventConverter'):s
 conflict_analysis_log_line :conflict_reporter =
         start_conflict_analysis_log_line -> conflict_reporter.clear()
         | checked_place_log_line:n -> conflict_reporter.add_checked_place(n)
+        | schedule_conflict_log_line:cp -> conflict_reporter.add_conflict(*cp)
 
 start_conflict_analysis_log_line = log_line_start('ConflictAnalyzer')
         'Start conflict analysis'
@@ -84,7 +85,7 @@ start_conflict_analysis_log_line = log_line_start('ConflictAnalyzer')
 checked_place_log_line = log_line_start('CheckedPlace') 'Name=' quoted_value
 
 schedule_conflict_log_line = log_line_start('CheckedPlace') 'Schedule conflict: '
-        'place=' quoted_value:p conflict:c
+        'place=' quoted_value:p ' ' conflict:c -> (p, c)
 
 conflict = 'Conflict(' conflict_fields:f ')' -> Conflict.from_fields(f)
 

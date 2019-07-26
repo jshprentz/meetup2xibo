@@ -370,6 +370,15 @@ def test_checked_place_log_line(log_parser_class, sample_log_lines):
     name = parser.checked_place_log_line()
     assert name == "Conference Room 1"
 
+def test_schedule_conflict_log_line(log_parser_class, sample_log_lines):
+    """Test recognizing a schedule conflict log line."""
+    expected_conflict = sample_log_lines.make_schedule_conflict()
+    log_line = sample_log_lines.schedule_conflict_line()
+    parser = log_parser_class(log_line)
+    name, conflicts = parser.schedule_conflict_log_line()
+    assert name == "Conference Room 2"
+    assert conflicts == expected_conflict
+
 def test_event_list(log_parser_class):
     """Test recognizing an event list."""
     parser = log_parser_class(
@@ -447,6 +456,16 @@ def test_conflict_analysis_log_line_checked_place(
     parser.conflict_analysis_log_line(conflict_reporter)
     assert ["Conference Room 1"] == conflict_reporter.sorted_checked_places()
 
+def test_conflict_analysis_log_line_schedule_conflict(
+        log_parser_class, sample_log_lines, conflict_reporter):
+    """Test recognizing a schedule conflict log line and adding it to a
+    conflict reporter."""
+    expected_conflict = sample_log_lines.make_schedule_conflict()
+    log_line = sample_log_lines.schedule_conflict_line()
+    parser = log_parser_class(log_line)
+    parser.conflict_analysis_log_line(conflict_reporter)
+    expected_conflict_places = [("Conference Room 2", [expected_conflict])]
+    assert conflict_reporter.sorted_conflict_places() == expected_conflict_places
 
 
 # vim: tabstop=8 expandtab shiftwidth=4 softtabstop=4 autoindent

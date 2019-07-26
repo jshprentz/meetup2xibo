@@ -1,5 +1,6 @@
 """Provides time ordered sample log lines."""
 
+from meetup2xibo.log_summarizer.conflict import Conflict
 from meetup2xibo.log_summarizer.event import Event
 from meetup2xibo.log_summarizer.log_lines import InsertEventLogLine, \
     UpdateEventLogLine, DeleteEventLogLine, UnknownLocationLogLine, \
@@ -136,7 +137,7 @@ CHECKED_PLACE_TEMPLATE = \
     "2019-03-04 06:{minutes:02d}:16,418 - INFO - CheckedPlace - " \
     "Name='Conference Room 1'"
 
-CONFLICT_TEMPLATE = \
+SCHEDULE_CONFLICT_TEMPLATE = \
     "2019-03-04 06:{minutes:02d}:54,246 - INFO - CheckedPlace - " \
     "Schedule conflict: place='Conference Room 2' " \
     "Conflict(start_time='2019-09-03 19:00:00', end_time='2019-09-03 " \
@@ -212,9 +213,9 @@ class SampleLogLines:
         """Return a checked place line."""
         return self.make_line(CHECKED_PLACE_TEMPLATE)
 
-    def conflict_line(self):
+    def schedule_conflict_line(self):
         """Return a conflict line."""
-        return self.make_line(CONFLICT_TEMPLATE)
+        return self.make_line(SCHEDULE_CONFLICT_TEMPLATE)
 
     @property
     def insert_fields(self):
@@ -294,5 +295,27 @@ class SampleLogLines:
         event = Event.from_fields(EVENT_LOCATION_FIELDS)
         date_time = self.date_time()
         return EventLocationLogLine(date_time, location, event)
+
+    def make_schedule_conflict(self):
+        """Return a schedule conflict for the conflict line."""
+        return Conflict(
+            start_time='2019-09-03 19:00',
+            end_time='2019-09-03 21:00',
+            events=[
+                Event(
+                    meetup_id='vzgnvqyzmbfb',
+                    name='Computational Mathematics: P=NP for students and engineers at Nova Labs', 
+                    location='Conference Room 2',
+                    start_time='2019-09-03 19:00', 
+                    end_time='2019-09-03 21:00',
+                    places=['Conference Room 2']), 
+                Event(
+                    meetup_id='whkcdryzmbfb',
+                    name='National Drone Science University (NDSU) Drone Science',
+                    location='Conference Room 2', 
+                    start_time='2019-09-03 19:00',
+                    end_time='2019-09-03 21:00', 
+                    places=['Conference Room 2'])
+                ])
 
 # vim: tabstop=8 expandtab shiftwidth=4 softtabstop=4 autoindent
