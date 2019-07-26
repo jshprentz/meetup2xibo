@@ -94,7 +94,7 @@ conflict = 'Conflict(' conflict_fields:f ')' -> Conflict.from_fields(f)
 
 other_log_line = rest_of_line
 
-log_line_start :name = timestamp:t dash level:l dash name dash
+log_line_start :logger = timestamp:t dash level:l dash exactly(logger) dash
         -> LogLineStart(t, l)
 
 timestamp = date:d ' ' time:t -> " ".join((d, t))
