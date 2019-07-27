@@ -17,15 +17,19 @@ Recent History
 
 .. Next Release
 .. ------------------
-* Detect and report room conflicts.
 
+3.0.1 (2019-07-27)
+------------------
+* Document logging and reporting schedule conflicts.
+* Fix documentation issues.
 
-.. Next Release
-.. ------------------
 
 3.0.0 (2019-07-25)
------------------- (2019-06-12)
 ------------------
+* Detect and report room conflicts.
+
+2.4.10 (2019-06-12)
+-------------------
 * Report reversion to earlier unknown locations in log summaries.
 * Improve reporting of OAuth2 errors.
 

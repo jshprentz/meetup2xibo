@@ -56,14 +56,18 @@ via email to the cron user.
 Meetup2xibo will log info and higher messages to the default
 :file:`meetup2xibo.log` file.
 
-Late each day, cron runs meetup2xibo with the :option:`-m <meetup2xibo -m>`
-option to log all location mappings from Meetup.com's venue name and
-how-to-find-us fields to Xibo's location.
-This run is scheduled to avoid the every-10-minute runs.
-The following crontab line schedules a meetup2xibo location mapping run every
-night before midnight::
+Late each day, cron runs meetup2xibo with two extra options:
 
-   48 23 * * * cd ~/meetup2xibo && . ./meetup2xibo.env && meetup2xibo -w -m
+- :option:`-c <meetup2xibo -c>` to log schedule conflicts
+
+- :option:`-m <meetup2xibo -m>` to log all location mappings from Meetup.com's
+  venue name and how-to-find-us fields to Xibo's location
+
+This run is scheduled to avoid the every-10-minute runs.
+The following crontab line schedules a schedule conflict and location mapping
+meetup2xibo run every night before midnight::
+
+   48 23 * * * cd ~/meetup2xibo && . ./meetup2xibo.env && meetup2xibo -w -c -m
 
 .. _`summarizer-cron-job`:
 

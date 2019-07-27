@@ -413,7 +413,7 @@ a list of places with possible scheduling conflicts.
        "Computer Lab",
        "Conference Room 1",
        "Conference Room 2",
-       "Conference Room 3",
+       "Conference Room 3"
    ]'
 
 Some places may be subdivided; others may be combined.
