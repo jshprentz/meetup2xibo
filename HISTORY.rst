@@ -17,6 +17,7 @@ Recent History
 
 Next Release
 ------------------
+* Document logging and reporting schedule conflicts.
 * Fix documentation issues.
 
 
