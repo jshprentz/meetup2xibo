@@ -15,7 +15,10 @@ Future History
 Recent History
 ~~~~~~~~~~~~~~
 
-Next Release
+.. Next Release
+.. ------------------
+
+3.0.1 (2019-07-27)
 ------------------
 * Document logging and reporting schedule conflicts.
 * Fix documentation issues.
