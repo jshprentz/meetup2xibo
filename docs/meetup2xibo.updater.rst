@@ -68,14 +68,6 @@ meetup2xibo.updater.injector module
     :undoc-members:
     :show-inheritance:
 
-meetup2xibo.updater.location\_builder module
---------------------------------------------
-
-.. automodule:: meetup2xibo.updater.location_builder
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
 meetup2xibo.updater.location\_chooser module
 --------------------------------------------
 

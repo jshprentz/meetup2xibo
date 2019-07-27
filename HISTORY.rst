@@ -15,8 +15,9 @@ Future History
 Recent History
 ~~~~~~~~~~~~~~
 
-.. Next Release
-.. ------------------
+Next Release
+------------------
+* Fix documentation issues.
 
 
 3.0.0 (2019-07-25)
@@ -24,7 +25,7 @@ Recent History
 * Detect and report room conflicts.
 
 2.4.10 (2019-06-12)
-------------------
+-------------------
 * Report reversion to earlier unknown locations in log summaries.
 * Improve reporting of OAuth2 errors.
 
