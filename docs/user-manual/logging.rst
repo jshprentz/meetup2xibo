@@ -57,6 +57,7 @@ Summarize-m2x-logs summarizes one or more meetup2xibo log files.
 The summary includes:
 
 - Counts of meetup2xibo runs, by version
+- Lists of schedule conflicts
 - Lists of events inserted, updated, deleted, and retired
 - Field-by-field details of updated events
 - Warnings about missing event locations
@@ -72,7 +73,8 @@ HTML-formatted results via email.
    :name: summary-email
    :align: center
 
-   The daily summary email message count meetup2xibo runs and list Xibo event changes.
+   The daily summary email message counts meetup2xibo runs, lists schedule
+   conflicts, and lists Xibo event changes.
 
 An email message attachment contains a CSV formatted file listing the
 conversions from Meetup.com venue name and how-to-find-us fields to Xibo
