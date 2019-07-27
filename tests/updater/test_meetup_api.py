@@ -33,7 +33,6 @@ def test_request_params():
     """Test building a request parameter dictionary."""
     retriever = MeetupEventsRetriever("foo_name", "bar_key", MEETUP_EVENTS_WANTED, None)
     expected_params = {
-            "key": "bar_key",
             "page": MEETUP_EVENTS_WANTED,
             "scroll": "recent_past"
             }

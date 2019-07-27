@@ -41,7 +41,6 @@ class MeetupEventsRetriever:
     def request_params(self):
         """Return a dictionary of request parameters."""
         return {
-            "key": self.api_key,
             "page": self.events_wanted,
             "scroll": "recent_past"
             }
