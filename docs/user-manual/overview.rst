@@ -48,10 +48,11 @@ Configuration
 Meetup2xibo gets its configuration from environment variables.
 The configuration includes:
 
-- Meetup.com API credentials
+- Meetup.com API settings
 - Xibo CMS API credentials
 - Xibo dataset column names
 - Location corrections
+- Places for schedule conflict analysis
 - Date/time thresholds for event insertion, deletion, and cancellation
 
 The :ref:`meetup2xibo man page <meetup2xibo-environment>` defines the

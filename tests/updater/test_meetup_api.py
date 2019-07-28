@@ -14,9 +14,8 @@ MEETUP_EVENTS_WANTED = 199
 def meetup_event_retriever():
     """Return a Meetup events retriever configured to connect to Meetup.com."""
     group_name = os.getenv("MEETUP_GROUP_URL_NAME")
-    api_key = os.getenv("MEETUP_API_KEY")
     last_time = os.getenv("NEAR_FUTURE_DATE")
-    return MeetupEventsRetriever(group_name, api_key, MEETUP_EVENTS_WANTED, last_time)
+    return MeetupEventsRetriever(group_name, MEETUP_EVENTS_WANTED, last_time)
 
 def save_json(the_json, path):
     """Save JSON to a file."""
@@ -26,14 +25,13 @@ def save_json(the_json, path):
 
 def test_build_url():
     """Test building a URL."""
-    retriever = MeetupEventsRetriever("foo_name", "bar_key", MEETUP_EVENTS_WANTED, None)
+    retriever = MeetupEventsRetriever("foo_name", MEETUP_EVENTS_WANTED, None)
     assert retriever.build_url() == "https://api.meetup.com/foo_name/events"
 
 def test_request_params():
     """Test building a request parameter dictionary."""
-    retriever = MeetupEventsRetriever("foo_name", "bar_key", MEETUP_EVENTS_WANTED, None)
+    retriever = MeetupEventsRetriever("foo_name", MEETUP_EVENTS_WANTED, None)
     expected_params = {
-            "key": "bar_key",
             "page": MEETUP_EVENTS_WANTED,
             "scroll": "recent_past"
             }
