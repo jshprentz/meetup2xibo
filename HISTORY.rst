@@ -2,14 +2,9 @@
 History
 =======
 
-~~~~~~~~~~~~~~
-Future History
-~~~~~~~~~~~~~~
-
-3.1
----
-
-* Support Meetup.com OAuth2.
+.. ~~~~~~~~~~~~~~
+.. Future History
+.. ~~~~~~~~~~~~~~
 
 ~~~~~~~~~~~~~~
 Recent History
@@ -17,6 +12,11 @@ Recent History
 
 .. Next Release
 .. ------------------
+
+3.1.0 (2019-07-27)
+------------------
+* Meetup API key no longer is sent to Meetup.com.
+* Environment variable ``MEETUP_API_KEY`` may be removed from configurations.
 
 3.0.1 (2019-07-27)
 ------------------

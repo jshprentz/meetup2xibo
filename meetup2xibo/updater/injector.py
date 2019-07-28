@@ -65,7 +65,6 @@ def inject_meetup_events_retriever(application_scope):
     """Return a Meetup events retriever configured by an application scope."""
     return MeetupEventsRetriever(
         group_url_name=application_scope.meetup_group_url_name,
-        api_key=application_scope.meetup_api_key,
         events_wanted=application_scope.meetup_events_wanted,
         cancelled_last_time=inject_cancelled_last_time(application_scope))
 
