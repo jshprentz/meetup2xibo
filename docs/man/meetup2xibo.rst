@@ -134,6 +134,10 @@ Environment
 
    The API key that authenticates access to Meetup.com.
 
+.. deprecated:: 3.1
+   The Meetup API key no longer is sent to Meetup.com.
+   This environment variable may be removed from configurations.
+
 .. envvar:: MEETUP_EVENTS_WANTED
 
    The number of events to request from Meetup.

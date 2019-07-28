@@ -8,7 +8,7 @@ The :ref:`meetup2xibo man page <meetup2xibo-environment>` defines the
 configuration environment variables.
 The configuration includes:
 
-- Meetup.com :abbr:`API(application programming interface)` credentials
+- Meetup.com :abbr:`API(application programming interface)` settings
 - Xibo :abbr:`CMS(Content Management System)` API credentials
 - Xibo dataset code and column names
 - Xibo web server certificate
@@ -29,20 +29,8 @@ removes permissions from group members and other users:
 
    $ chmod u=rw,go-rwx meetup2xibo.env
 
-Meetup.com API Credentials
---------------------------
-
-Meetup.com requires an API key with each request.
-The API key identifies and authenticates the user of the client application
-(meetup2xibo in this case).
-Meetup.com issues API keys on their `Getting an API Key`_ web page.
-Environment variable :envvar:`MEETUP_API_KEY` provides the API key.
-
-.. note::
-
-   Meetup.com announced that they will issue no new API keys.
-   They prefer OAuth2, a more secure authentication system.
-   Meetup2xibo needs revision to support OAuth2 at Meetup.com. 
+Meetup.com API Settings
+-----------------------
 
 Meetup2xibo requests events for a specific Meetup.com group.
 The Meetup.com API use a computer-friendly group :abbr:`URL(Uniform Resource
@@ -217,7 +205,7 @@ variable :envvar:`PLACE_PHRASES` as a
    export PLACE_PHRASES='[
        {"phrase": "Conf Rm 1",         "place": "Conference Room 1"},
        {"phrase": "Conference rm 1",   "place": "Conference Room 1"},
-       {"phrase": "Conference room 1", "place": "Conference Room 1"},
+       {"phrase": "Conference room 1", "place": "Conference Room 1"}
    ]'
 
 Meetup2xibo ignores spacing and upper/lower case distinctions when searching
