@@ -30,7 +30,10 @@ See :doc:`prerequisites` for a description of the computing and skills
 requirements.
 
 Meetup2xibo stores event data in a Xibo dataset.
-See :doc:`xibo-dataset-setup` for instructions about creating the dataset.
+See :doc:`xibo-quick-start` for instructions about about importing the dataset
+structure and an agenda layout.
+Alternatively, see :doc:`xibo-dataset-setup` for instructions about creating
+the dataset manually.
 
 Meetup2xibo accesses the Xibo API as a distinct authorized user.
 See :doc:`xibo-user-setup` for instructions about adding and authorizing this
