@@ -10,7 +10,10 @@ History
 Recent History
 ~~~~~~~~~~~~~~
 
-Next Release
+.. Next Release
+.. ------------------
+
+3.1.0 (2019-07-27)
 ------------------
 * Meetup API key no longer is sent to Meetup.com.
 * Environment variable ``MEETUP_API_KEY`` may be removed from configurations.
