@@ -7,6 +7,7 @@ Future History
 ~~~~~~~~~~~~~~
 
 * Support Xibo 2.
+* Improve reporting of JSON configuration errors.
 
 ~~~~~~~~~~~~~~
 Recent History
