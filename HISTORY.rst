@@ -2,16 +2,20 @@
 History
 =======
 
-.. ~~~~~~~~~~~~~~
-.. Future History
-.. ~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~
+Future History
+~~~~~~~~~~~~~~
+
+* Support Xibo 2.
+* Improve reporting of JSON configuration errors.
 
 ~~~~~~~~~~~~~~
 Recent History
 ~~~~~~~~~~~~~~
 
-.. Next Release
-.. ------------------
+Next Release
+------------------
+* Document quick start import of dataset structure.
 
 3.1.0 (2019-07-27)
 ------------------
