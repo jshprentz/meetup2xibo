@@ -13,7 +13,10 @@ Future History
 Recent History
 ~~~~~~~~~~~~~~
 
-Next Release
+.. Next Release
+.. ------------------
+
+3.2.0 (2019-07-29)
 ------------------
 * Document quick start import of dataset structure.
 
