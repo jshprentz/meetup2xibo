@@ -7,6 +7,10 @@ Meetup2Xibo manages five data value columns in that dataset.
 Xibo administrators may add additional formula columns to aid filtering,
 sorting and formating data for layouts.
 
+The steps below describe how to setup the dataset in Xibo.
+:doc:`xibo-quick-start` provides an alternative method using an imported
+dataset structure.
+
 .. _`create-an-events-dataset`:
 
 Create an Events Dataset
@@ -16,7 +20,7 @@ Meetup2xibo saves, updates, and deletes event data stored in a Xibo dataset.
 Click the :guilabel:`Add DataSet` button above the datasets list, as shown in
 :numref:`Figure %s <add-dataset>`.
 
-.. figure:: /images/screenshots/add-user.png
+.. figure:: /images/screenshots/add-dataset.png
    :alt: Screenshot showing Xibo's datasets list
    :name: add-dataset
    :align: center
