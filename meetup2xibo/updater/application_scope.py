@@ -69,11 +69,7 @@ class ApplicationScope:
 
     @property
     def default_places(self):
-        return self._env_vars["DEFAULT_PLACES"]
-
-    @property
-    def default_place_list(self):
-        return json.loads(self.default_places)
+        return self.json_loads("DEFAULT_PLACES")
 
     @property
     def end_time_column_name(self):

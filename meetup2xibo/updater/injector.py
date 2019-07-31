@@ -122,7 +122,7 @@ def inject_default_event_location(application_scope):
     by an application scope."""
     return EventLocation(
         application_scope.default_location,
-        application_scope.default_place_list)
+        application_scope.default_places)
 
 
 def inject_event_converter(application_scope):

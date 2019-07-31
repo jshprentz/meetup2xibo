@@ -13,6 +13,8 @@ CONTAINING_PLACES='''[
     {"place": "Woodshop", "contains": ["Green Way"]}
 ]'''
 
+DEFAULT_PLACES='[]'
+
 
 def test_conflict_places_valid():
     """Test converting a valid conflict places list."""
@@ -39,6 +41,18 @@ def test_containing_places_invalid():
     scope = ApplicationScope(None, {'CONTAINING_PLACES': CONTAINING_PLACES[1:]})
     with pytest.raises(JsonConversionError, match="Classroom A/B"):
         scope.containing_places
+
+def test_default_places_valid():
+    """Test converting a valid default places list."""
+    scope = ApplicationScope(None, {'DEFAULT_PLACES': DEFAULT_PLACES})
+    expected_default_places = []
+    assert expected_default_places == scope.default_places
+
+def test_default_places_invalid():
+    """Test converting an invalid default places list."""
+    scope = ApplicationScope(None, {'DEFAULT_PLACES': DEFAULT_PLACES[1:]})
+    with pytest.raises(JsonConversionError, match="line 1:"):
+        scope.default_places
 
 
 # vim: tabstop=8 expandtab shiftwidth=4 softtabstop=4 autoindent
