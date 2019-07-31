@@ -124,13 +124,12 @@ class ApplicationScope:
 
     @property
     def more_place_phrases(self):
-        return self._env_vars["MORE_PLACE_PHRASES"]
+        return self.json_loads("MORE_PLACE_PHRASES")
 
     @property
     def more_place_phrase_tuples(self):
         return (
-            PhraseLocation(**dict) for dict in
-            json.loads(self.more_place_phrases)
+            PhraseLocation(**dict) for dict in self.more_place_phrases
         )
 
     @property

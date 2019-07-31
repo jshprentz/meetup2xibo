@@ -59,20 +59,34 @@ def test_default_places_invalid():
     with pytest.raises(JsonConversionError, match="line 1:"):
         scope.default_places
 
-def test_place_phrases_valid():
-    """Test converting a valid place_phrases list."""
+def test_more_place_phrases_valid():
+    """Test converting a valid place phrases list."""
     scope = ApplicationScope(None, {'PLACE_PHRASES': PLACE_PHRASES})
-    expected_place_phrase = {
+    expected_more_place_phrase = {
             "phrase": "CAD Lab",
             "place": "CAD Lab"}
-    assert expected_place_phrase == scope.place_phrases[0]
+    assert expected_more_place_phrase == scope.more_place_phrases[0]
 
-def test_place_phrases_invalid():
-    """Test converting an invalid place_phrases list."""
+def test_more_place_phrases_invalid():
+    """Test converting an invalid place phrases list."""
     scope = ApplicationScope(None, {'PLACE_PHRASES': PLACE_PHRASES[1:]})
     expected_pointer_line = r'                                                           \^'
     with pytest.raises(JsonConversionError, match=expected_pointer_line):
-        scope.place_phrases
+        scope.more_place_phrases
+
+def test_more_place_phrases_valid():
+    """Test converting a valid more place phrases list."""
+    scope = ApplicationScope(None, {'MORE_PLACE_PHRASES': PLACE_PHRASES})
+    expected_more_place_phrase = {
+            "phrase": "Classroom A",
+            "place": "Classroom A"}
+    assert expected_more_place_phrase == scope.more_place_phrases[1]
+
+def test_more_place_phrases_invalid():
+    """Test converting an invalid more place phrases list."""
+    scope = ApplicationScope(None, {'MORE_PLACE_PHRASES': PLACE_PHRASES[1:]})
+    with pytest.raises(JsonConversionError, match="line 2:"):
+        scope.more_place_phrases
 
 
 # vim: tabstop=8 expandtab shiftwidth=4 softtabstop=4 autoindent
