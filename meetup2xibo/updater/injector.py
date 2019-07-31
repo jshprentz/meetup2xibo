@@ -332,7 +332,7 @@ def inject_conflict_places(application_scope):
     """Return conflict places configured by an application scope."""
     return ConflictPlacesLoader(
             ConflictPlaces(),
-            application_scope.conflict_places_list,
+            application_scope.conflict_places,
             application_scope.containing_places_list
             ).load()
 
