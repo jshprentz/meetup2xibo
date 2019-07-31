@@ -15,6 +15,11 @@ CONTAINING_PLACES='''[
 
 DEFAULT_PLACES='[]'
 
+PLACE_PHRASES='''[
+    {"phrase": "CAD Lab",		"place": "CAD Lab"},
+    {"phrase": "Classroom A",		"place": "Classroom A"}
+    ]'''
+
 
 def test_conflict_places_valid():
     """Test converting a valid conflict places list."""
@@ -53,6 +58,21 @@ def test_default_places_invalid():
     scope = ApplicationScope(None, {'DEFAULT_PLACES': DEFAULT_PLACES[1:]})
     with pytest.raises(JsonConversionError, match="line 1:"):
         scope.default_places
+
+def test_place_phrases_valid():
+    """Test converting a valid place_phrases list."""
+    scope = ApplicationScope(None, {'PLACE_PHRASES': PLACE_PHRASES})
+    expected_place_phrase = {
+            "phrase": "CAD Lab",
+            "place": "CAD Lab"}
+    assert expected_place_phrase == scope.place_phrases[0]
+
+def test_place_phrases_invalid():
+    """Test converting an invalid place_phrases list."""
+    scope = ApplicationScope(None, {'PLACE_PHRASES': PLACE_PHRASES[1:]})
+    expected_pointer_line = r'                                                           \^'
+    with pytest.raises(JsonConversionError, match=expected_pointer_line):
+        scope.place_phrases
 
 
 # vim: tabstop=8 expandtab shiftwidth=4 softtabstop=4 autoindent
