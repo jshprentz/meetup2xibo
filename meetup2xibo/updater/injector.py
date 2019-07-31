@@ -333,7 +333,7 @@ def inject_conflict_places(application_scope):
     return ConflictPlacesLoader(
             ConflictPlaces(),
             application_scope.conflict_places,
-            application_scope.containing_places_list
+            application_scope.containing_places
             ).load()
 
 

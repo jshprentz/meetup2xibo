@@ -42,11 +42,7 @@ class ApplicationScope:
 
     @property
     def containing_places(self):
-        return self._env_vars["CONTAINING_PLACES"]
-
-    @property
-    def containing_places_list(self):
-        return json.loads(self.containing_places)
+        return self.json_loads("CONTAINING_PLACES")
 
     @property
     def delete_after_end_seconds(self):
@@ -234,7 +230,7 @@ class ApplicationScope:
             detabbed_line = truncated_line.expandtabs()
             char_count = len(detabbed_line)
             pointer_line = char_count * " " + "^"
-            error_location = "line {:d}\n{}\n{}".format(
+            error_location = "line {:d}:\n{}\n{}".format(
                     line_num, error_line.expandtabs(), pointer_line)
         else:
             error_location = "line (:d} column (:d}".format(line_num, column_num)

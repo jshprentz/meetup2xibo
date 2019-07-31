@@ -8,6 +8,12 @@ CONFLICT_PLACES='''[
 	"CAD Lab",
 	"Classroom A"]'''
 
+CONTAINING_PLACES='''[
+    {"place": "Classroom A/B", "contains": ["Classroom A", "Classroom B"]},
+    {"place": "Woodshop", "contains": ["Green Way"]}
+]'''
+
+
 def test_conflict_places_valid():
     """Test converting a valid conflict places list."""
     scope = ApplicationScope(None, {'CONFLICT_PLACES': CONFLICT_PLACES})
@@ -19,6 +25,20 @@ def test_conflict_places_invalid():
     scope = ApplicationScope(None, {'CONFLICT_PLACES': CONFLICT_PLACES[1:]})
     with pytest.raises(JsonConversionError, match="CONFLICT_PLACES"):
         scope.conflict_places
+
+def test_containing_places_valid():
+    """Test converting a valid containing places list."""
+    scope = ApplicationScope(None, {'CONTAINING_PLACES': CONTAINING_PLACES})
+    expected_containing_place = {
+            "place": "Classroom A/B",
+            "contains": ["Classroom A", "Classroom B"]}
+    assert expected_containing_place == scope.containing_places[0]
+
+def test_containing_places_invalid():
+    """Test converting an invalid containing places list."""
+    scope = ApplicationScope(None, {'CONTAINING_PLACES': CONTAINING_PLACES[1:]})
+    with pytest.raises(JsonConversionError, match="Classroom A/B"):
+        scope.containing_places
 
 
 # vim: tabstop=8 expandtab shiftwidth=4 softtabstop=4 autoindent
