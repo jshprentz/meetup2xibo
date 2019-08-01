@@ -1,9 +1,11 @@
 """Test generating the Xibo API."""
 
+from .logging_application import LoggingApplication
 from .logging_context import LoggingContext
 from .logging_setup_manager import LoggingSetupManager
 from .http_response_error import HttpResponseError
-from .exceptions import DatasetDiscoveryError, ContainmentLoopError
+from .exceptions import DatasetDiscoveryError, ContainmentLoopError, \
+        JsonConversionError
 from .meetup2xibo import Meetup2Xibo, XiboSessionProcessor, \
         XiboEventCrudProcessor
 from .meetup_api import MeetupEventsRetriever
@@ -33,6 +35,14 @@ from pytz import timezone
 import certifi
 
 
+def inject_logging_application(application_scope):
+    """Return a logging application configured by an application scope."""
+    return LoggingApplication(
+        inject_logging_context(application_scope),
+        inject_enter_logging_application_scope(application_scope)
+        )
+
+
 def inject_logging_context(application_scope):
     """Return a logging context configured by an application scope."""
     return LoggingContext(
@@ -52,12 +62,22 @@ def inject_logging_setup_manager(application_scope):
         mappings=application_scope.mappings)
 
 
+def inject_enter_logging_application_scope(application_scope):
+    """Return a function configured by an application scope that provides a
+    processor configured by an application scope and a notional logging
+    application scope."""
+    def enter():
+        return inject_meetup2xibo(application_scope)
+    return enter
+
+
 def inject_no_trace_exceptions():
     """Return a tuple listing exception classes that need no traceback."""
     return (
             HttpResponseError,
             ContainmentLoopError,
             DatasetDiscoveryError,
+            JsonConversionError,
             Oauth2SessionStarterError)
 
 
@@ -122,7 +142,7 @@ def inject_default_event_location(application_scope):
     by an application scope."""
     return EventLocation(
         application_scope.default_location,
-        application_scope.default_place_list)
+        application_scope.default_places)
 
 
 def inject_event_converter(application_scope):
@@ -332,8 +352,8 @@ def inject_conflict_places(application_scope):
     """Return conflict places configured by an application scope."""
     return ConflictPlacesLoader(
             ConflictPlaces(),
-            application_scope.conflict_places_list,
-            application_scope.containing_places_list
+            application_scope.conflict_places,
+            application_scope.containing_places
             ).load()
 
 
@@ -367,10 +387,9 @@ def inject_cancelled_last_time(application_scope):
             application_scope.ignore_cancelled_after_seconds)
 
 
-def inject_meetup_2_xibo(application_scope):
+def inject_meetup2xibo(application_scope):
     """Return a Meetup to Xibo converter configured by an application scope."""
     return Meetup2Xibo(
-        inject_logging_context(application_scope),
         inject_meetup_events_retriever(application_scope),
         inject_selected_conflict_analyzer(application_scope),
         inject_event_converter(application_scope),

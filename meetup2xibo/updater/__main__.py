@@ -5,15 +5,15 @@ update the Xibo database."""
 
 from .application_scope import ApplicationScope
 from .command_line import parse_args
-from .injector import inject_meetup_2_xibo
+from .injector import inject_logging_application
 import os
 
 
 def main():
-    """Enter the application scope and run the Meetup
-    to Xibo converter."""
+    """Enter the application scope and run the Meetup to Xibo converter with
+    logging."""
     scope = ApplicationScope(parse_args(), os.environ)
-    inject_meetup_2_xibo(scope).run()
+    inject_logging_application(scope).run()
 
 
 if __name__ == '__main__':

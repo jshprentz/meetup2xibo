@@ -7,7 +7,6 @@ Future History
 ~~~~~~~~~~~~~~
 
 * Support Xibo 2.
-* Improve reporting of JSON configuration errors.
 
 ~~~~~~~~~~~~~~
 Recent History
@@ -15,6 +14,11 @@ Recent History
 
 .. Next Release
 .. ------------------
+
+3.2.1 (2019-08-01)
+------------------
+* Improve reporting of JSON configuration errors.
+* Log errors during initialization.
 
 3.2.0 (2019-07-29)
 ------------------
