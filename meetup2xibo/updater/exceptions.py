@@ -10,6 +10,7 @@ class ContainmentLoopError(Exception):
 
     """Raised when conflict analysis finds a loop in place containment."""
 
+
 class JsonConversionError(Exception):
 
     """Raised when JSON conversion fails."""

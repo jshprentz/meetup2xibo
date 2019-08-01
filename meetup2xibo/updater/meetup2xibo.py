@@ -13,7 +13,6 @@ XiboEventCrudScope = namedtuple(
         "event_dataset_id event_column_ids")
 
 
-
 class Meetup2Xibo:
 
     """Downloads Meetup events into a Xibo database."""

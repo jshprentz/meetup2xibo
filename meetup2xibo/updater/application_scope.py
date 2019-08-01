@@ -214,24 +214,24 @@ class ApplicationScope:
     @staticmethod
     def json_conversion_message(
             env_key, err_msg, line_num, column_num, json_doc):
-        """Return a message describing a JSON conversion error at a numbered line
-        and column within the JSON document retrieved from the named environment
-        variable."""
+        """Return a message describing a JSON conversion error at a numbered
+        line and column within the JSON document retrieved from the named
+        environment variable."""
         json_lines = json_doc.splitlines()
         if len(json_lines) >= line_num:
             error_line = json_lines[line_num - 1]
-            truncated_line = error_line[0 : column_num - 1]
+            truncated_line = error_line[0:column_num - 1]
             detabbed_line = truncated_line.expandtabs()
             char_count = len(detabbed_line)
             pointer_line = char_count * " " + "^"
             context_lines = '\n'.join(json_lines[:line_num][-3:]).expandtabs()
-            error_location = "line {:d}:\n{}\n{}".format(
-                    line_num, context_lines, pointer_line)
+            error_location = "line {:d}:\n{}\n{}" \
+                .format(line_num, context_lines, pointer_line)
         else:
-            error_location = "line (:d} column (:d}".format(line_num, column_num)
+            error_location = "line (:d} column (:d}" \
+                .format(line_num, column_num)
         return "In JSON environment variable {}: {} at {}" \
-                .format(env_key, err_msg, error_location)
-
+            .format(env_key, err_msg, error_location)
 
 
 # vim: tabstop=8 expandtab shiftwidth=4 softtabstop=4 autoindent

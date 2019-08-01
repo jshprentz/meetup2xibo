@@ -1,5 +1,6 @@
 """An application that sets up logging prior to other initialization."""
 
+
 class LoggingApplication:
 
     """An application that sets up logging prior to other initialization."""

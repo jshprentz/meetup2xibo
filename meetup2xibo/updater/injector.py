@@ -387,7 +387,6 @@ def inject_cancelled_last_time(application_scope):
             application_scope.ignore_cancelled_after_seconds)
 
 
-
 def inject_meetup2xibo(application_scope):
     """Return a Meetup to Xibo converter configured by an application scope."""
     return Meetup2Xibo(
