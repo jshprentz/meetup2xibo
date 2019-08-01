@@ -3,6 +3,7 @@ environment variables needed by the application."""
 
 
 from .special_location import SpecialLocation
+from .exceptions import JsonConversionError
 import meetup2xibo
 import logging
 import json
@@ -33,11 +34,7 @@ class ApplicationScope:
 
     @property
     def conflict_places(self):
-        return self._env_vars["CONFLICT_PLACES"]
-
-    @property
-    def conflict_places_list(self):
-        return json.loads(self.conflict_places)
+        return self.json_loads("CONFLICT_PLACES")
 
     @property
     def conflicts(self):
@@ -45,11 +42,7 @@ class ApplicationScope:
 
     @property
     def containing_places(self):
-        return self._env_vars["CONTAINING_PLACES"]
-
-    @property
-    def containing_places_list(self):
-        return json.loads(self.containing_places)
+        return self.json_loads("CONTAINING_PLACES")
 
     @property
     def delete_after_end_seconds(self):
@@ -76,11 +69,7 @@ class ApplicationScope:
 
     @property
     def default_places(self):
-        return self._env_vars["DEFAULT_PLACES"]
-
-    @property
-    def default_place_list(self):
-        return json.loads(self.default_places)
+        return self.json_loads("DEFAULT_PLACES")
 
     @property
     def end_time_column_name(self):
@@ -101,13 +90,12 @@ class ApplicationScope:
 
     @property
     def place_phrases(self):
-        return self._env_vars["PLACE_PHRASES"]
+        return self.json_loads("PLACE_PHRASES")
 
     @property
     def place_phrase_tuples(self):
         return (
-            PhraseLocation(**dict) for dict in
-            json.loads(self.place_phrases)
+            PhraseLocation(**dict) for dict in self.place_phrases
         )
 
     @property
@@ -136,13 +124,12 @@ class ApplicationScope:
 
     @property
     def more_place_phrases(self):
-        return self._env_vars["MORE_PLACE_PHRASES"]
+        return self.json_loads("MORE_PLACE_PHRASES")
 
     @property
     def more_place_phrase_tuples(self):
         return (
-            PhraseLocation(**dict) for dict in
-            json.loads(self.more_place_phrases)
+            PhraseLocation(**dict) for dict in self.more_place_phrases
         )
 
     @property
@@ -159,13 +146,13 @@ class ApplicationScope:
 
     @property
     def special_locations(self):
-        return self._env_vars["SPECIAL_LOCATIONS"]
+        return self.json_loads("SPECIAL_LOCATIONS")
 
     @property
     def special_locations_dict(self):
         return {
                 d["meetup_id"]: SpecialLocation(**d)
-                for d in json.loads(self.special_locations)}
+                for d in self.special_locations}
 
     @property
     def start_time_column_name(self):
@@ -210,6 +197,41 @@ class ApplicationScope:
     @property
     def xibo_port(self):
         return self._env_vars["XIBO_PORT"]
+
+    def json_loads(self, env_key):
+        """Return the deserialized JSON value from the environment variable
+        named env_key.  If the data being deserialized is not a valid JSON
+        document, a JsonConversionError reporting the context description will
+        be raised."""
+        json_value = self._env_vars[env_key]
+        try:
+            return json.loads(json_value)
+        except json.JSONDecodeError as err:
+            message = self.json_conversion_message(
+                    env_key, err.msg, err.lineno, err.colno, err.doc)
+            raise JsonConversionError(message) from err
+
+    @staticmethod
+    def json_conversion_message(
+            env_key, err_msg, line_num, column_num, json_doc):
+        """Return a message describing a JSON conversion error at a numbered line
+        and column within the JSON document retrieved from the named environment
+        variable."""
+        json_lines = json_doc.splitlines()
+        if len(json_lines) >= line_num:
+            error_line = json_lines[line_num - 1]
+            truncated_line = error_line[0 : column_num - 1]
+            detabbed_line = truncated_line.expandtabs()
+            char_count = len(detabbed_line)
+            pointer_line = char_count * " " + "^"
+            context_lines = '\n'.join(json_lines[:line_num][-3:]).expandtabs()
+            error_location = "line {:d}:\n{}\n{}".format(
+                    line_num, context_lines, pointer_line)
+        else:
+            error_location = "line (:d} column (:d}".format(line_num, column_num)
+        return "In JSON environment variable {}: {} at {}" \
+                .format(env_key, err_msg, error_location)
+
 
 
 # vim: tabstop=8 expandtab shiftwidth=4 softtabstop=4 autoindent
