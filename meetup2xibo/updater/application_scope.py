@@ -224,8 +224,9 @@ class ApplicationScope:
             detabbed_line = truncated_line.expandtabs()
             char_count = len(detabbed_line)
             pointer_line = char_count * " " + "^"
+            context_lines = '\n'.join(json_lines[:line_num][-3:]).expandtabs()
             error_location = "line {:d}:\n{}\n{}".format(
-                    line_num, error_line.expandtabs(), pointer_line)
+                    line_num, context_lines, pointer_line)
         else:
             error_location = "line (:d} column (:d}".format(line_num, column_num)
         return "In JSON environment variable {}: {} at {}" \
