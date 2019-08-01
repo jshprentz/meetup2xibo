@@ -146,13 +146,13 @@ class ApplicationScope:
 
     @property
     def special_locations(self):
-        return self._env_vars["SPECIAL_LOCATIONS"]
+        return self.json_loads("SPECIAL_LOCATIONS")
 
     @property
     def special_locations_dict(self):
         return {
                 d["meetup_id"]: SpecialLocation(**d)
-                for d in json.loads(self.special_locations)}
+                for d in self.special_locations}
 
     @property
     def start_time_column_name(self):

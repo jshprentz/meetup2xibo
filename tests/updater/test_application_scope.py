@@ -20,6 +20,10 @@ PLACE_PHRASES='''[
     {"phrase": "Classroom A",		"place": "Classroom A"}
     ]'''
 
+SPECIAL_LOCATIONS='''[
+    {"meetup_id": "zvbxrpl2", "location": "Woodshop", "comment": "", "override": true, "places": ["Woodshop"]},
+    {"meetup_id": "259565055", "location": "Orange Bay", "comment": "Empower2Make", "override": false, "places": []}
+    ]'''
 
 def test_conflict_places_valid():
     """Test converting a valid conflict places list."""
@@ -59,20 +63,20 @@ def test_default_places_invalid():
     with pytest.raises(JsonConversionError, match="line 1:"):
         scope.default_places
 
-def test_more_place_phrases_valid():
+def test_place_phrases_valid():
     """Test converting a valid place phrases list."""
     scope = ApplicationScope(None, {'PLACE_PHRASES': PLACE_PHRASES})
-    expected_more_place_phrase = {
+    expected_place_phrase = {
             "phrase": "CAD Lab",
             "place": "CAD Lab"}
-    assert expected_more_place_phrase == scope.more_place_phrases[0]
+    assert expected_place_phrase == scope.place_phrases[0]
 
-def test_more_place_phrases_invalid():
+def test_place_phrases_invalid():
     """Test converting an invalid place phrases list."""
     scope = ApplicationScope(None, {'PLACE_PHRASES': PLACE_PHRASES[1:]})
     expected_pointer_line = r'                                                           \^'
     with pytest.raises(JsonConversionError, match=expected_pointer_line):
-        scope.more_place_phrases
+        scope.place_phrases
 
 def test_more_place_phrases_valid():
     """Test converting a valid more place phrases list."""
@@ -88,5 +92,22 @@ def test_more_place_phrases_invalid():
     with pytest.raises(JsonConversionError, match="line 2:"):
         scope.more_place_phrases
 
+def test_special_locations_valid():
+    """Test converting a valid special locations list."""
+    scope = ApplicationScope(None, {'SPECIAL_LOCATIONS': SPECIAL_LOCATIONS})
+    expected_place_phrase = {
+        "meetup_id": "zvbxrpl2",
+        "location": "Woodshop",
+        "comment": "",
+        "override": True,
+        "places": ["Woodshop"]}
+    assert expected_place_phrase == scope.special_locations[0]
+
+def test_special_locations_invalid():
+    """Test converting an invalid special locations list."""
+    scope = ApplicationScope(None, {'SPECIAL_LOCATIONS': SPECIAL_LOCATIONS[1:]})
+    expected_error_line = '{"meetup_id": "zvbxrpl2", "location": "Woodshop",' 
+    with pytest.raises(JsonConversionError, match=expected_error_line):
+        scope.special_locations
 
 # vim: tabstop=8 expandtab shiftwidth=4 softtabstop=4 autoindent
