@@ -13,18 +13,18 @@ XiboEventCrudScope = namedtuple(
         "event_dataset_id event_column_ids")
 
 
+
 class Meetup2Xibo:
 
-    """Downloads Meetup events into a Xibo databse."""
+    """Downloads Meetup events into a Xibo database."""
 
     def __init__(
-            self, logging_context, meetup_events_retriever, conflict_analyzer,
+            self, meetup_events_retriever, conflict_analyzer,
             event_converter, site_cert_assurer, oauth2_session_starter,
             enter_xibo_session_scope):
-        """Initialize with a logging context, a Meetup events retriever, an
-        event converter, a site certificate assurer, an OAuth2 session starter,
-        a Xibo sesson scope entrance function """
-        self.logging_context = logging_context
+        """Initialize with a Meetup events retriever, an event converter, a
+        site certificate assurer, an OAuth2 session starter, and a Xibo sesson
+        scope entrance function """
         self.meetup_events_retriever = meetup_events_retriever
         self.conflict_analyzer = conflict_analyzer
         self.event_converter = event_converter
@@ -33,12 +33,11 @@ class Meetup2Xibo:
         self.enter_xibo_session_scope = enter_xibo_session_scope
 
     def run(self):
-        """Run the Meetup to Xibo conversion within a logging context."""
-        with self.logging_context:
-            meetup_events = self.retreive_meetup_events()
-            cancelled_meetup_events = self.retreive_cancelled_meetup_events()
-            self.convert(meetup_events, cancelled_meetup_events)
-            self.conflict_analyzer.analyze_conflicts(meetup_events)
+        """Run the Meetup to Xibo conversion."""
+        meetup_events = self.retreive_meetup_events()
+        cancelled_meetup_events = self.retreive_cancelled_meetup_events()
+        self.convert(meetup_events, cancelled_meetup_events)
+        self.conflict_analyzer.analyze_conflicts(meetup_events)
 
     def convert(self, meetup_events, cancelled_meetup_events):
         """Convert Meetup events to Xibo events."""

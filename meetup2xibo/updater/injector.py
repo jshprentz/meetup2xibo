@@ -1,5 +1,6 @@
 """Test generating the Xibo API."""
 
+from .logging_application import LoggingApplication
 from .logging_context import LoggingContext
 from .logging_setup_manager import LoggingSetupManager
 from .http_response_error import HttpResponseError
@@ -34,6 +35,14 @@ from pytz import timezone
 import certifi
 
 
+def inject_logging_application(application_scope):
+    """Return a logging application configured by an application scope."""
+    return LoggingApplication(
+        inject_logging_context(application_scope),
+        inject_enter_logging_application_scope(application_scope)
+        )
+
+
 def inject_logging_context(application_scope):
     """Return a logging context configured by an application scope."""
     return LoggingContext(
@@ -51,6 +60,15 @@ def inject_logging_setup_manager(application_scope):
         verbose=application_scope.verbose,
         warnings=application_scope.warnings,
         mappings=application_scope.mappings)
+
+
+def inject_enter_logging_application_scope(application_scope):
+    """Return a function configured by an application scope that provides a
+    processor configured by an application scope and a notional logging
+    application scope."""
+    def enter():
+        return inject_meetup2xibo(application_scope)
+    return enter
 
 
 def inject_no_trace_exceptions():
@@ -369,10 +387,10 @@ def inject_cancelled_last_time(application_scope):
             application_scope.ignore_cancelled_after_seconds)
 
 
-def inject_meetup_2_xibo(application_scope):
+
+def inject_meetup2xibo(application_scope):
     """Return a Meetup to Xibo converter configured by an application scope."""
     return Meetup2Xibo(
-        inject_logging_context(application_scope),
         inject_meetup_events_retriever(application_scope),
         inject_selected_conflict_analyzer(application_scope),
         inject_event_converter(application_scope),
