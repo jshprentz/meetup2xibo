@@ -19,7 +19,7 @@ class CarefulEnvironment(collections.abc.Mapping):
         """Return the environment variable value with the named key."""
         try:
             return self._env_vars[key]
-        except KeyError as err:    
+        except KeyError as err:
             message = "Missing environment variable {}".format(key)
             raise MissingEnvVarError(message) from err
 
