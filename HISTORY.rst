@@ -12,7 +12,10 @@ Future History
 Recent History
 ~~~~~~~~~~~~~~
 
-Next Release
+.. Next Release
+.. ------------------
+
+3.2.2 (2019-08-01)
 ------------------
 * Improve reporting of missing environment variables.
 
