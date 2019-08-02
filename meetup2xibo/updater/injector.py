@@ -5,7 +5,7 @@ from .logging_context import LoggingContext
 from .logging_setup_manager import LoggingSetupManager
 from .http_response_error import HttpResponseError
 from .exceptions import DatasetDiscoveryError, ContainmentLoopError, \
-        JsonConversionError
+        JsonConversionError, MissingEnvVarError
 from .meetup2xibo import Meetup2Xibo, XiboSessionProcessor, \
         XiboEventCrudProcessor
 from .meetup_api import MeetupEventsRetriever
@@ -78,6 +78,7 @@ def inject_no_trace_exceptions():
             ContainmentLoopError,
             DatasetDiscoveryError,
             JsonConversionError,
+            MissingEnvVarError,
             Oauth2SessionStarterError)
 
 

@@ -15,6 +15,10 @@ Recent History
 .. Next Release
 .. ------------------
 
+3.2.2 (2019-08-01)
+------------------
+* Improve reporting of missing environment variables.
+
 3.2.1 (2019-08-01)
 ------------------
 * Improve reporting of JSON configuration errors.
