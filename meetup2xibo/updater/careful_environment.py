@@ -60,7 +60,7 @@ class CarefulEnvironment(collections.abc.Mapping):
             error_location = "line {:d}:\n{}\n{}" \
                 .format(line_num, context_lines, pointer_line)
         else:
-            error_location = "line (:d} column (:d}" \
+            error_location = "line {:d} column {:d}" \
                 .format(line_num, column_num)
         return "In JSON environment variable {}: {} at {}" \
             .format(key, err_msg, error_location)
