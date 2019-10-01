@@ -12,7 +12,10 @@ Future History
 Recent History
 ~~~~~~~~~~~~~~
 
-Next Release
+.. Next Release
+.. ------------------
+
+3.2.3 (2019-10-01)
 ------------------
 * Accept special location places when summarizing logs.
 
