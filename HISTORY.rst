@@ -15,6 +15,10 @@ Recent History
 .. Next Release
 .. ------------------
 
+3.2.3 (2019-10-01)
+------------------
+* Accept special location places when summarizing logs.
+
 3.2.2 (2019-08-01)
 ------------------
 * Improve reporting of missing environment variables.
