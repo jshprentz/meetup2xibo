@@ -17,7 +17,7 @@ Summary = namedtuple(
         "counter crud_lister conflict_reporter location_mapper")
 SpecialLocation = namedtuple(
         "SpecialLocation",
-        "meetup_id location override comment")
+        "meetup_id location override comment places")
 
 
 GRAMMER = r"""

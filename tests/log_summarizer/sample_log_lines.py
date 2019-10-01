@@ -102,13 +102,15 @@ UNKNOWN_LOCATION_FIELDS = [
 SPECIAL_LOCATION_TEMPLATE = \
     "2019-03-04 06:{minutes:02d}:05,290 - WARNING - SpecialEventsMonitor - " \
     "No longer needed SpecialLocation(meetup_id='258645498', " \
-    "location='Orange Bay', override=False, comment='Just testing')"
+    "location='Orange Bay', override=False, comment='Just testing', " \
+    "places='Electronics')"
 
 SPECIAL_LOCATION_FIELDS = [
     ('meetup_id', '258645498'),
     ('location', 'Orange Bay'),
     ('override', False),
     ('comment', 'Just testing'),
+    ('places', 'Electronics'),
     ]
 
 EVENT_LOCATION_TEMPLATE = \
