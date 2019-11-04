@@ -8,8 +8,10 @@ class ConflictReporter:
     """Collects and reports scheduling conflicts organized by place and
     time."""
 
-    def __init__(self):
-        """Initialize with no conflicts or places."""
+    def __init__(self, critical_date):
+        """Initialize with a critical date and with no conflicts or places.
+        The critical date, is a string formatted as YYYY-MM-DD."""
+        self._critical_date = critical_date
         self._checked_places = []
         self._conflict_places = defaultdict(list)
 
@@ -25,6 +27,7 @@ class ConflictReporter:
 
     def add_conflict(self, place_name, conflict):
         """Add the scheduling conflict at the named place."""
+        conflict.check_critical_date(self._critical_date)
         conflict_list = self._conflict_places[place_name]
         conflict_list.append(conflict)
 

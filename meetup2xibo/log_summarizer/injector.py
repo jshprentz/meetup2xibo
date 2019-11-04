@@ -8,6 +8,7 @@ from .crud_lister import CrudLister
 from .conflict_reporter import ConflictReporter
 from .renderer import Renderer, EmailRenderer, SummaryRenderer, \
         LocationMappingCsvRenderer, make_jinja2_env
+import datetime
 
 
 def inject_log_summarizer(application_scope):
@@ -52,7 +53,12 @@ def inject_crud_lister():
 
 def inject_conflict_reporter():
     """Return an empty conflict reporter."""
-    return ConflictReporter()
+    return ConflictReporter(inject_date_today())
+
+
+def inject_date_today():
+    """Return today's date as a string formated as YYYY-MM-DD."""
+    return datetime.date.today().isoformat()
 
 
 def inject_location_mapper():

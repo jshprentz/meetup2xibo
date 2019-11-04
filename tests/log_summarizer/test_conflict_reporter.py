@@ -11,6 +11,7 @@ SAMPLE_MEETUP_ID = 'qlpqsqyzhbqb'
 SAMPLE_NAME = 'Arduino User Group'
 SAMPLE_LOCATION = 'Conference Room 3'
 SAMPLE_START_TIME = '2019-05-12 15:00:00'
+SAMPLE_START_DATE = SAMPLE_START_TIME[:10]
 SAMPLE_END_TIME = '2019-05-12 17:00:00'
 
 SAMPLE_OTHER_MEETUP_ID = '75636384'
@@ -47,7 +48,7 @@ def make_conflict(
 @pytest.fixture
 def conflict_reporter():
     """Return a conflict reporter."""
-    return ConflictReporter()
+    return ConflictReporter(SAMPLE_START_DATE)
 
 @given(place_name=place_names)
 def test_add_checked_place_one(place_name, conflict_reporter):
@@ -94,6 +95,18 @@ def test_add_conflict_two_places_one_event(conflict_reporter):
     conflict_reporter.add_conflict("Metal Shop", conflict2)
     sorted_conflict_places = conflict_reporter.sorted_conflict_places()
     assert sorted_conflict_places == [("Metal Shop", [conflict2]), ("Woodshop", [conflict1])]
+
+def test_add_conflict_critical(conflict_reporter):
+    """Test adding a critical conflict."""
+    conflict = make_conflict()
+    conflict_reporter.add_conflict("Woodshop", conflict)
+    assert conflict.is_critical
+
+def test_add_conflict_noncritical(conflict_reporter):
+    """Test adding a noncritical conflict."""
+    conflict = make_conflict(start_time=SAMPLE_OTHER_START_TIME, end_time=SAMPLE_OTHER_END_TIME)
+    conflict_reporter.add_conflict("Woodshop", conflict)
+    assert not conflict.is_critical
 
 def test_has_conflicts(conflict_reporter):
     """Test adding and testing for a conflict."""

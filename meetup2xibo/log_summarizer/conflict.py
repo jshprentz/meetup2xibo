@@ -14,6 +14,7 @@ class Conflict:
         self._start_time = start_time
         self._end_time = end_time
         self._events = events
+        self._is_critical = False
 
     @classmethod
     def from_fields(cls, field_list):
@@ -42,6 +43,11 @@ class Conflict:
             .format(self.__class__.__name__,
                     self._start_time, self._end_time, self._events)
 
+    def check_critical_date(self, critical_date):
+        """Check whether this conflict starts on a critical date, a string
+        formatted as YYYY-MM-DD."""
+        self._is_critical = self._start_time.startswith(critical_date)
+
     def report_sort_key(self):
         """Return a sort key for sorting into reporting order."""
         return (self._start_time, self._end_time)
@@ -61,5 +67,9 @@ class Conflict:
     @property
     def events(self):
         return self._events
+
+    @property
+    def is_critical(self):
+        return self._is_critical
 
 # vim: tabstop=8 expandtab shiftwidth=4 softtabstop=4 autoindent

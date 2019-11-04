@@ -12,8 +12,9 @@ Future History
 Recent History
 ~~~~~~~~~~~~~~
 
-.. Next Release
-.. ------------------
+Next Release
+------------------
+* Highlight today's conflicts in red in log summaries. 
 
 3.2.3 (2019-10-01)
 ------------------
