@@ -82,7 +82,11 @@ table.blueTable thead th:first-child {
 {% for place, conflicts in conflict_places %}
         <h3>{{ place }}</h3>
 {% for conflict in conflicts %}
-            <h4>{{ conflict.start_time }} to {{ conflict.end_time }}</h4>
+            <h4
+{% if conflict.is_critical %}
+                    class="warning"
+{% endif %}
+                    >{{ conflict.start_time }} to {{ conflict.end_time }}</h4>
                 <ul>
 {% for event in conflict.sorted_events()  %}
                 <li>{{ report.linked_event_display(event) }}</li>

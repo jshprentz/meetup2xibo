@@ -23,7 +23,7 @@ def log_parser_class():
 @pytest.fixture
 def conflict_reporter():
     """Return a conflict reporter."""
-    return ConflictReporter()
+    return ConflictReporter("2019-11-04")
 
 @pytest.fixture
 def crud_lister():
