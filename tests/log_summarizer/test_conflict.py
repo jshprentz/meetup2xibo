@@ -11,6 +11,7 @@ SAMPLE_MEETUP_ID = 'qlpqsqyzhbqb'
 SAMPLE_NAME = 'Arduino User Group'
 SAMPLE_LOCATION = 'Conference Room 3'
 SAMPLE_START_TIME = '2019-05-12 15:00:00'
+SAMPLE_START_DATE = SAMPLE_START_TIME[:10]
 SAMPLE_END_TIME = '2019-05-12 17:00:00'
 
 SAMPLE_OTHER_MEETUP_ID = '75636384'
@@ -111,5 +112,20 @@ def test_hash_different_end_times(other_end_time):
     conflict1 = make_conflict()
     conflict2 = make_conflict(end_time=other_end_time)
     assert hash(conflict1) != hash(conflict2)
+
+def test_critical_date_same():
+    """Test checking for a critical date with the same start date."""
+    conflict = make_conflict()
+    conflict.check_critical_date(SAMPLE_START_DATE)
+    assert conflict.is_critical
+
+@given(iso_dates)
+def test_critical_date_different(other_start_time):
+    """Test checking for a critical date with a different start date."""
+    other_start_date = other_start_time[:10] 
+    assume(other_start_date != SAMPLE_START_DATE)
+    conflict = make_conflict()
+    conflict.check_critical_date(other_start_date)
+    assert not conflict.is_critical
 
 # vim: tabstop=8 expandtab shiftwidth=4 softtabstop=4 autoindent
