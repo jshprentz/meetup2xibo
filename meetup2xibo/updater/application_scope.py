@@ -157,6 +157,10 @@ class ApplicationScope:
         return self._env_vars["START_TIME_COLUMN_NAME"]
 
     @property
+    def suppressed_event_ids(self):
+        return self._env_vars.json("SUPPRESSED_EVENT_IDS")
+
+    @property
     def timezone(self):
         return self._env_vars["TIMEZONE"]
 
