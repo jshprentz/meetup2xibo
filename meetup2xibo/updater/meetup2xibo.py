@@ -20,15 +20,16 @@ class Meetup2Xibo:
     def __init__(
             self, meetup_events_retriever, conflict_analyzer,
             event_converter, site_cert_assurer, oauth2_session_starter,
-            enter_xibo_session_scope):
+            event_suppressor, enter_xibo_session_scope):
         """Initialize with a Meetup events retriever, an event converter, a
-        site certificate assurer, an OAuth2 session starter, and a Xibo sesson
-        scope entrance function """
+        site certificate assurer, an OAuth2 session starter, an event
+        suppressor, and a Xibo sesson scope entrance function """
         self.meetup_events_retriever = meetup_events_retriever
         self.conflict_analyzer = conflict_analyzer
         self.event_converter = event_converter
         self.site_cert_assurer = site_cert_assurer
         self.oauth2_session_starter = oauth2_session_starter
+        self.event_suppressor = event_suppressor
         self.enter_xibo_session_scope = enter_xibo_session_scope
 
     def run(self):
@@ -37,6 +38,7 @@ class Meetup2Xibo:
         cancelled_meetup_events = self.retreive_cancelled_meetup_events()
         self.convert(meetup_events, cancelled_meetup_events)
         self.conflict_analyzer.analyze_conflicts(meetup_events)
+        self.event_suppressor.log_unchecked_ids()
 
     def convert(self, meetup_events, cancelled_meetup_events):
         """Convert Meetup events to Xibo events."""
@@ -62,6 +64,7 @@ class Meetup2Xibo:
     def extract_events_from_json(self, json_events, convert):
         """Extract event tuples from a list of Meetup JSON events with a
         conversion function."""
+        #TODO suppress events here
         return [convert(event_json) for event_json in json_events]
 
     def start_xibo_session(self):
