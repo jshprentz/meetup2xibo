@@ -11,10 +11,10 @@ class ScopeCache:
         self._empty = True
 
     def get(self, fresh_provider):
-        """Invokes fresh_provider once, caches the result, and returns that
-        same value every time. Not thread safe."""
+        """Invokes fresh_provider function once, caches the result, and returns
+        that same value every time. Not thread safe."""
         if self._empty:
-            self._cache = fresh_provider.get()
+            self._cache = fresh_provider()
             self._empty = False
         return self._cache
 
