@@ -11,13 +11,13 @@ DEFAULT_DURATION = THREE_HOURS_MSEC
 CANCELLED_LOCATION = EventLocation("Cancelled", [])
 
 # Meetup event JSON field names
+DURATION_KEY ="duration"
+FIND_US_KEY ="how_to_find_us"
 MEETUP_ID_KEY ="id"
 NAME_KEY ="name"
 START_TIME_KEY ="time"
-DURATION_KEY ="duration"
 VENUE_KEY ="venue"
 VENUE_NAME_KEY ="name"
-FIND_US_KEY ="how_to_find_us"
 
 Event = namedtuple(
         "Event",
