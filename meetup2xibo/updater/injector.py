@@ -15,6 +15,7 @@ from .conflict_analyzer import ConflictAnalyzer, NullConflictAnalyzer
 from .conflict_places import ConflictPlaces, ConflictPlacesLoader
 from .event_converter import EventConverter
 from .event_location import EventLocation
+from .event_suppressor import EventSuppressor
 from .event_updater import EventUpdater
 from .phrase_mapper import PhraseMapper
 from .xibo_api_url_builder import XiboApiUrlBuilder
@@ -198,6 +199,20 @@ def inject_oauth2_session_starter(application_scope):
         application_scope.xibo_client_secret,
         inject_xibo_token_url(application_scope),
         inject_user_agent(application_scope))
+
+
+def inject_event_suppressor(application_scope):
+    """Return an event suppressor configured by an application scope."""
+    return application_scope.event_suppressor(
+        inject_event_suppressor_provider(application_scope))
+
+
+def inject_event_suppressor_provider(application_scope):
+    """Return a function that provides an event suppressor configured by an
+    application session scope."""
+    def get():
+        return EventSuppressor(application_scope.suppressed_event_ids)
+    return get
 
 
 def inject_enter_xibo_session_scope(application_scope):
@@ -396,6 +411,7 @@ def inject_meetup2xibo(application_scope):
         inject_event_converter(application_scope),
         inject_site_cert_assurer(application_scope),
         inject_oauth2_session_starter(application_scope),
+        inject_event_suppressor(application_scope),
         inject_enter_xibo_session_scope(application_scope),
         )
 
