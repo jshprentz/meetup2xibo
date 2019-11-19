@@ -73,11 +73,18 @@ class EventUpdater:
         """Delete unknown (to Meetup) events given a set of event IDs."""
         for event_id in event_ids:
             xibo_event = self.xibo_events[event_id]
-            action = self.anti_flapper.categorize(xibo_event)
-            if action is not EventFlappingStatus.keep:
-                self.xibo_event_crud.delete_xibo_event(
-                        xibo_event, action.action)
-                self.special_location_monitor.deleted_event(xibo_event)
+            self.check_flapping_event(xibo_event)
+
+    def check_flapping_event(self, xibo_event):
+        """Retire or delete events not flapping."""
+        action = self.anti_flapper.categorize(xibo_event)
+        if action is not EventFlappingStatus.keep:
+            self.delete_xibo_event(xibo_event, action.action)
+
+    def delete_xibo_event(self, xibo_event, action):
+        """Delete an event from Xibo, logging an action such as "Retired."""
+        self.xibo_event_crud.delete_xibo_event(xibo_event, action)
+        self.special_location_monitor.deleted_event(xibo_event)
 
     @staticmethod
     def event_list_to_dict(events):
