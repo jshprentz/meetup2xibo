@@ -446,6 +446,14 @@ Loops are forbidden.
    The Conference Center may not contain the Convention Center if the
    Convention Center already contains the Conference Center.
 
+Suppressed Events
+-----------------
+
+Xibo should not display some placeholder and private events.
+Environment variable :envvar:`SUPPRESS_MEETUP_IDS` contains a list of Meetup
+IDs of events to suppress from Xibo displays.
+Suppressed events will not be analyzed for locations or checked for conflicts.
+
 Timezone
 --------
 
@@ -487,7 +495,7 @@ variable :envvar:`DELETE_BEFORE_START_HOURS`.
 
 Some Xibo displays, such as daily agendas and weekly calendars, should continue
 to display events after their conclusion.
-Past events should not be delegted from the Xibo dataset until some number of
+Past events should not be delegated from the Xibo dataset until some number of
 hours after they end, as configured by environment variable
 :envvar:`DELETE_AFTER_END_HOURS`.
 

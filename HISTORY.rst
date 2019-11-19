@@ -7,6 +7,7 @@ Future History
 ~~~~~~~~~~~~~~
 
 * Support Xibo 2.
+* Report unneeded suppressed Meetup event IDs.
 
 ~~~~~~~~~~~~~~
 Recent History
@@ -14,6 +15,12 @@ Recent History
 
 .. Next Release
 .. ------------------
+
+3.3.0 (2019-11-19)
+------------------
+* Suppress processing and display of configured events.
+* Add SUPPRESSED_EVENT_IDS environment variable.
+* Emphasize today's schedule conflicts.
 
 3.2.4 (2019-11-04)
 ------------------

@@ -211,7 +211,20 @@ Environment
 
 .. envvar:: START_TIME_COLUMN_NAME
 
-   The name of the Xibo dataset column containing event start times in `ISO 8601`_ format.
+   The name of the Xibo dataset column containing event start times in
+   `ISO 8601`_ format.
+
+.. envvar:: SUPPRESS_MEETUP_IDS
+
+   A JSON array of Meetup IDs for events that Xibo should not display.
+   For example::
+
+    export SUPPRESS_MEETUP_IDS='[
+        "266192589",
+        "tdwljryzqbjb"
+    ]'
+
+   .. versionadded:: 3.3
 
 .. envvar:: TIMEZONE
 

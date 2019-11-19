@@ -14,16 +14,18 @@ class EventUpdater:
 
     def __init__(
                 self, meetup_events, cancelled_meetup_events, xibo_events,
-                xibo_event_crud, anti_flapper, special_location_monitor):
+                xibo_event_crud, anti_flapper, event_suppressor,
+                special_location_monitor):
         """Initialize with lists (or iterables) of Meetup and Xibo events, a
-        Xibo event CRUD manager, an anti-flapper, and a special location
-        monitor."""
+        Xibo event CRUD manager, an anti-flapper, an event suppressor, and a
+        special location monitor."""
         self.meetup_events = self.event_list_to_dict(meetup_events)
         self.cancelled_meetup_events = self.event_list_to_dict(
                 cancelled_meetup_events)
         self.xibo_events = self.event_list_to_dict(xibo_events)
         self.xibo_event_crud = xibo_event_crud
         self.anti_flapper = anti_flapper
+        self.event_suppressor = event_suppressor
         self.special_location_monitor = special_location_monitor
 
     def update_xibo(self):
@@ -73,11 +75,21 @@ class EventUpdater:
         """Delete unknown (to Meetup) events given a set of event IDs."""
         for event_id in event_ids:
             xibo_event = self.xibo_events[event_id]
-            action = self.anti_flapper.categorize(xibo_event)
-            if action is not EventFlappingStatus.keep:
-                self.xibo_event_crud.delete_xibo_event(
-                        xibo_event, action.action)
-                self.special_location_monitor.deleted_event(xibo_event)
+            if self.event_suppressor.should_suppress(event_id):
+                self.delete_xibo_event(xibo_event, "Suppressed")
+            else:
+                self.check_flapping_event(xibo_event)
+
+    def check_flapping_event(self, xibo_event):
+        """Retire or delete events not flapping."""
+        action = self.anti_flapper.categorize(xibo_event)
+        if action is not EventFlappingStatus.keep:
+            self.delete_xibo_event(xibo_event, action.action)
+
+    def delete_xibo_event(self, xibo_event, action):
+        """Delete an event from Xibo, logging an action such as "Retired"."""
+        self.xibo_event_crud.delete_xibo_event(xibo_event, action)
+        self.special_location_monitor.deleted_event(xibo_event)
 
     @staticmethod
     def event_list_to_dict(events):

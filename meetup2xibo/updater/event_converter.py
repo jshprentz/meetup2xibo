@@ -1,4 +1,5 @@
-"""Converts Meetup events from JSON dictionaries into event objects."""
+"""Converts individual and lists of Meetup events from JSON dictionaries into
+event objects."""
 
 from .event_location import EventLocation
 import re
@@ -10,6 +11,15 @@ THREE_HOURS_MSEC = 3 * 60 * 60 * 1000
 DEFAULT_DURATION = THREE_HOURS_MSEC
 CANCELLED_LOCATION = EventLocation("Cancelled", [])
 
+# Meetup event JSON field names
+DURATION_KEY = "duration"
+FIND_US_KEY = "how_to_find_us"
+MEETUP_ID_KEY = "id"
+NAME_KEY = "name"
+START_TIME_KEY = "time"
+VENUE_KEY = "venue"
+VENUE_NAME_KEY = "name"
+
 Event = namedtuple(
         "Event",
         "meetup_id name location start_time end_time places")
@@ -20,6 +30,8 @@ PartialEvent = namedtuple(
 
 
 class EventConverter:
+
+    """Converts Meetup events from JSON dictionaries into event objects."""
 
     logger = logging.getLogger("EventConverter")
 
@@ -43,15 +55,16 @@ class EventConverter:
 
     def partial_event(self, event_json):
         """Convert Meetup event JSON to a partial event tuple."""
-        meetup_id = event_json["id"]
-        name = self.edit_name(event_json["name"])
-        start_time = self.date_time_creator.xibo_time(event_json["time"])
-        duration = event_json.get("duration", DEFAULT_DURATION)
+        meetup_id = event_json[MEETUP_ID_KEY]
+        name = self.edit_name(event_json[NAME_KEY])
+        start_time_epoch_ms = event_json[START_TIME_KEY]
+        start_time = self.date_time_creator.xibo_time(start_time_epoch_ms)
+        duration = event_json.get(DURATION_KEY, DEFAULT_DURATION)
         end_time = self.date_time_creator.xibo_time(
-                event_json["time"] + duration)
-        venue = event_json.get("venue", {"name": ""})
-        venue_name = venue["name"]
-        find_us = event_json.get("how_to_find_us", "")
+                start_time_epoch_ms + duration)
+        venue = event_json.get(VENUE_KEY, {VENUE_NAME_KEY: ""})
+        venue_name = venue[VENUE_NAME_KEY]
+        find_us = event_json.get(FIND_US_KEY, "")
         return PartialEvent(
                 meetup_id, name, start_time, end_time, venue_name, find_us)
 
@@ -75,6 +88,39 @@ class EventConverter:
         else:
             name = raw_name
         return name.strip()
+
+
+class EventListConverter:
+
+    """Converts a list of Meetup events from JSON dictionaries into event
+    objects."""
+
+    def __init__(self, event_converter, event_suppressor):
+        """Initialize with an event converter and an event suppressor."""
+        self.event_converter = event_converter
+        self.event_suppressor = event_suppressor
+
+    def convert_meetup_events(self, json_events):
+        """Convert a list of Meetup events."""
+        return self.convert_events_from_json(
+                json_events,
+                self.event_converter.convert)
+
+    def convert_cancelled_meetup_events(self, json_events):
+        """Convert a list of cancelled Meetup events."""
+        return self.convert_events_from_json(
+                json_events,
+                self.event_converter.convert_cancelled)
+
+    def convert_events_from_json(self, json_events, convert):
+        """Convert event tuples from a list of Meetup JSON events with a
+        conversion function."""
+        should_suppress = self.event_suppressor.should_suppress
+        return [
+                convert(event_json)
+                for event_json in json_events
+                if not should_suppress(event_json[MEETUP_ID_KEY])
+                ]
 
 
 # vim: tabstop=8 expandtab shiftwidth=4 softtabstop=4 autoindent
