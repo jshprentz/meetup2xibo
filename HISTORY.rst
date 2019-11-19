@@ -7,6 +7,7 @@ Future History
 ~~~~~~~~~~~~~~
 
 * Support Xibo 2.
+* Report unneeded suppressed Meetup event IDs.
 
 ~~~~~~~~~~~~~~
 Recent History
