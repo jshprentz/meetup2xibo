@@ -1,4 +1,5 @@
-"""Converts Meetup events from JSON dictionaries into event objects."""
+"""Converts individual and lists of Meetup events from JSON dictionaries into
+event objects."""
 
 from .event_location import EventLocation
 import re
@@ -29,6 +30,8 @@ PartialEvent = namedtuple(
 
 
 class EventConverter:
+
+    """Converts Meetup events from JSON dictionaries into event objects."""
 
     logger = logging.getLogger("EventConverter")
 
@@ -85,6 +88,39 @@ class EventConverter:
         else:
             name = raw_name
         return name.strip()
+
+
+class EventListConverter:
+
+    """Converts a list of Meetup events from JSON dictionaries into event
+    objects."""
+
+    def __init__(self, event_converter, event_suppressor):
+        """Initialize with an event converter and an event suppressor."""
+        self.event_converter = event_converter
+        self.event_suppressor = event_suppressor
+
+    def convert_meetup_events(self, json_events):
+        """Convert a list of Meetup events."""
+        return self.convert_events_from_json(
+                json_events,
+                self.event_converter.convert)
+
+    def convert_cancelled_meetup_events(self, json_events):
+        """Convert a list of cancelled Meetup events."""
+        return self.convert_events_from_json(
+                json_events,
+                self.event_converter.convert_cancelled)
+
+    def convert_events_from_json(self, json_events, convert):
+        """Convert event tuples from a list of Meetup JSON events with a
+        conversion function."""
+        should_suppress = self.event_suppressor.should_suppress
+        return [
+                convert(event_json)
+                for event_json in json_events
+                if not should_suppress(event_json[MEETUP_ID_KEY])
+                ]
 
 
 # vim: tabstop=8 expandtab shiftwidth=4 softtabstop=4 autoindent
