@@ -12,8 +12,10 @@ Future History
 Recent History
 ~~~~~~~~~~~~~~
 
-.. Next Release
-.. ------------------
+Next Release
+------------------
+* Suppress processing and display of configured events.
+* Add SUPPRESSED_EVENT_IDS environment variable.
 
 3.2.4 (2019-11-04)
 ------------------
