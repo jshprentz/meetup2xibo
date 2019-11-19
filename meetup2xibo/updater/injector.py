@@ -13,7 +13,7 @@ from .place_finder import PlaceFinder
 from .location_chooser import LocationChooser
 from .conflict_analyzer import ConflictAnalyzer, NullConflictAnalyzer
 from .conflict_places import ConflictPlaces, ConflictPlacesLoader
-from .event_converter import EventConverter
+from .event_converter import EventConverter, EventListConverter
 from .event_location import EventLocation
 from .event_suppressor import EventSuppressor
 from .event_updater import EventUpdater
@@ -145,6 +145,13 @@ def inject_default_event_location(application_scope):
     return EventLocation(
         application_scope.default_location,
         application_scope.default_places)
+
+
+def inject_event_list_converter(application_scope):
+    """Return an event list converter configured by an application scope."""
+    return EventListConverter(
+        inject_event_converter(application_scope),
+        inject_event_suppressor(application_scope))
 
 
 def inject_event_converter(application_scope):
@@ -408,7 +415,7 @@ def inject_meetup2xibo(application_scope):
     return Meetup2Xibo(
         inject_meetup_events_retriever(application_scope),
         inject_selected_conflict_analyzer(application_scope),
-        inject_event_converter(application_scope),
+        inject_event_list_converter(application_scope),
         inject_site_cert_assurer(application_scope),
         inject_oauth2_session_starter(application_scope),
         inject_event_suppressor(application_scope),
