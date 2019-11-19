@@ -328,6 +328,7 @@ def inject_event_updater_provider(application_scope, xibo_session_scope):
             xibo_events,
             xibo_event_crud,
             inject_anti_flapper(application_scope),
+            inject_event_suppressor(application_scope),
             inject_special_location_monitor(application_scope)
             )
     return get

@@ -14,16 +14,18 @@ class EventUpdater:
 
     def __init__(
                 self, meetup_events, cancelled_meetup_events, xibo_events,
-                xibo_event_crud, anti_flapper, special_location_monitor):
+                xibo_event_crud, anti_flapper, event_suppressor,
+                special_location_monitor):
         """Initialize with lists (or iterables) of Meetup and Xibo events, a
-        Xibo event CRUD manager, an anti-flapper, and a special location
-        monitor."""
+        Xibo event CRUD manager, an anti-flapper, an event suppressor, and a
+        special location monitor."""
         self.meetup_events = self.event_list_to_dict(meetup_events)
         self.cancelled_meetup_events = self.event_list_to_dict(
                 cancelled_meetup_events)
         self.xibo_events = self.event_list_to_dict(xibo_events)
         self.xibo_event_crud = xibo_event_crud
         self.anti_flapper = anti_flapper
+        self.event_suppressor = event_suppressor
         self.special_location_monitor = special_location_monitor
 
     def update_xibo(self):

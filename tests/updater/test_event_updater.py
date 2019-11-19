@@ -2,6 +2,7 @@
 
 from meetup2xibo.updater.event_converter import Event
 from meetup2xibo.updater.xibo_event import XiboEvent
+from meetup2xibo.updater.event_suppressor import EventSuppressor
 from meetup2xibo.updater.event_updater import EventUpdater
 from meetup2xibo.updater.anti_flapper import AntiFlapper
 from unittest.mock import MagicMock, call
@@ -27,6 +28,9 @@ DELETED_CURRENT_XIBO_EVENT = XiboEvent("D02", "Laser Class", "Room 4", "2017-12-
 # Deleted event future
 DELETED_FUTURE_XIBO_EVENT = XiboEvent("D03", "Casting Class", "Room 5", "2017-12-13 17:00:00", "2017-12-13 19:00:00", 105)
 
+# Deleted event suppressed
+DELETED_SUPPRESSED_XIBO_EVENT = XiboEvent("D04", "Arduino Class", "Room 7", "2017-12-16 15:00:00", "2017-12-16 20:00:00", 107)
+
 # Cancelled event
 CANCELLED_MEETUP_EVENT = Event("E01", "3D Printer Class", "Cancelled", "2017-12-14 19:00:00", "2017-12-14 21:00:00", [])
 CANCELLED_XIBO_EVENT = XiboEvent("E01", "3D Printer Class", "Room 6", "2017-12-14 19:15:00", "2017-12-14 21:00:00", 106)
@@ -38,7 +42,8 @@ OLD_CANCELLED_MEETUP_EVENT = Event("F01", "Electonics Class", "Cancelled", "2017
 MEETUP_EVENTS = [NEW_MEETUP_EVENT, UNCHANGED_MEETUP_EVENT, UPDATED_MEETUP_EVENT]
 CANCELLED_MEETUP_EVENTS = [CANCELLED_MEETUP_EVENT, OLD_CANCELLED_MEETUP_EVENT]
 XIBO_EVENTS = [UPDATED_XIBO_EVENT, CANCELLED_XIBO_EVENT, DELETED_PAST_XIBO_EVENT,
-    DELETED_CURRENT_XIBO_EVENT, UNCHANGED_XIBO_EVENT, DELETED_FUTURE_XIBO_EVENT]
+    DELETED_CURRENT_XIBO_EVENT, UNCHANGED_XIBO_EVENT, DELETED_FUTURE_XIBO_EVENT,
+    DELETED_SUPPRESSED_XIBO_EVENT]
 
 EXPECTED_MEETUP_EVENTS_DICT = {
     "A01": NEW_MEETUP_EVENT,
@@ -52,6 +57,7 @@ EXPECTED_XIBO_EVENTS_DICT = {
     "D01": DELETED_PAST_XIBO_EVENT,
     "D02": DELETED_CURRENT_XIBO_EVENT,
     "D03": DELETED_FUTURE_XIBO_EVENT,
+    "D04": DELETED_SUPPRESSED_XIBO_EVENT,
     "E01": CANCELLED_XIBO_EVENT,
 }
 
@@ -66,7 +72,7 @@ def test_event_list_to_dict():
 
 def test_init():
     """Test converting event lists to dictionaries during initialization."""
-    event_updater = EventUpdater(MEETUP_EVENTS, CANCELLED_MEETUP_EVENTS, XIBO_EVENTS, None, None, None)
+    event_updater = EventUpdater(MEETUP_EVENTS, CANCELLED_MEETUP_EVENTS, XIBO_EVENTS, None, None, None, None)
     assert EXPECTED_MEETUP_EVENTS_DICT == event_updater.meetup_events
     assert EXPECTED_CANCELLED_MEETUP_EVENTS_DICT == event_updater.cancelled_meetup_events
     assert EXPECTED_XIBO_EVENTS_DICT == event_updater.xibo_events
@@ -74,7 +80,7 @@ def test_init():
 def test_insert_new_events():
     """Test inserting new events."""
     mock_xibo_event_crud = MagicMock()
-    event_updater = EventUpdater(MEETUP_EVENTS, CANCELLED_MEETUP_EVENTS, XIBO_EVENTS, mock_xibo_event_crud, None, None)
+    event_updater = EventUpdater(MEETUP_EVENTS, CANCELLED_MEETUP_EVENTS, XIBO_EVENTS, mock_xibo_event_crud, None, None, None)
     insert_ids = {"A01", "C01"}
     event_updater.insert_new_events(insert_ids)
     calls = [call(NEW_MEETUP_EVENT), call(UNCHANGED_MEETUP_EVENT)]
@@ -83,7 +89,7 @@ def test_insert_new_events():
 def test_update_known_events():
     """Test updating known events."""
     mock_xibo_event_crud = MagicMock()
-    event_updater = EventUpdater(MEETUP_EVENTS, CANCELLED_MEETUP_EVENTS, XIBO_EVENTS, mock_xibo_event_crud, None, None)
+    event_updater = EventUpdater(MEETUP_EVENTS, CANCELLED_MEETUP_EVENTS, XIBO_EVENTS, mock_xibo_event_crud, None, None, None)
     update_ids = {"B01", "C01"}
     event_updater.update_known_events(update_ids)
     calls = [call(UPDATED_XIBO_EVENT, UPDATED_MEETUP_EVENT)]
@@ -92,7 +98,7 @@ def test_update_known_events():
 def test_update_cancelled_events():
     """Test updating cancelled events."""
     mock_xibo_event_crud = MagicMock()
-    event_updater = EventUpdater(MEETUP_EVENTS, CANCELLED_MEETUP_EVENTS, XIBO_EVENTS, mock_xibo_event_crud, None, None)
+    event_updater = EventUpdater(MEETUP_EVENTS, CANCELLED_MEETUP_EVENTS, XIBO_EVENTS, mock_xibo_event_crud, None, None, None)
     update_ids = {"E01"}
     event_updater.update_cancelled_events(update_ids)
     calls = [call(CANCELLED_XIBO_EVENT, CANCELLED_MEETUP_EVENT)]
@@ -104,7 +110,7 @@ def test_delete_unknown_events():
     mock_xibo_event_crud = MagicMock()
     mock_special_location_monitor = MagicMock()
     event_updater = EventUpdater(MEETUP_EVENTS, CANCELLED_MEETUP_EVENTS, XIBO_EVENTS, mock_xibo_event_crud,
-        anti_flapper, mock_special_location_monitor)
+        anti_flapper, None, mock_special_location_monitor)
     delete_ids = {"D01", "D02", "D03"}
     event_updater.delete_unknown_events(delete_ids)
     delete_calls = [
