@@ -6,6 +6,9 @@ __pycache__/
 # C extensions
 *.so
 
+# Ctags
+tags
+
 # Distribution / packaging
 .Python
 env/
@@ -79,6 +82,9 @@ venv/
 
 # Sample data
 *.csv
+
+# Editor configurations
+.vimrc
 
 # Sensitive files
 run.config

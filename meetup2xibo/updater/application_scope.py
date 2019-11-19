@@ -3,6 +3,7 @@ environment variables needed by the application."""
 
 
 from .special_location import SpecialLocation
+from .scope_cache import ScopeCache
 import meetup2xibo
 import logging
 from collections import namedtuple
@@ -25,6 +26,7 @@ class ApplicationScope:
         environment variable dictionary."""
         self._args = args
         self._env_vars = env_vars
+        self._event_suppressor_cache = ScopeCache()
 
     @property
     def app_name(self):
@@ -76,6 +78,9 @@ class ApplicationScope:
     @property
     def event_dataset_code(self):
         return self._env_vars["EVENT_DATASET_CODE"]
+
+    def event_suppressor(self, event_suppressor_provider):
+        return self._event_suppressor_cache.get(event_suppressor_provider)
 
     @property
     def ignore_cancelled_after_seconds(self):
@@ -155,6 +160,10 @@ class ApplicationScope:
     @property
     def start_time_column_name(self):
         return self._env_vars["START_TIME_COLUMN_NAME"]
+
+    @property
+    def suppressed_event_ids(self):
+        return self._env_vars.json("SUPPRESSED_EVENT_IDS")
 
     @property
     def timezone(self):

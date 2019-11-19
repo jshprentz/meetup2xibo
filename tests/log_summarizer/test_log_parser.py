@@ -5,7 +5,8 @@ from meetup2xibo.log_summarizer.conflict import Conflict
 from meetup2xibo.log_summarizer.event import Event
 from meetup2xibo.log_summarizer.log_lines import InsertEventLogLine, \
     UpdateEventLogLine, DeleteEventLogLine, RetireEventLogLine, \
-    UnknownLocationLogLine, EventLocationLogLine, SpecialLocationLogLine
+    SuppressEventLogLine, UnknownLocationLogLine, EventLocationLogLine, \
+    SpecialLocationLogLine
 from meetup2xibo.log_summarizer.start_counter import StartCounter
 from meetup2xibo.log_summarizer.conflict_reporter import ConflictReporter
 from meetup2xibo.log_summarizer.crud_lister import CrudLister
@@ -226,6 +227,15 @@ def test_retire_log_line(log_parser_class, sample_log_lines):
     assert isinstance(log_line, RetireEventLogLine)
     assert log_line.timestamp == '2019-03-04 06:00'
     assert log_line.meetup_id == '257907613'
+
+def test_suppress_log_line(log_parser_class, sample_log_lines):
+    """Test recognizing a suppress log line."""
+    log_line_text = sample_log_lines.suppress_line()
+    parser = log_parser_class(log_line_text)
+    log_line = parser.suppress_log_line()
+    assert isinstance(log_line, SuppressEventLogLine)
+    assert log_line.timestamp == '2019-03-04 06:00'
+    assert log_line.meetup_id == '263548213'
 
 def test_update_log_line(log_parser_class, sample_log_lines):
     """Test recognizing a pair of update log lines."""

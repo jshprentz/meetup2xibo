@@ -19,16 +19,17 @@ class Meetup2Xibo:
 
     def __init__(
             self, meetup_events_retriever, conflict_analyzer,
-            event_converter, site_cert_assurer, oauth2_session_starter,
-            enter_xibo_session_scope):
-        """Initialize with a Meetup events retriever, an event converter, a
-        site certificate assurer, an OAuth2 session starter, and a Xibo sesson
-        scope entrance function """
+            event_list_converter, site_cert_assurer, oauth2_session_starter,
+            event_suppressor, enter_xibo_session_scope):
+        """Initialize with a Meetup events retriever, an event list converter,
+        a site certificate assurer, an OAuth2 session starter, an event
+        suppressor, and a Xibo sesson scope entrance function."""
         self.meetup_events_retriever = meetup_events_retriever
         self.conflict_analyzer = conflict_analyzer
-        self.event_converter = event_converter
+        self.event_list_converter = event_list_converter
         self.site_cert_assurer = site_cert_assurer
         self.oauth2_session_starter = oauth2_session_starter
+        self.event_suppressor = event_suppressor
         self.enter_xibo_session_scope = enter_xibo_session_scope
 
     def run(self):
@@ -37,6 +38,7 @@ class Meetup2Xibo:
         cancelled_meetup_events = self.retreive_cancelled_meetup_events()
         self.convert(meetup_events, cancelled_meetup_events)
         self.conflict_analyzer.analyze_conflicts(meetup_events)
+        self.event_suppressor.log_all_ids()
 
     def convert(self, meetup_events, cancelled_meetup_events):
         """Convert Meetup events to Xibo events."""
@@ -46,23 +48,17 @@ class Meetup2Xibo:
 
     def retreive_meetup_events(self):
         """Retrieve a list of Meetup events."""
-        json_events = self.meetup_events_retriever.retrieve_events_json()
-        return self.extract_events_from_json(
-                json_events,
-                self.event_converter.convert)
+        retriever = self.meetup_events_retriever
+        json_events = retriever.retrieve_events_json()
+        converter = self.event_list_converter
+        return converter.convert_meetup_events(json_events)
 
     def retreive_cancelled_meetup_events(self):
         """Retrieve a list of cancelled Meetup events."""
         retriever = self.meetup_events_retriever
         json_events = retriever.retrieve_cancelled_events_json()
-        return self.extract_events_from_json(
-                json_events,
-                self.event_converter.convert_cancelled)
-
-    def extract_events_from_json(self, json_events, convert):
-        """Extract event tuples from a list of Meetup JSON events with a
-        conversion function."""
-        return [convert(event_json) for event_json in json_events]
+        converter = self.event_list_converter
+        return converter.convert_cancelled_meetup_events(json_events)
 
     def start_xibo_session(self):
         """Return a new web session with the Xibo API server."""

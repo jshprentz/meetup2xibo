@@ -122,6 +122,15 @@ class RetireEventLogLine(EventLogLine):
         super().__init__(timestamp, event, "Retired")
 
 
+class SuppressEventLogLine(EventLogLine):
+
+    """A log line reporting a suppressed event."""
+
+    def __init__(self, timestamp, event):
+        """Initialize with a timestamp and an event."""
+        super().__init__(timestamp, event, "Suppressed")
+
+
 class UnknownLocationLogLine(EventLogLine):
 
     """A log line reporting an unknown locaation."""

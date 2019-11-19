@@ -2,7 +2,7 @@
 
 from meetup2xibo.log_summarizer.log_lines import InsertEventLogLine, \
         UpdateEventLogLine, DeleteEventLogLine, RetireEventLogLine, \
-        EventLocationLogLine
+        EventLocationLogLine, SuppressEventLogLine
 from meetup2xibo.log_summarizer.event import Event
 import pytest
 
@@ -44,6 +44,11 @@ def test_meetup_id_in_retire_event_log_line(event):
     log_line = RetireEventLogLine(SAMPLE_LOG_TIME, event)
     assert log_line.meetup_id == SAMPLE_MEETUP_ID
 
+def test_meetup_id_in_suppress_event_log_line(event):
+    """Test getting the Meetup ID from an suppress event log line."""
+    log_line = SuppressEventLogLine(SAMPLE_LOG_TIME, event)
+    assert log_line.meetup_id == SAMPLE_MEETUP_ID
+
 def test_meetup_id_in_update_event_log_line(event):
     """Test getting the Meetup ID from an update event log line."""
     after_event = make_event(location="Somewhere else")
@@ -83,6 +88,11 @@ def test_final_event_in_retire_event_log_line(event):
     log_line = RetireEventLogLine(SAMPLE_LOG_TIME, event)
     assert log_line.final_event == event
 
+def test_final_event_in_suppress_event_log_line(event):
+    """Test getting the final event from an suppress event log line."""
+    log_line = SuppressEventLogLine(SAMPLE_LOG_TIME, event)
+    assert log_line.final_event == event
+
 def test_insert_action():   
     """Test that an insert log line returns the expected action."""
     log_line = InsertEventLogLine(SAMPLE_LOG_TIME, None)
@@ -103,6 +113,11 @@ def test_retire_action():
     """Test that a retire log line returns the expected action."""
     log_line = RetireEventLogLine(SAMPLE_LOG_TIME, None)
     assert log_line.action == "Retired"
+
+def test_suppress_action():   
+    """Test that a suppress log line returns the expected action."""
+    log_line = SuppressEventLogLine(SAMPLE_LOG_TIME, None)
+    assert log_line.action == "Suppressed"
 
 def test_event_location_key_fields(sample_log_lines):
     """Test that an event location log line returns the expected key fields."""

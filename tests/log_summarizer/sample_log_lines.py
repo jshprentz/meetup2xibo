@@ -4,7 +4,8 @@ from meetup2xibo.log_summarizer.conflict import Conflict
 from meetup2xibo.log_summarizer.event import Event
 from meetup2xibo.log_summarizer.log_lines import InsertEventLogLine, \
     UpdateEventLogLine, DeleteEventLogLine, UnknownLocationLogLine, \
-    EventLocationLogLine, SpecialLocationLogLine, RetireEventLogLine
+    EventLocationLogLine, SpecialLocationLogLine, RetireEventLogLine, \
+    SuppressEventLogLine
 from meetup2xibo.log_summarizer.log_parser import SpecialLocation
 
 
@@ -83,6 +84,21 @@ RETIRE_FIELDS = [
     ('start_time', '2019-03-10 14:00:00'),
     ('end_time', '2019-03-10 16:00:00'),
     ('xibo_id', '59'),
+    ]
+
+SUPPRESS_TEMPLATE = \
+    "2019-03-04 06:{minutes:02d}:51,367 - INFO - XiboEventCrud - Suppressed " \
+    "XiboEvent(meetup_id='263548213', name='KEEP ORANGE BAY CLEAR', " \
+    "location='Orange Bay', start_time='2019-03-16 15:00:00', " \
+    "end_time='2019-03-16 19:00:00', xibo_id='81')"
+
+SUPPRESS_FIELDS = [
+    ('meetup_id', '263548213'),
+    ('name', 'KEEP ORANGE BAY CLEAR'),
+    ('location', 'Orange Bay'),
+    ('start_time', '2019-03-16 15:00:00'),
+    ('end_time', '2019-03-16 19:00:00'),
+    ('xibo_id', '81'),
     ]
 
 UNKNOWN_LOCATION_TEMPLATE = \
@@ -195,6 +211,10 @@ class SampleLogLines:
         """Return a retire line."""
         return self.make_line(RETIRE_TEMPLATE)
 
+    def suppress_line(self):
+        """Return a suppress line."""
+        return self.make_line(SUPPRESS_TEMPLATE)
+
     def unknown_location_line(self):
         """Return an unknown location line."""
         return self.make_line(UNKNOWN_LOCATION_TEMPLATE)
@@ -233,6 +253,11 @@ class SampleLogLines:
     def retire_fields(self):
         """return fields that should be extracted from a retire log line."""
         return RETIRE_FIELDS
+
+    @property
+    def suppress_fields(self):
+        """return fields that should be extracted from a suppress log line."""
+        return SUPPRESS_FIELDS
 
     @property
     def update_before_fields(self):
@@ -276,6 +301,12 @@ class SampleLogLines:
         event = Event.from_fields(RETIRE_FIELDS)
         date_time = self.date_time()
         return RetireEventLogLine(date_time, event)
+
+    def make_suppress_log_line(self):
+        """Return a suppress log line object."""
+        event = Event.from_fields(SUPPRESS_FIELDS)
+        date_time = self.date_time()
+        return SuppressEventLogLine(date_time, event)
 
     def make_unknown_location_log_line(self, venue_name=''):
         """Return an unknown location log line object with an optional
