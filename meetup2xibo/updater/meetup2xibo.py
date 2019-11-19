@@ -38,7 +38,7 @@ class Meetup2Xibo:
         cancelled_meetup_events = self.retreive_cancelled_meetup_events()
         self.convert(meetup_events, cancelled_meetup_events)
         self.conflict_analyzer.analyze_conflicts(meetup_events)
-        self.event_suppressor.log_unchecked_ids()
+        self.event_suppressor.log_all_ids()
 
     def convert(self, meetup_events, cancelled_meetup_events):
         """Convert Meetup events to Xibo events."""
