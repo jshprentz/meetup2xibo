@@ -107,15 +107,17 @@ def test_update_cancelled_events():
 def test_delete_unknown_events():
     """Test deleting unknown events."""
     anti_flapper = AntiFlapper("2017-12-11 19:00:00", "2017-12-11 22:00:00", "2017-12-31 23:00:00")
+    event_suppressor = EventSuppressor(["D04"])
     mock_xibo_event_crud = MagicMock()
     mock_special_location_monitor = MagicMock()
     event_updater = EventUpdater(MEETUP_EVENTS, CANCELLED_MEETUP_EVENTS, XIBO_EVENTS, mock_xibo_event_crud,
-        anti_flapper, None, mock_special_location_monitor)
-    delete_ids = {"D01", "D02", "D03"}
+        anti_flapper, event_suppressor, mock_special_location_monitor)
+    delete_ids = {"D01", "D02", "D03", "D04"}
     event_updater.delete_unknown_events(delete_ids)
     delete_calls = [
         call(DELETED_PAST_XIBO_EVENT, "Retired"),
         call(DELETED_FUTURE_XIBO_EVENT, "Deleted"),
+        call(DELETED_SUPPRESSED_XIBO_EVENT, "Suppressed"),
     ]
     monitor_calls = [
         call(DELETED_PAST_XIBO_EVENT),
