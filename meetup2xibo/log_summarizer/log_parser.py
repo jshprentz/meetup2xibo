@@ -4,7 +4,7 @@ from .conflict import Conflict
 from .event import Event
 from .log_lines import InsertEventLogLine, DeleteEventLogLine, \
     UpdateEventLogLine, UnknownLocationLogLine, EventLocationLogLine, \
-    SpecialLocationLogLine, RetireEventLogLine
+    SpecialLocationLogLine, RetireEventLogLine, SuppressEventLogLine
 from parsley import makeGrammar, ParseError
 from collections import namedtuple
 
@@ -37,6 +37,7 @@ start_log_line :counter = log_line_start('meetup2xibo'):s
 event_log_line :crud_lister = (insert_log_line
         | delete_log_line
         | retire_log_line
+        | suppress_log_line
         | update_log_line
         | unknown_location_log_line
         | special_location_log_line):log_line
@@ -50,6 +51,9 @@ delete_log_line = log_line_start('XiboEventCrud'):s 'Deleted Xibo' event:e
 
 retire_log_line = log_line_start('XiboEventCrud'):s 'Retired Xibo' event:e
         -> RetireEventLogLine(s.timestamp, e)
+
+suppress_log_line = log_line_start('XiboEventCrud'):s 'Suppressed Xibo' event:e
+        -> SuppressEventLogLine(s.timestamp, e)
 
 update_log_line = update_from_log_line:f '\n' update_to_log_line:t
         -> UpdateEventLogLine(t.timestamp, f, t.event)
@@ -170,6 +174,7 @@ def make_log_parser_class():
             'InsertEventLogLine': InsertEventLogLine,
             'DeleteEventLogLine': DeleteEventLogLine,
             'RetireEventLogLine': RetireEventLogLine,
+            'SuppressEventLogLine': SuppressEventLogLine,
             'UpdateEventLogLine': UpdateEventLogLine,
             'UnknownLocationLogLine': UnknownLocationLogLine,
             'SpecialLocation': SpecialLocation,
