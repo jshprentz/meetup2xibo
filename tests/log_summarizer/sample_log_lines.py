@@ -261,51 +261,51 @@ class SampleLogLines:
 
     @property
     def insert_fields(self):
-        """return fields that should be extracted from an insert log line."""
+        """Return fields that should be extracted from an insert log line."""
         return INSERT_FIELDS
 
     @property
     def delete_fields(self):
-        """return fields that should be extracted from a delete log line."""
+        """Return fields that should be extracted from a delete log line."""
         return DELETE_FIELDS
 
     @property
     def retire_fields(self):
-        """return fields that should be extracted from a retire log line."""
+        """Return fields that should be extracted from a retire log line."""
         return RETIRE_FIELDS
 
     @property
     def suppress_fields(self):
-        """return fields that should be extracted from a suppress log line."""
+        """Return fields that should be extracted from a suppress log line."""
         return SUPPRESS_FIELDS
 
     @property
     def event_suppressed_meetup_id(self):
-        """return the Meetup ID that should be extracted from an event
+        """Return the Meetup ID that should be extracted from an event
         suppressed log line."""
         return EVENT_SUPPRESSED_MEETUP_ID
 
     @property
     def event_suppressed_meetup_id(self):
-        """return the Meetup ID that should be extracted from a suppressed not
+        """Return the Meetup ID that should be extracted from a suppressed not
         checked log line."""
         return SUPPRESS_NOT_CHECKED_MEETUP_ID
 
     @property
     def update_before_fields(self):
-        """return fields that should be extracted from an update from log
+        """Return fields that should be extracted from an update from log
         line."""
         return UPDATE_BEFORE_FIELDS
 
     @property
     def update_after_fields(self):
-        """return fields that should be extracted from an update to log
+        """Return fields that should be extracted from an update to log
         line."""
         return UPDATE_AFTER_FIELDS
 
     @property
     def unknown_location_fields(self):
-        """return fields that should be extracted from an unknown location log
+        """Return fields that should be extracted from an unknown location log
         line."""
         return UNKNOWN_LOCATION_FIELDS
 
