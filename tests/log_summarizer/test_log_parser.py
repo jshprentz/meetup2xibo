@@ -11,6 +11,7 @@ from meetup2xibo.log_summarizer.start_counter import StartCounter
 from meetup2xibo.log_summarizer.conflict_reporter import ConflictReporter
 from meetup2xibo.log_summarizer.crud_lister import CrudLister
 from meetup2xibo.log_summarizer.location_mapper import LocationMapper
+from meetup2xibo.log_summarizer.suppressed_event_tracker import SuppressedEventTracker
 from parsley import ParseError
 import pytest
 
@@ -42,9 +43,14 @@ def location_mapper():
     return LocationMapper()
 
 @pytest.fixture
-def summary(counter, crud_lister, conflict_reporter, location_mapper):
+def suppressed_event_tracker():
+    """Return a suppresseed event tracker."""
+    return SuppressedEventTracker()
+
+@pytest.fixture
+def summary(counter, crud_lister, conflict_reporter, location_mapper, suppressed_event_tracker):
     """Return a summary tuple."""
-    return Summary(counter, crud_lister, conflict_reporter, location_mapper)
+    return Summary(counter, crud_lister, conflict_reporter, location_mapper, suppressed_event_tracker)
 
 def test_dash(log_parser_class):
     """Test recognizing the dash separator between log line components."""
