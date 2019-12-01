@@ -101,6 +101,18 @@ SUPPRESS_FIELDS = [
     ('xibo_id', '81'),
     ]
 
+EVENT_SUPPRESSED_TEMPLATE = \
+    "2019-03-04 06:{minutes:02d}:51,793 - INFO - EventSuppressor - " \
+    "Suppressed meetup_id='266191234'"
+
+EVENT_SUPPRESSED_MEETUP_ID = '266191234'
+
+SUPPRESS_NOT_CHECKED_TEMPLATE = \
+    "2019-11-17 06:{minutes:02d}:35,949 - INFO - EventSuppressor - "\
+    "Suppressed Meetup ID was not checked. meetup_id='266192589'"
+
+SUPPRESS_NOT_CHECKED_MEETUP_ID = '266192589'
+
 UNKNOWN_LOCATION_TEMPLATE = \
     "2019-03-04 06:{minutes:02d}:11,441 - WARNING - LocationChooser - " \
     "Unknown location for PartialEvent(meetup_id='259565055', name='EMPOWER2MAKE', " \
@@ -215,6 +227,14 @@ class SampleLogLines:
         """Return a suppress line."""
         return self.make_line(SUPPRESS_TEMPLATE)
 
+    def event_suppressed_line(self):
+        """Return an event suppressed line."""
+        return self.make_line(EVENT_SUPPRESSED_TEMPLATE)
+
+    def suppressed_not_checked_line(self):
+        """Return a suppressed not checked line."""
+        return self.make_line(SUPPRESSED_NOT_CHECKED_TEMPLATE)
+
     def unknown_location_line(self):
         """Return an unknown location line."""
         return self.make_line(UNKNOWN_LOCATION_TEMPLATE)
@@ -258,6 +278,18 @@ class SampleLogLines:
     def suppress_fields(self):
         """return fields that should be extracted from a suppress log line."""
         return SUPPRESS_FIELDS
+
+    @property
+    def event_suppressed_meetup_id(self):
+        """return the Meetup ID that should be extracted from an event
+        suppressed log line."""
+        return EVENT_SUPPRESSED_MEETUP_ID
+
+    @property
+    def event_suppressed_meetup_id(self):
+        """return the Meetup ID that should be extracted from a suppressed not
+        checked log line."""
+        return SUPPRESS_NOT_CHECKED_MEETUP_ID
 
     @property
     def update_before_fields(self):
