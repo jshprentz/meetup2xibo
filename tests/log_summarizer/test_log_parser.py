@@ -11,6 +11,7 @@ from meetup2xibo.log_summarizer.start_counter import StartCounter
 from meetup2xibo.log_summarizer.conflict_reporter import ConflictReporter
 from meetup2xibo.log_summarizer.crud_lister import CrudLister
 from meetup2xibo.log_summarizer.location_mapper import LocationMapper
+from meetup2xibo.log_summarizer.suppressed_event_tracker import SuppressedEventTracker
 from parsley import ParseError
 import pytest
 
@@ -42,9 +43,14 @@ def location_mapper():
     return LocationMapper()
 
 @pytest.fixture
-def summary(counter, crud_lister, conflict_reporter, location_mapper):
+def suppressed_event_tracker():
+    """Return a suppresseed event tracker."""
+    return SuppressedEventTracker()
+
+@pytest.fixture
+def summary(counter, crud_lister, conflict_reporter, location_mapper, suppressed_event_tracker):
     """Return a summary tuple."""
-    return Summary(counter, crud_lister, conflict_reporter, location_mapper)
+    return Summary(counter, crud_lister, conflict_reporter, location_mapper, suppressed_event_tracker)
 
 def test_dash(log_parser_class):
     """Test recognizing the dash separator between log line components."""
@@ -228,14 +234,45 @@ def test_retire_log_line(log_parser_class, sample_log_lines):
     assert log_line.timestamp == '2019-03-04 06:00'
     assert log_line.meetup_id == '257907613'
 
-def test_suppress_log_line(log_parser_class, sample_log_lines):
-    """Test recognizing a suppress log line."""
-    log_line_text = sample_log_lines.suppress_line()
+def test_suppress_xibo_log_line(log_parser_class, sample_log_lines,
+        suppressed_event_tracker):
+    """Test recognizing a suppressed Xibo event log line."""
+    log_line_text = sample_log_lines.suppress_xibo_line()
     parser = log_parser_class(log_line_text)
-    log_line = parser.suppress_log_line()
+    log_line = parser.suppress_log_line(suppressed_event_tracker)
     assert isinstance(log_line, SuppressEventLogLine)
     assert log_line.timestamp == '2019-03-04 06:00'
     assert log_line.meetup_id == '263548213'
+
+def test_suppress_xibo_log_line_suppresses(log_parser_class, sample_log_lines,
+        suppressed_event_tracker):
+    """Test that recognizing a suppressed Xibo event log line suppresses its
+    Meetup ID."""
+    suppressed_event_tracker.unchecked_id(sample_log_lines.suppress_xibo_meetup_id)
+    log_line_text = sample_log_lines.suppress_xibo_line()
+    parser = log_parser_class(log_line_text)
+    log_line = parser.suppress_log_line(suppressed_event_tracker)
+    assert not suppressed_event_tracker.unneeded_ids()
+
+def test_suppress_meetup_id_log_line_suppresses(log_parser_class,
+        sample_log_lines, suppressed_event_tracker):
+    """Test that recognizing a suppresssed Meetup ID log line suppresses its
+    Meetup ID."""
+    suppressed_event_tracker.unchecked_id(sample_log_lines.meetup_id_suppressed_meetup_id)
+    log_line_text = sample_log_lines.meetup_id_suppressed_line()
+    parser = log_parser_class(log_line_text)
+    log_line = parser.suppressed_meetup_id_log_line(suppressed_event_tracker)
+    assert not suppressed_event_tracker.unneeded_ids()
+
+def test_suppress_meetup_id_log_line_suppresses(log_parser_class,
+        sample_log_lines, suppressed_event_tracker):
+    """Test that recognizing a suppresssed Meetup ID log not checked line adds
+    its Meetup ID to the unneeded list."""
+    expected_unneeded_ids = [sample_log_lines.suppressed_not_checked_meetup_id]
+    log_line_text = sample_log_lines.suppressed_not_checked_line()
+    parser = log_parser_class(log_line_text)
+    log_line = parser.suppressed_id_not_checked_log_line(suppressed_event_tracker)
+    assert suppressed_event_tracker.unneeded_ids() == expected_unneeded_ids
 
 def test_update_log_line(log_parser_class, sample_log_lines):
     """Test recognizing a pair of update log lines."""
@@ -275,11 +312,11 @@ def test_event_location_log_line(log_parser_class, sample_log_lines):
     assert log_line.meetup_id == '259405866'
     assert log_line.location == 'Woodshop'
 
-def test_event_log_line(log_parser_class, sample_log_lines, crud_lister):
+def test_event_log_line(log_parser_class, sample_log_lines, crud_lister, summary):
     """Test recognizing an event log line."""
     log_line_text = sample_log_lines.insert_line()
     parser = log_parser_class(log_line_text)
-    parser.event_log_line(crud_lister)
+    parser.event_log_line(summary)
     meetup_id = 'tmnbrqyzhbhb'
     log_line = crud_lister.event_logs[meetup_id].log_lines[0]
     assert isinstance(log_line, InsertEventLogLine)

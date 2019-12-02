@@ -86,20 +86,34 @@ RETIRE_FIELDS = [
     ('xibo_id', '59'),
     ]
 
-SUPPRESS_TEMPLATE = \
+SUPPRESS_XIBO_TEMPLATE = \
     "2019-03-04 06:{minutes:02d}:51,367 - INFO - XiboEventCrud - Suppressed " \
     "XiboEvent(meetup_id='263548213', name='KEEP ORANGE BAY CLEAR', " \
     "location='Orange Bay', start_time='2019-03-16 15:00:00', " \
     "end_time='2019-03-16 19:00:00', xibo_id='81')"
 
-SUPPRESS_FIELDS = [
-    ('meetup_id', '263548213'),
+SUPPRESS_XIBO_MEETUP_ID = '263548213'
+
+SUPPRESS_XIBO_FIELDS = [
+    ('meetup_id', SUPPRESS_XIBO_MEETUP_ID),
     ('name', 'KEEP ORANGE BAY CLEAR'),
     ('location', 'Orange Bay'),
     ('start_time', '2019-03-16 15:00:00'),
     ('end_time', '2019-03-16 19:00:00'),
     ('xibo_id', '81'),
     ]
+
+MEETUP_ID_SUPPRESSED_TEMPLATE = \
+    "2019-03-04 06:{minutes:02d}:51,793 - INFO - EventSuppressor - " \
+    "Suppressed meetup_id='266191234'"
+
+MEETUP_ID_SUPPRESSED_MEETUP_ID = '266191234'
+
+SUPPRESSED_NOT_CHECKED_TEMPLATE = \
+    "2019-11-17 06:{minutes:02d}:35,949 - INFO - EventSuppressor - "\
+    "Suppressed Meetup ID was not checked. meetup_id='266192589'"
+
+SUPPRESSED_NOT_CHECKED_MEETUP_ID = '266192589'
 
 UNKNOWN_LOCATION_TEMPLATE = \
     "2019-03-04 06:{minutes:02d}:11,441 - WARNING - LocationChooser - " \
@@ -211,9 +225,17 @@ class SampleLogLines:
         """Return a retire line."""
         return self.make_line(RETIRE_TEMPLATE)
 
-    def suppress_line(self):
-        """Return a suppress line."""
-        return self.make_line(SUPPRESS_TEMPLATE)
+    def suppress_xibo_line(self):
+        """Return a suppress Xibo event line."""
+        return self.make_line(SUPPRESS_XIBO_TEMPLATE)
+
+    def meetup_id_suppressed_line(self):
+        """Return Meetup ID suppressed line."""
+        return self.make_line(MEETUP_ID_SUPPRESSED_TEMPLATE)
+
+    def suppressed_not_checked_line(self):
+        """Return a suppressed not checked line."""
+        return self.make_line(SUPPRESSED_NOT_CHECKED_TEMPLATE)
 
     def unknown_location_line(self):
         """Return an unknown location line."""
@@ -241,39 +263,58 @@ class SampleLogLines:
 
     @property
     def insert_fields(self):
-        """return fields that should be extracted from an insert log line."""
+        """Return fields that should be extracted from an insert log line."""
         return INSERT_FIELDS
 
     @property
     def delete_fields(self):
-        """return fields that should be extracted from a delete log line."""
+        """Return fields that should be extracted from a delete log line."""
         return DELETE_FIELDS
 
     @property
     def retire_fields(self):
-        """return fields that should be extracted from a retire log line."""
+        """Return fields that should be extracted from a retire log line."""
         return RETIRE_FIELDS
 
     @property
-    def suppress_fields(self):
-        """return fields that should be extracted from a suppress log line."""
-        return SUPPRESS_FIELDS
+    def suppress_xibo_fields(self):
+        """Return fields that should be extracted from a suppress Xibo event
+        log line."""
+        return SUPPRESS_XIBO_FIELDS
+
+    @property
+    def suppress_xibo_meetup_id(self):
+        """Return the Meetup ID that should be extracted from a suppress Xibo
+        event log line."""
+        return SUPPRESS_XIBO_MEETUP_ID
+
+    @property
+    def meetup_id_suppressed_meetup_id(self):
+        """Return the Meetup ID that should be extracted from a Meetup ID
+        suppressed log line."""
+        return MEETUP_ID_SUPPRESSED_MEETUP_ID
+
+    @property
+    def suppressed_not_checked_meetup_id(self):
+        """Return the Meetup ID that should be extracted from a suppressed not
+        checked log line."""
+        return SUPPRESSED_NOT_CHECKED_MEETUP_ID
 
     @property
     def update_before_fields(self):
-        """return fields that should be extracted from an update from log
+        """Return fields that should be extracted from an update from log
         line."""
         return UPDATE_BEFORE_FIELDS
 
     @property
     def update_after_fields(self):
-        """return fields that should be extracted from an update to log
+        """Return fields that should be extracted from an update to log
         line."""
         return UPDATE_AFTER_FIELDS
 
     @property
     def unknown_location_fields(self):
-        """return fields that should be extracted from an unknown location log
+        """Return fields that should be extracted from an unknown location log
         line."""
         return UNKNOWN_LOCATION_FIELDS
 
@@ -302,9 +343,9 @@ class SampleLogLines:
         date_time = self.date_time()
         return RetireEventLogLine(date_time, event)
 
-    def make_suppress_log_line(self):
-        """Return a suppress log line object."""
-        event = Event.from_fields(SUPPRESS_FIELDS)
+    def make_suppress_event_log_line(self):
+        """Return a suppress xibo event log line object."""
+        event = Event.from_fields(SUPPRESS_XIBO_FIELDS)
         date_time = self.date_time()
         return SuppressEventLogLine(date_time, event)
 

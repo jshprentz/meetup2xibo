@@ -128,6 +128,8 @@ class SummaryRenderer:
         """Render the log file summary as a string."""
         crud_lister = summary.crud_lister
         conflict_reporter = summary.conflict_reporter
+        suppressed_event_tracker = summary.suppressed_event_tracker
+        unneeded_meetup_ids = sorted(suppressed_event_tracker.unneeded_ids())
         template = self.jinja2_env.get_template(self.template_name)
         return template.render(
                 counters=summary.counter.counts(),
@@ -135,7 +137,8 @@ class SummaryRenderer:
                 past_event_logs=crud_lister.sorted_past_event_logs(),
                 has_conflicts=conflict_reporter.has_conflicts(),
                 checked_places=conflict_reporter.sorted_checked_places(),
-                conflict_places=conflict_reporter.sorted_conflict_places()
+                conflict_places=conflict_reporter.sorted_conflict_places(),
+                unneeded_meetup_ids=unneeded_meetup_ids
                 )
 
 
