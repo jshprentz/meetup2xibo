@@ -103,17 +103,17 @@ SUPPRESS_XIBO_FIELDS = [
     ('xibo_id', '81'),
     ]
 
-EVENT_SUPPRESSED_TEMPLATE = \
+MEETUP_ID_SUPPRESSED_TEMPLATE = \
     "2019-03-04 06:{minutes:02d}:51,793 - INFO - EventSuppressor - " \
     "Suppressed meetup_id='266191234'"
 
-EVENT_SUPPRESSED_MEETUP_ID = '266191234'
+MEETUP_ID_SUPPRESSED_MEETUP_ID = '266191234'
 
-SUPPRESS_NOT_CHECKED_TEMPLATE = \
+SUPPRESSED_NOT_CHECKED_TEMPLATE = \
     "2019-11-17 06:{minutes:02d}:35,949 - INFO - EventSuppressor - "\
     "Suppressed Meetup ID was not checked. meetup_id='266192589'"
 
-SUPPRESS_NOT_CHECKED_MEETUP_ID = '266192589'
+SUPPRESSED_NOT_CHECKED_MEETUP_ID = '266192589'
 
 UNKNOWN_LOCATION_TEMPLATE = \
     "2019-03-04 06:{minutes:02d}:11,441 - WARNING - LocationChooser - " \
@@ -229,9 +229,9 @@ class SampleLogLines:
         """Return a suppress Xibo event line."""
         return self.make_line(SUPPRESS_XIBO_TEMPLATE)
 
-    def event_suppressed_line(self):
-        """Return an event suppressed line."""
-        return self.make_line(EVENT_SUPPRESSED_TEMPLATE)
+    def meetup_id_suppressed_line(self):
+        """Return Meetup ID suppressed line."""
+        return self.make_line(MEETUP_ID_SUPPRESSED_TEMPLATE)
 
     def suppressed_not_checked_line(self):
         """Return a suppressed not checked line."""
@@ -289,16 +289,16 @@ class SampleLogLines:
         return SUPPRESS_XIBO_MEETUP_ID
 
     @property
-    def event_suppressed_meetup_id(self):
-        """Return the Meetup ID that should be extracted from an event
+    def meetup_id_suppressed_meetup_id(self):
+        """Return the Meetup ID that should be extracted from a Meetup ID
         suppressed log line."""
-        return EVENT_SUPPRESSED_MEETUP_ID
+        return MEETUP_ID_SUPPRESSED_MEETUP_ID
 
     @property
     def suppressed_not_checked_meetup_id(self):
         """Return the Meetup ID that should be extracted from a suppressed not
         checked log line."""
-        return SUPPRESS_NOT_CHECKED_MEETUP_ID
+        return SUPPRESSED_NOT_CHECKED_MEETUP_ID
 
     @property
     def update_before_fields(self):

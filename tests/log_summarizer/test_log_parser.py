@@ -236,7 +236,7 @@ def test_retire_log_line(log_parser_class, sample_log_lines):
 
 def test_suppress_xibo_log_line(log_parser_class, sample_log_lines,
         suppressed_event_tracker):
-    """Test recognizing a suppress log line."""
+    """Test recognizing a suppressed Xibo event log line."""
     log_line_text = sample_log_lines.suppress_xibo_line()
     parser = log_parser_class(log_line_text)
     log_line = parser.suppress_log_line(suppressed_event_tracker)
@@ -246,12 +246,33 @@ def test_suppress_xibo_log_line(log_parser_class, sample_log_lines,
 
 def test_suppress_xibo_log_line_suppresses(log_parser_class, sample_log_lines,
         suppressed_event_tracker):
-    """Test that recognizing a suppress log line suppresses its Meetup ID."""
+    """Test that recognizing a suppressed Xibo event log line suppresses its
+    Meetup ID."""
     suppressed_event_tracker.missing_id(sample_log_lines.suppress_xibo_meetup_id)
     log_line_text = sample_log_lines.suppress_xibo_line()
     parser = log_parser_class(log_line_text)
     log_line = parser.suppress_log_line(suppressed_event_tracker)
     assert not suppressed_event_tracker.unneeded_ids()
+
+def test_suppress_meetup_id_log_line_suppresses(log_parser_class,
+        sample_log_lines, suppressed_event_tracker):
+    """Test that recognizing a suppresssed Meetup ID log line suppresses its
+    Meetup ID."""
+    suppressed_event_tracker.missing_id(sample_log_lines.meetup_id_suppressed_meetup_id)
+    log_line_text = sample_log_lines.meetup_id_suppressed_line()
+    parser = log_parser_class(log_line_text)
+    log_line = parser.suppressed_meetup_id_log_line(suppressed_event_tracker)
+    assert not suppressed_event_tracker.unneeded_ids()
+
+def test_suppress_meetup_id_log_line_suppresses(log_parser_class,
+        sample_log_lines, suppressed_event_tracker):
+    """Test that recognizing a suppresssed Meetup ID log not checked line adds
+    its Meetup ID to the unneeded list."""
+    expected_unneeded_ids = [sample_log_lines.suppressed_not_checked_meetup_id]
+    log_line_text = sample_log_lines.suppressed_not_checked_line()
+    parser = log_parser_class(log_line_text)
+    log_line = parser.suppressed_id_not_checked_log_line(suppressed_event_tracker)
+    assert suppressed_event_tracker.unneeded_ids() == expected_unneeded_ids
 
 def test_update_log_line(log_parser_class, sample_log_lines):
     """Test recognizing a pair of update log lines."""
