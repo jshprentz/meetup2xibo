@@ -12,7 +12,10 @@ Future History
 Recent History
 ~~~~~~~~~~~~~~
 
-Next Release
+.. Next Release
+.. ------------------
+
+3.3.1 (2019-12-02)
 ------------------
 * Report unneeded suppressed Meetup event IDs when summarizing logs.
 
