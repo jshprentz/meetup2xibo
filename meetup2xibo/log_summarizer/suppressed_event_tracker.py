@@ -4,7 +4,8 @@
 class SuppressedEventTracker:
 
     def __init__(self):
-        """Initialize with empty sets of suppressed and unchecked Meetup IDs."""
+        """Initialize with empty sets of suppressed and unchecked Meetup
+        IDs."""
         self._suppressed_ids = set()
         self._unchecked_ids = set()
 

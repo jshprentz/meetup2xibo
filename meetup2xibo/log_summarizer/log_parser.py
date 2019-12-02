@@ -14,7 +14,7 @@ LogLineStart = namedtuple("LogLineStart", "timestamp log_level")
 UpdateToLogLine = namedtuple("UpdateToLogLine", "timestamp event")
 Summary = namedtuple(
         "Summary",
-        "counter crud_lister conflict_reporter location_mapper " \
+        "counter crud_lister conflict_reporter location_mapper "
         "suppressed_event_tracker")
 SpecialLocation = namedtuple(
         "SpecialLocation",
