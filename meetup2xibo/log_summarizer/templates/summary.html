@@ -124,6 +124,15 @@ table.blueTable thead th:first-child {
         </dl>
 {% endif %}
 
+{% if unneeded_meetup_ids %}
+    <h2>Suppressed Meetup Event IDs Not Needed</h2>
+        <ul>
+{% for meetup_id in unneeded_meetup_ids %}
+            <li><span class="warning">{{ meetup_id }}</span></li>
+{% endfor %}
+        </ul>
+{% endif %}
+
 </body>
 </html>
 {# vim: set tabstop=8 expandtab shiftwidth=4 softtabstop=4 autoindent: #}
