@@ -7,7 +7,6 @@ Future History
 ~~~~~~~~~~~~~~
 
 * Support Xibo 2.
-* Report unneeded suppressed Meetup event IDs.
 
 ~~~~~~~~~~~~~~
 Recent History
@@ -15,6 +14,10 @@ Recent History
 
 .. Next Release
 .. ------------------
+
+3.3.1 (2019-12-02)
+------------------
+* Report unneeded suppressed Meetup event IDs when summarizing logs.
 
 3.3.0 (2019-11-19)
 ------------------

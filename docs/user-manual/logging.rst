@@ -57,12 +57,24 @@ Summarize-m2x-logs summarizes one or more meetup2xibo log files.
 The summary includes:
 
 - Counts of meetup2xibo runs, by version
+
 - Lists of schedule conflicts
+
 - Lists of events inserted, updated, deleted, and retired
+
 - Field-by-field details of updated events
-- Warnings about missing event locations
-- Warnings about special event locations no longer needed
-- Spreadsheet showing conversions from Meetup.com locations to Xibo locations
+
+- Warnings (in red)
+
+  - About today's schedule conflicts
+
+  - About unknown event locations
+
+  - About special event locations no longer needed
+
+  - About suppressed Meetup.com event IDs no longer needed
+
+- A spreadsheet showing conversions from Meetup.com locations to Xibo locations
 
 :ref:`summarizer-cron-job` describes how to run summarize-m2x-logs daily and send the
 HTML-formatted results via email.

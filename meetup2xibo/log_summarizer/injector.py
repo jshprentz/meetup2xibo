@@ -8,6 +8,7 @@ from .crud_lister import CrudLister
 from .conflict_reporter import ConflictReporter
 from .renderer import Renderer, EmailRenderer, SummaryRenderer, \
         LocationMappingCsvRenderer, make_jinja2_env
+from .suppressed_event_tracker import SuppressedEventTracker
 import datetime
 
 
@@ -28,7 +29,8 @@ def inject_summary():
         inject_start_counter(),
         inject_crud_lister(),
         inject_conflict_reporter(),
-        inject_location_mapper())
+        inject_location_mapper(),
+        inject_suppressed_event_tracker())
 
 
 def inject_input_stream(application_scope):
@@ -64,6 +66,11 @@ def inject_date_today():
 def inject_location_mapper():
     """Return a location mapper."""
     return LocationMapper()
+
+
+def inject_suppressed_event_tracker():
+    """Return a suppressed event tracker."""
+    return SuppressedEventTracker()
 
 
 def inject_log_parser():

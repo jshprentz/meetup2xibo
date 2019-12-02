@@ -14,7 +14,8 @@ LogLineStart = namedtuple("LogLineStart", "timestamp log_level")
 UpdateToLogLine = namedtuple("UpdateToLogLine", "timestamp event")
 Summary = namedtuple(
         "Summary",
-        "counter crud_lister conflict_reporter location_mapper")
+        "counter crud_lister conflict_reporter location_mapper "
+        "suppressed_event_tracker")
 SpecialLocation = namedtuple(
         "SpecialLocation",
         "meetup_id location override comment places")
@@ -24,24 +25,25 @@ GRAMMER = r"""
 log_lines :summary = log_line(summary)*
 
 log_line :summary = (start_log_line(summary.counter)
-        | event_log_line(summary.crud_lister)
+        | event_log_line(summary)
         | conflict_analysis_log_line(summary.conflict_reporter)
         | event_location_log_line:l
                 -> summary.location_mapper.add_event_location_log_line(l)
+        | suppressed_id_log_line(summary.suppressed_event_tracker)
         | other_log_line) '\n'
 
 start_log_line :counter = log_line_start('meetup2xibo'):s
         'Start ' rest_of_line:p
         -> counter.count(p)
 
-event_log_line :crud_lister = (insert_log_line
+event_log_line :summary = (insert_log_line
         | delete_log_line
         | retire_log_line
-        | suppress_log_line
+        | suppress_log_line(summary.suppressed_event_tracker)
         | update_log_line
         | unknown_location_log_line
         | special_location_log_line):log_line
-        -> crud_lister.add_log_line(log_line)
+        -> summary.crud_lister.add_log_line(log_line)
 
 insert_log_line = log_line_start('XiboEventCrud'):s 'Inserted ' event:e
         -> InsertEventLogLine(s.timestamp, e)
@@ -52,8 +54,10 @@ delete_log_line = log_line_start('XiboEventCrud'):s 'Deleted Xibo' event:e
 retire_log_line = log_line_start('XiboEventCrud'):s 'Retired Xibo' event:e
         -> RetireEventLogLine(s.timestamp, e)
 
-suppress_log_line = log_line_start('XiboEventCrud'):s 'Suppressed Xibo' event:e
-        -> SuppressEventLogLine(s.timestamp, e)
+suppress_log_line :tracker = log_line_start('XiboEventCrud'):s
+        'Suppressed Xibo'
+        (event:e -> tracker.suppressed_event(e)):event
+        -> SuppressEventLogLine(s.timestamp, event)
 
 update_log_line = update_from_log_line:f '\n' update_to_log_line:t
         -> UpdateEventLogLine(t.timestamp, f, t.event)
@@ -95,6 +99,21 @@ schedule_conflict_log_line = log_line_start('CheckedPlace')
         'Schedule conflict: place=' quoted_value:p ' ' conflict:c -> (p, c)
 
 conflict = 'Conflict(' conflict_fields:f ')' -> Conflict.from_fields(f)
+
+suppressed_id_log_line :tracker =
+        suppressed_meetup_id_log_line(tracker)
+        | suppressed_id_not_checked_log_line(tracker)
+
+suppressed_meetup_id_log_line :tracker =
+        log_line_start('EventSuppressor')
+        'Suppressed meetup_id=' quoted_value:v
+        -> tracker.suppressed_id(v)
+
+suppressed_id_not_checked_log_line :tracker =
+        log_line_start('EventSuppressor')
+        'Suppressed Meetup ID was not checked. meetup_id='
+        quoted_value:v
+        -> tracker.unchecked_id(v)
 
 other_log_line = rest_of_line
 
