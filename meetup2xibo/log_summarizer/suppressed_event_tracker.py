@@ -1,12 +1,12 @@
-"""Tracks suppressed events, event IDs, and missing event IDs."""
+"""Tracks suppressed events, event IDs, and unchecked event IDs."""
 
 
 class SuppressedEventTracker:
 
     def __init__(self):
-        """Initialize with empty sets of suppressed and missing Meetup IDs."""
+        """Initialize with empty sets of suppressed and unchecked Meetup IDs."""
         self._suppressed_ids = set()
-        self._missing_ids = set()
+        self._unchecked_ids = set()
 
     def suppressed_id(self, meetup_id):
         """Track the suppression of a Meetup ID."""
@@ -17,13 +17,13 @@ class SuppressedEventTracker:
         self.suppressed_id(event.meetup_id)
         return event
 
-    def missing_id(self, meetup_id):
-        """Track a missing Meetup ID that should be suppressed."""
-        self._missing_ids.add(meetup_id)
+    def unchecked_id(self, meetup_id):
+        """Track an unchecked Meetup ID that should be suppressed."""
+        self._unchecked_ids.add(meetup_id)
 
     def unneeded_ids(self):
         """Return a list of suppressed Meetup IDs no longer needed."""
-        unneeded_ids = self._missing_ids - self._suppressed_ids
+        unneeded_ids = self._unchecked_ids - self._suppressed_ids
         return list(unneeded_ids)
 
 

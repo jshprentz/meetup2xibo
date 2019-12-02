@@ -113,7 +113,7 @@ suppressed_id_not_checked_log_line :tracker =
         log_line_start('EventSuppressor')
         'Suppressed Meetup ID was not checked. meetup_id='
         quoted_value:v
-        -> tracker.missing_id(v)
+        -> tracker.unchecked_id(v)
 
 other_log_line = rest_of_line
 

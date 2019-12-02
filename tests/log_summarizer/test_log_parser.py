@@ -248,7 +248,7 @@ def test_suppress_xibo_log_line_suppresses(log_parser_class, sample_log_lines,
         suppressed_event_tracker):
     """Test that recognizing a suppressed Xibo event log line suppresses its
     Meetup ID."""
-    suppressed_event_tracker.missing_id(sample_log_lines.suppress_xibo_meetup_id)
+    suppressed_event_tracker.unchecked_id(sample_log_lines.suppress_xibo_meetup_id)
     log_line_text = sample_log_lines.suppress_xibo_line()
     parser = log_parser_class(log_line_text)
     log_line = parser.suppress_log_line(suppressed_event_tracker)
@@ -258,7 +258,7 @@ def test_suppress_meetup_id_log_line_suppresses(log_parser_class,
         sample_log_lines, suppressed_event_tracker):
     """Test that recognizing a suppresssed Meetup ID log line suppresses its
     Meetup ID."""
-    suppressed_event_tracker.missing_id(sample_log_lines.meetup_id_suppressed_meetup_id)
+    suppressed_event_tracker.unchecked_id(sample_log_lines.meetup_id_suppressed_meetup_id)
     log_line_text = sample_log_lines.meetup_id_suppressed_line()
     parser = log_parser_class(log_line_text)
     log_line = parser.suppressed_meetup_id_log_line(suppressed_event_tracker)
