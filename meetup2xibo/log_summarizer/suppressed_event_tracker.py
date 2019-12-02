@@ -12,6 +12,11 @@ class SuppressedEventTracker:
         """Track the suppression of a Meetup ID."""
         self._suppressed_ids.add(meetup_id)
 
+    def suppressed_event(self, event):
+        """Track the suppression of an event. Return the event."""
+        self.suppressed_id(event.meetup_id)
+        return event
+
     def missing_id(self, meetup_id):
         """Track a missing Meetup ID that should be suppressed."""
         self._missing_ids.add(meetup_id)

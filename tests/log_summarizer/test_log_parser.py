@@ -234,14 +234,24 @@ def test_retire_log_line(log_parser_class, sample_log_lines):
     assert log_line.timestamp == '2019-03-04 06:00'
     assert log_line.meetup_id == '257907613'
 
-def test_suppress_log_line(log_parser_class, sample_log_lines):
+def test_suppress_xibo_log_line(log_parser_class, sample_log_lines,
+        suppressed_event_tracker):
     """Test recognizing a suppress log line."""
-    log_line_text = sample_log_lines.suppress_line()
+    log_line_text = sample_log_lines.suppress_xibo_line()
     parser = log_parser_class(log_line_text)
-    log_line = parser.suppress_log_line()
+    log_line = parser.suppress_log_line(suppressed_event_tracker)
     assert isinstance(log_line, SuppressEventLogLine)
     assert log_line.timestamp == '2019-03-04 06:00'
     assert log_line.meetup_id == '263548213'
+
+def test_suppress_xibo_log_line_suppresses(log_parser_class, sample_log_lines,
+        suppressed_event_tracker):
+    """Test that recognizing a suppress log line suppresses its Meetup ID."""
+    suppressed_event_tracker.missing_id(sample_log_lines.suppress_xibo_meetup_id)
+    log_line_text = sample_log_lines.suppress_xibo_line()
+    parser = log_parser_class(log_line_text)
+    log_line = parser.suppress_log_line(suppressed_event_tracker)
+    assert not suppressed_event_tracker.unneeded_ids()
 
 def test_update_log_line(log_parser_class, sample_log_lines):
     """Test recognizing a pair of update log lines."""
@@ -281,11 +291,11 @@ def test_event_location_log_line(log_parser_class, sample_log_lines):
     assert log_line.meetup_id == '259405866'
     assert log_line.location == 'Woodshop'
 
-def test_event_log_line(log_parser_class, sample_log_lines, crud_lister):
+def test_event_log_line(log_parser_class, sample_log_lines, crud_lister, summary):
     """Test recognizing an event log line."""
     log_line_text = sample_log_lines.insert_line()
     parser = log_parser_class(log_line_text)
-    parser.event_log_line(crud_lister)
+    parser.event_log_line(summary)
     meetup_id = 'tmnbrqyzhbhb'
     log_line = crud_lister.event_logs[meetup_id].log_lines[0]
     assert isinstance(log_line, InsertEventLogLine)

@@ -86,14 +86,16 @@ RETIRE_FIELDS = [
     ('xibo_id', '59'),
     ]
 
-SUPPRESS_TEMPLATE = \
+SUPPRESS_XIBO_TEMPLATE = \
     "2019-03-04 06:{minutes:02d}:51,367 - INFO - XiboEventCrud - Suppressed " \
     "XiboEvent(meetup_id='263548213', name='KEEP ORANGE BAY CLEAR', " \
     "location='Orange Bay', start_time='2019-03-16 15:00:00', " \
     "end_time='2019-03-16 19:00:00', xibo_id='81')"
 
-SUPPRESS_FIELDS = [
-    ('meetup_id', '263548213'),
+SUPPRESS_XIBO_MEETUP_ID = '263548213'
+
+SUPPRESS_XIBO_FIELDS = [
+    ('meetup_id', SUPPRESS_XIBO_MEETUP_ID),
     ('name', 'KEEP ORANGE BAY CLEAR'),
     ('location', 'Orange Bay'),
     ('start_time', '2019-03-16 15:00:00'),
@@ -223,9 +225,9 @@ class SampleLogLines:
         """Return a retire line."""
         return self.make_line(RETIRE_TEMPLATE)
 
-    def suppress_line(self):
-        """Return a suppress line."""
-        return self.make_line(SUPPRESS_TEMPLATE)
+    def suppress_xibo_line(self):
+        """Return a suppress Xibo event line."""
+        return self.make_line(SUPPRESS_XIBO_TEMPLATE)
 
     def event_suppressed_line(self):
         """Return an event suppressed line."""
@@ -275,9 +277,16 @@ class SampleLogLines:
         return RETIRE_FIELDS
 
     @property
-    def suppress_fields(self):
-        """Return fields that should be extracted from a suppress log line."""
-        return SUPPRESS_FIELDS
+    def suppress_xibo_fields(self):
+        """Return fields that should be extracted from a suppress Xibo event
+        log line."""
+        return SUPPRESS_XIBO_FIELDS
+
+    @property
+    def suppress_xibo_meetup_id(self):
+        """Return the Meetup ID that should be extracted from a suppress Xibo
+        event log line."""
+        return SUPPRESS_XIBO_MEETUP_ID
 
     @property
     def event_suppressed_meetup_id(self):
@@ -286,7 +295,7 @@ class SampleLogLines:
         return EVENT_SUPPRESSED_MEETUP_ID
 
     @property
-    def event_suppressed_meetup_id(self):
+    def suppressed_not_checked_meetup_id(self):
         """Return the Meetup ID that should be extracted from a suppressed not
         checked log line."""
         return SUPPRESS_NOT_CHECKED_MEETUP_ID
@@ -334,9 +343,9 @@ class SampleLogLines:
         date_time = self.date_time()
         return RetireEventLogLine(date_time, event)
 
-    def make_suppress_log_line(self):
-        """Return a suppress log line object."""
-        event = Event.from_fields(SUPPRESS_FIELDS)
+    def make_suppress_event_log_line(self):
+        """Return a suppress xibo event log line object."""
+        event = Event.from_fields(SUPPRESS_XIBO_FIELDS)
         date_time = self.date_time()
         return SuppressEventLogLine(date_time, event)
 
