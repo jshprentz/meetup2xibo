@@ -50,10 +50,12 @@ Resources
 Features
 --------
 
-**Meetup2xibo** ...
+Meetup2xibo
+~~~~~~~~~~~
 
 * Retrieves events from the Meetup.com API.
 * Inserts, updates, and deletes events via the Xibo CMS API.
+* Suppresses selected events from display by Xibo.
 * Extracts event locations from Meetup.com venue name and find-us fields.
 * Maps abbreviated and misspelled event locations to preferred forms.
 * Allows per-event overrides of location mapping rules.
@@ -64,7 +66,8 @@ Features
 * Logs changes to Xibo events.
 * Logs location mappings.
 
-Supporting programs ...
+Supporting programs
+~~~~~~~~~~~~~~~~~~~
 
 * Summarize logs in a daily email message.
 * Report yesterday's date for use in shell scripts.
