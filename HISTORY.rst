@@ -12,8 +12,9 @@ Future History
 Recent History
 ~~~~~~~~~~~~~~
 
-.. Next Release
-.. ------------------
+Next Release
+------------------
+* Correct and improve documentation.
 
 3.3.1 (2019-12-02)
 ------------------
