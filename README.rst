@@ -7,12 +7,20 @@ Meetup2Xibo
 
 .. Start badges
 
+.. image:: https://img.shields.io/pypi/pyversions/meetup2xibo
+        :target: https://pypi.org/project/meetup2xibo/
+        :alt: PyPI - Python Version
+
 .. image:: https://img.shields.io/travis/jshprentz/meetup2xibo.svg
         :target: https://travis-ci.org/jshprentz/meetup2xibo
 
 .. image:: https://readthedocs.org/projects/meetup2xibo/badge/?version=latest
         :target: https://meetup2xibo.readthedocs.io/en/latest/?badge=latest
         :alt: Documentation Status
+
+.. image:: https://api.dependabot.com/badges/status?host=github&repo=jshprentz/meetup2xibo
+        :target: https://dependabot.com
+        :alt: Dependabot Status
 
 .. Start description
 
