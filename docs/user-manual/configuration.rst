@@ -29,6 +29,8 @@ removes permissions from group members and other users:
 
    $ chmod u=rw,go-rwx meetup2xibo.env
 
+.. _`meetup-com-api-settings`:
+
 Meetup.com API Settings
 -----------------------
 
@@ -495,13 +497,14 @@ variable :envvar:`DELETE_BEFORE_START_HOURS`.
 
 Some Xibo displays, such as daily agendas and weekly calendars, should continue
 to display events after their conclusion.
-Past events should not be delegated from the Xibo dataset until some number of
+Past events should not be deleted from the Xibo dataset until some number of
 hours after they end, as configured by environment variable
 :envvar:`DELETE_AFTER_END_HOURS`.
 
-The Meetup.com API lists some fixed number (hundreds) of future events.
-As new near-term events are added to the Meetup.com calendar, some previously
-reported far future events are bumped from the listing.
+The Meetup.com API lists some fixed number (hundreds, see
+:ref:`meetup-com-api-settings`) of future events.  As new near-term events are
+added to the Meetup.com calendar, some previously reported far future events
+are bumped from the listing.
 To avoid flapping, meetup2xibo does not delete events from the Xibo dataset
 more than some number of days in the future, as configured by environment
 variable :envvar:`DELETE_UNTIL_FUTURE_DAYS`.
