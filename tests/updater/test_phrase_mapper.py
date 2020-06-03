@@ -46,14 +46,18 @@ EXPECTED_INVALID_MATCH_ENDS = [0, 2, 3, 5, 7, 8, 9]
 phrase_tuples = st.sampled_from(PHRASES)
 phrase_tuple_lists = st.lists(phrase_tuples, min_size = 1, max_size = len(PHRASES), unique = True)
 
-@pytest.fixture()
-def sample_phrase_mapper():
+def phrase_mapper_with_test_phrases():
     """Return a phrase mapper initialized with the test phrases."""
     return phrase_mapper.PhraseMapper(ahocorasick.Automaton(), PHRASES)
 
 @pytest.fixture()
+def sample_phrase_mapper():
+    """Return a sample phrase mapper."""
+    return phrase_mapper_with_test_phrases()
+
+@pytest.fixture()
 def setup_phrase_mapper(sample_phrase_mapper):
-    """Return a setup phrase mapper initialized with the test phrases."""
+    """Return a sample phrase mapper setup for matching."""
     return sample_phrase_mapper.setup()
 
 @pytest.mark.parametrize("text, expected_phrases", EXPECTED_MAPPINGS)
@@ -63,11 +67,12 @@ def test_map_phrases(text, expected_phrases, setup_phrase_mapper):
     assert phrases == expected_phrases
 
 @given(phrase_tuples = phrase_tuple_lists)
-def test_map_phrases_ordered(phrase_tuples, setup_phrase_mapper):
+def test_map_phrases_ordered(phrase_tuples):
     """Test that phrases are mapped in order."""
     patterns, expected_phrases = zip(*phrase_tuples)
     text = ", ".join(patterns)
-    phrases = setup_phrase_mapper.map_phrases(text)
+    phrase_mapper = phrase_mapper_with_test_phrases().setup()
+    phrases = phrase_mapper.map_phrases(text)
     assert phrases == list(expected_phrases)
     
 def test_setup_returns_phrase_mapper(sample_phrase_mapper):
@@ -76,7 +81,7 @@ def test_setup_returns_phrase_mapper(sample_phrase_mapper):
 
 @pytest.mark.parametrize("text, expected_normalized_text", EXPECTED_NORMALIZED_TEXT)
 def test_normalize_text(text, expected_normalized_text):
-    """Test that normalization removes spaces and converts to lower carse."""
+    """Test that normalization removes spaces and converts to lower case."""
     assert phrase_mapper.normalize_text(text) == expected_normalized_text
 
 def test_match_to_sortable_match():
