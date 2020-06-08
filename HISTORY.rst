@@ -16,6 +16,7 @@ Next Release
 ------------------
 * Correct and improve documentation.
 * Add badges for Python version and Dependabot.
+* Mitigate pytest fixture use with Hypothesis.
 
 3.3.1 (2019-12-02)
 ------------------

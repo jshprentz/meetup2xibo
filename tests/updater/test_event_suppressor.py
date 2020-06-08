@@ -33,6 +33,7 @@ def test_should_suppress_in_list(meetup_ids_to_suppress):
     assert suppressor.should_suppress(meetup_id)
 
 @given(meetup_ids_to_suppress=meetup_id_lists)
+@pytest.mark.filterwarnings("ignore:.*'caplog' fixture, which is reset between function calls")
 def test_log_unchecked_ids_all(meetup_ids_to_suppress, caplog):
     """Test logging all unchecked Meetup IDs."""
     caplog.clear()
@@ -44,6 +45,7 @@ def test_log_unchecked_ids_all(meetup_ids_to_suppress, caplog):
         assert meetup_id in caplog.text
 
 @given(meetup_ids_to_suppress=meetup_id_lists)
+@pytest.mark.filterwarnings("ignore:.*'caplog' fixture, which is reset between function calls")
 def test_log_unchecked_ids_only(meetup_ids_to_suppress, caplog):
     """Test logging only unchecked Meetup IDs."""
     caplog.clear()
@@ -58,6 +60,7 @@ def test_log_unchecked_ids_only(meetup_ids_to_suppress, caplog):
         assert meetup_id in caplog.text
 
 @given(meetup_ids_to_suppress=meetup_id_lists)
+@pytest.mark.filterwarnings("ignore:.*'caplog' fixture, which is reset between function calls")
 def test_log_suppressed_ids_only(meetup_ids_to_suppress, caplog):
     """Test logging only suppressed Meetup IDs."""
     caplog.clear()
