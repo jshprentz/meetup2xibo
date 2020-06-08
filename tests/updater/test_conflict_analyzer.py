@@ -85,7 +85,7 @@ def test_events_by_end_time(events):
             assert sorted_events[i].end_time > sorted_events[i + 1].end_time
 
 @given(early_list_size = small_list_sizes, late_list_size = small_list_sizes)
-@pytest.mark.filterwarnings("ignore:.*fixture, which is reset between function calls")
+@pytest.mark.filterwarnings("ignore:.*'mocker' fixture, which is reset between function calls")
 def test_analyze_events_at_start_time(early_list_size, late_list_size, sample_events, mocker):
     """Test analyzing event starts from a list ordered by start time. (Tested
     before conflict places was implemented.)"""
@@ -106,7 +106,7 @@ def test_analyze_events_at_start_time(early_list_size, late_list_size, sample_ev
     assert not sorted_events
 
 @given(early_list_size = small_list_sizes, late_list_size = small_list_sizes)
-@pytest.mark.filterwarnings("ignore:.*fixture, which is reset between function calls")
+@pytest.mark.filterwarnings("ignore:.*'mocker' fixture, which is reset between function calls")
 def test_analyze_events_at_end_time(early_list_size, late_list_size, sample_events, mocker):
     """Test analyzing event ends from a list ordered by end time. (Tested
     before conflict places was implemented.)"""
