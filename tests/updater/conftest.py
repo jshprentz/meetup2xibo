@@ -116,7 +116,7 @@ def module_file_path(request, module_dir_path):
     test_name = request.function.__name__
     return module_dir_path / test_name
 
-@pytest.fixture
+@pytest.fixture(scope="module")
 def sample_events():
     """Return a sample log line generator."""
     return SampleEvents()
